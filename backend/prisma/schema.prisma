@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id      String   @id
+  name    String   @unique
+  recipes Recipe[]
+
+  @@map("categories")
+}
+
+model Area {
+  id      String   @id
+  name    String   @unique
+  recipes Recipe[]
+
+  @@map("areas")
+}
+
+model Ingredient {
+  id          String             @id
+  name        String
+  description String?
+  img         String?
+  recipes     RecipeIngredient[]
+
+  @@map("ingredients")
+}
+
+model User {
+  id           String        @id
+  name         String
+  email        String        @unique
+  avatar       String?
+  recipes      Recipe[]
+  testimonials Testimonial[]
+
+  @@map("users")
+}
+
+model Recipe {
+  id           String             @id
+  title        String
+  instructions String
+  description  String?
+  thumb        String?
+  preview      String?
+  time         Int?
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  areaId String
+  area   Area   @relation(fields: [areaId], references: [id])
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+
+  ingredients RecipeIngredient[]
+
+  @@map("recipes")
+}
+
+model RecipeIngredient {
+  recipeId String
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  ingredientId String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+
+  measure String?
+
+  @@id([recipeId, ingredientId])
+  @@map("recipe_ingredients")
+}
+
+model Testimonial {
+  id      String @id
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+
+  testimonial String
+
+  @@map("testimonials")
+}
