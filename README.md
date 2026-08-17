@@ -24,8 +24,8 @@ Foodies — a full-stack recipe application (React frontend + Express/Prisma bac
    This is equivalent to `docker compose up --build -d`.
 
 3. The app will be available at:
-   - Frontend: http://localhost:5173
-   - Backend API: http://localhost:3000/api
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:4000/api
 
 Other useful commands:
 

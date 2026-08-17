@@ -44,10 +44,10 @@ services:
       context: ./backend
 
     ports:
-      - "${PORT}:${PORT}"
+      - "${BACK_PORT}:${BACK_PORT}"
 
     environment:
-      PORT: ${PORT}
+      BACK_PORT: ${BACK_PORT}
       DATABASE_URL: ${DATABASE_URL}
       JWT_SECRET: ${JWT_SECRET}
       FRONTEND_URL: ${FRONTEND_URL}
@@ -62,7 +62,7 @@ services:
       context: ./frontend
 
     ports:
-      - "5173:5173"
+      - "${FRONT_PORT}:${FRONT_PORT}"
 
     environment:
       VITE_API_URL: ${VITE_API_URL}

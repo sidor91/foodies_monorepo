@@ -10,6 +10,6 @@ RUN npm install
 COPY . .
 RUN npx prisma generate
 
-EXPOSE ${PORT}
+EXPOSE ${BACK_PORT}
 
 CMD ["npm", "start"]
