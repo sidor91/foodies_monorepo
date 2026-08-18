@@ -26,6 +26,7 @@ Foodies — a full-stack recipe application (React frontend + Express/Prisma bac
 3. The app will be available at:
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:4000/api
+   - Swagger API docs: http://localhost:4000/api/docs _(planned — not yet implemented)_
 
 Other useful commands:
 
@@ -88,3 +89,7 @@ Database connection settings are configured via environment variables (see `.env
 | `POSTGRES_PASSWORD`   | Database password                                        |
 | `POSTGRES_PORT`       | Host port mapped to PostgreSQL (container port `5432`)   |
 | `DATABASE_URL`        | Prisma connection string used by the backend/db-init containers |
+
+## API Documentation
+
+Interactive Swagger/OpenAPI documentation for the backend REST API is planned but not yet implemented. Once added, it will be served at `/api/docs` and generated from route/controller annotations (e.g. via `swagger-jsdoc` + `swagger-ui-express`).
