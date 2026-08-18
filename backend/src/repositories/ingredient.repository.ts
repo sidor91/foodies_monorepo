@@ -10,3 +10,5 @@ class IngredientRepository {
 }
 
 export const ingredientRepository = new IngredientRepository(prisma);
+
+export type TIngredientRepository = typeof ingredientRepository;
