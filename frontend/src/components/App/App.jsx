@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { lazy, useState } from "react";
+import { lazy, useState, Suspense } from "react";
 
 import { Header, MobileMenu, Loader, Footer } from "../index.js";
 
@@ -10,21 +10,21 @@ import css from "./App.module.css";
 
 const App = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isAuthOpen, setIsAuthOpen] = userState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   const handleMobileToggle = () => {
-    setIsMobileOpen(!isMobileOpen);
+    setIsMobileMenuOpen((prev) => !prev);
   };
   return (
-    <div className={`main__container ${isMobileOpen && "modal__open"}`}>
-      <Header isMobileMenuOpen={isMobileOpen} onMobileToggle={handleMobileToggle} />
+    <div className={`main__container ${isMobileMenuOpen && "modal__open"}`}>
+      <Header isMobileMenuOpen={isMobileMenuOpen} onMobileToggle={handleMobileToggle} />
 
-      <MobileMenu isMobileMenuOpen={isMobileOpen} onMobileToggle={handleMobileToggle} />
+      <MobileMenu isMobileMenuOpen={isMobileMenuOpen} onMobileToggle={handleMobileToggle} />
 
       <main className={css.content} inert={isMobileMenuOpen ? "" : undefined}>
         <Suspense fallback={<Loader />}>
           <Routes>
-            <Route path="/" element={<Home />} />
+            {/* <Route path="/" element={<Home />} /> */}
           </Routes>
         </Suspense>
       </main>

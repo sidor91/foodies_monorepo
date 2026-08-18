@@ -1,4 +1,4 @@
-const MobileMenu = ({}) => {
+const MobileMenu = () => {
   return;
 };
 
