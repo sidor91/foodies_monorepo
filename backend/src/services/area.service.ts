@@ -2,7 +2,11 @@ import { areaRepository } from "../repositories/area.repository.js";
 
 type AreaRepository = typeof areaRepository;
 
-class AreaService {
+export interface IAreaService {
+    getAll: AreaRepository["findAllSorted"];
+}
+
+class AreaService implements IAreaService {
     constructor(private readonly areaRepository: AreaRepository) {}
 
     getAll() {
@@ -10,4 +14,4 @@ class AreaService {
     }
 }
 
-export const areaService = new AreaService(areaRepository);
+export const areaService: IAreaService = new AreaService(areaRepository);
