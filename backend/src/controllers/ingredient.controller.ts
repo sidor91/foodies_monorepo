@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
-import { ingredientRepository } from "../repositories/ingredient.repository.js";
+import { ingredientService } from "../services/ingredient.service.js";
 
 class IngredientController {
     // GET /ingredients — public list of ingredients.
     getAll = async (req: Request, res: Response) => {
-        const ingredients = await ingredientRepository.findAllSorted();
+        const ingredients = await ingredientService.getAll();
         res.json(ingredients);
     };
 }

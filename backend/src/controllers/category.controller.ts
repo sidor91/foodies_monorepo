@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
-import { categoryRepository } from "../repositories/category.repository.js";
+import { categoryService } from "../services/category.service.js";
 
 class CategoryController {
     // GET /categories — public list of recipe categories.
     getAll = async (req: Request, res: Response) => {
-        const categories = await categoryRepository.findAllSorted();
+        const categories = await categoryService.getAll();
         res.json(categories);
     };
 }

@@ -1,8 +1,6 @@
-import crypto from "node:crypto";
 import type { Request, Response } from "express";
-import type { Prisma } from "@prisma/client";
-import { recipeRepository } from "../repositories/recipe.repository.js";
-import { favoriteRepository } from "../repositories/favorite.repository.js";
+import { recipeService } from "../services/recipe.service.js";
+import { favoriteService } from "../services/favorite.service.js";
 
 // Utility helper — not domain logic, kept as a plain function.
 function parsePagination(query: Request["query"]) {
@@ -26,21 +24,16 @@ interface CreateRecipeBody {
 class RecipesController {
     // GET /recipes?category=&ingredient=&area=&page=&limit= — public search with pagination.
     search = async (req: Request, res: Response) => {
-        const category = req.query.category as string | undefined;
-        const ingredient = req.query.ingredient as string | undefined;
-        const area = req.query.area as string | undefined;
         const { page, limit, skip, take } = parsePagination(req.query);
 
-        const where: Prisma.RecipeWhereInput = {
-            ...(category && { categoryId: category }),
-            ...(area && { areaId: area }),
-            ...(ingredient && { ingredients: { some: { ingredientId: ingredient } } }),
-        };
-
-        const [items, total] = await Promise.all([
-            recipeRepository.findMany(where, skip, take),
-            recipeRepository.count(where),
-        ]);
+        const { items, total } = await recipeService.search(
+            {
+                category: req.query.category as string | undefined,
+                area: req.query.area as string | undefined,
+                ingredient: req.query.ingredient as string | undefined,
+            },
+            { skip, take },
+        );
 
         res.json({ items, page, limit, total, totalPages: Math.ceil(total / limit) });
     };
@@ -48,46 +41,27 @@ class RecipesController {
     // GET /recipes/popular?limit= — public, ranked by favorites count.
     popular = async (req: Request, res: Response) => {
         const limit = Math.min(Math.max(parseInt(String(req.query.limit), 10) || 10, 1), 50);
-
-        const popular = await recipeRepository.findPopular(limit);
-
-        res.json(
-            popular.map(({ _count, ...recipe }) => ({
-                ...recipe,
-                favoritesCount: _count.favoritedBy,
-            })),
-        );
+        const popular = await recipeService.getPopular(limit);
+        res.json(popular);
     };
 
     // GET /recipes/own?page=&limit= — private, recipes created by the current user.
     own = async (req: Request, res: Response) => {
         const { page, limit, skip, take } = parsePagination(req.query);
-        const where: Prisma.RecipeWhereInput = { ownerId: req.user!.id };
-
-        const [items, total] = await Promise.all([
-            recipeRepository.findMany(where, skip, take),
-            recipeRepository.count(where),
-        ]);
-
+        const { items, total } = await recipeService.getOwn(req.user!.id, { skip, take });
         res.json({ items, page, limit, total, totalPages: Math.ceil(total / limit) });
     };
 
     // GET /recipes/favorites?page=&limit= — private, current user's favorited recipes.
     favorites = async (req: Request, res: Response) => {
         const { page, limit, skip, take } = parsePagination(req.query);
-        const where: Prisma.RecipeWhereInput = { favoritedBy: { some: { userId: req.user!.id } } };
-
-        const [items, total] = await Promise.all([
-            recipeRepository.findMany(where, skip, take),
-            recipeRepository.count(where),
-        ]);
-
+        const { items, total } = await recipeService.getFavorites(req.user!.id, { skip, take });
         res.json({ items, page, limit, total, totalPages: Math.ceil(total / limit) });
     };
 
     // GET /recipes/:id — public recipe detail.
     getById = async (req: Request, res: Response) => {
-        const recipe = await recipeRepository.findDetailById(req.params.id);
+        const recipe = await recipeService.getById(req.params.id);
 
         if (!recipe) {
             res.status(404).json({ message: "Recipe not found" });
@@ -118,8 +92,7 @@ class RecipesController {
             return;
         }
 
-        const recipe = await recipeRepository.create({
-            id: crypto.randomUUID(),
+        const recipe = await recipeService.create(req.user!.id, {
             title,
             instructions,
             description,
@@ -128,7 +101,6 @@ class RecipesController {
             time,
             categoryId,
             areaId,
-            ownerId: req.user!.id,
             ingredients,
         });
 
@@ -137,37 +109,34 @@ class RecipesController {
 
     // DELETE /recipes/:id — private, only the owner may delete their recipe.
     deleteOwn = async (req: Request, res: Response) => {
-        const recipe = await recipeRepository.findById(req.params.id);
+        const result = await recipeService.deleteOwn(req.user!.id, req.params.id);
 
-        if (!recipe) {
+        if (result === "not_found") {
             res.status(404).json({ message: "Recipe not found" });
             return;
         }
-        if (recipe.ownerId !== req.user!.id) {
+        if (result === "forbidden") {
             res.status(403).json({ message: "You can only delete your own recipes" });
             return;
         }
 
-        await recipeRepository.deleteById(req.params.id);
         res.status(204).send();
     };
 
     // POST /recipes/:id/favorite — private, add recipe to favorites (idempotent).
     addFavorite = async (req: Request, res: Response) => {
-        const recipe = await recipeRepository.findById(req.params.id);
-        if (!recipe) {
+        if (!(await recipeService.exists(req.params.id))) {
             res.status(404).json({ message: "Recipe not found" });
             return;
         }
 
-        await favoriteRepository.upsert(req.user!.id, req.params.id);
-
+        await favoriteService.add(req.user!.id, req.params.id);
         res.status(204).send();
     };
 
     // DELETE /recipes/:id/favorite — private, remove recipe from favorites (idempotent).
     removeFavorite = async (req: Request, res: Response) => {
-        await favoriteRepository.remove(req.user!.id, req.params.id);
+        await favoriteService.remove(req.user!.id, req.params.id);
         res.status(204).send();
     };
 }
