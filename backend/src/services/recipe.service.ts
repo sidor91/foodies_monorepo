@@ -11,13 +11,24 @@ export interface RecipeFilters {
 }
 
 export interface Pagination {
-    skip: number;
-    take: number;
+    page: number;
+    limit: number;
 }
 
 export type CreateRecipeInput = Omit<CreateRecipeData, "id" | "ownerId">;
 
 type DeleteOwnResult = "not_found" | "forbidden" | "deleted";
+
+export interface IRecipeService {
+    search: RecipeService["search"];
+    getPopular: RecipeService["getPopular"];
+    getOwn: RecipeService["getOwn"];
+    getFavorites: RecipeService["getFavorites"];
+    getById: RecipeService["getById"];
+    exists: RecipeService["exists"];
+    create: RecipeService["create"];
+    deleteOwn: RecipeService["deleteOwn"];
+}
 
 class RecipeService {
     constructor(private readonly recipeRepository: RecipeRepository) {}
@@ -31,12 +42,7 @@ class RecipeService {
             }),
         };
 
-        const [items, total] = await Promise.all([
-            this.recipeRepository.findMany(where, pagination.skip, pagination.take),
-            this.recipeRepository.count(where),
-        ]);
-
-        return { items, total };
+        return this.paginate(where, pagination);
     }
 
     async getPopular(limit: number) {
@@ -48,25 +54,11 @@ class RecipeService {
     }
 
     async getOwn(ownerId: string, pagination: Pagination) {
-        const where: Prisma.RecipeWhereInput = { ownerId };
-
-        const [items, total] = await Promise.all([
-            this.recipeRepository.findMany(where, pagination.skip, pagination.take),
-            this.recipeRepository.count(where),
-        ]);
-
-        return { items, total };
+        return this.paginate({ ownerId }, pagination);
     }
 
     async getFavorites(userId: string, pagination: Pagination) {
-        const where: Prisma.RecipeWhereInput = { favoritedBy: { some: { userId } } };
-
-        const [items, total] = await Promise.all([
-            this.recipeRepository.findMany(where, pagination.skip, pagination.take),
-            this.recipeRepository.count(where),
-        ]);
-
-        return { items, total };
+        return this.paginate({ favoritedBy: { some: { userId } } }, pagination);
     }
 
     getById(id: string) {
@@ -93,6 +85,17 @@ class RecipeService {
         await this.recipeRepository.deleteById(recipeId);
         return "deleted";
     }
+
+    private async paginate(where: Prisma.RecipeWhereInput, { page, limit }: Pagination) {
+        const skip = (page - 1) * limit;
+
+        const [items, total] = await Promise.all([
+            this.recipeRepository.findMany(where, skip, limit),
+            this.recipeRepository.count(where),
+        ]);
+
+        return { items, page, limit, total, totalPages: Math.ceil(total / limit) };
+    }
 }
 
-export const recipeService = new RecipeService(recipeRepository);
+export const recipeService: IRecipeService = new RecipeService(recipeRepository);
