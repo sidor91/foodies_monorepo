@@ -1,11 +1,11 @@
-import { Router } from "express";
+import { Router, type Request, type Response, type NextFunction } from "express";
 import { authenticate } from "../middlewares/auth.js";
 import * as recipesController from "../controllers/recipes.controller.js";
 
 const router = Router();
 
-function asyncHandler(fn) {
-    return (req, res, next) => fn(req, res, next).catch(next);
+function asyncHandler(fn: (req: Request, res: Response, next: NextFunction) => Promise<unknown>) {
+    return (req: Request, res: Response, next: NextFunction) => fn(req, res, next).catch(next);
 }
 
 // Static sub-paths must be registered before the "/:id" route.

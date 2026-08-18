@@ -1,6 +1,12 @@
 import express from "express";
 import cors from "cors";
 import recipesRouter from "./routes/recipes.routes.js";
+import {
+    categoriesRouter,
+    areasRouter,
+    ingredientsRouter,
+    testimonialsRouter,
+} from "./routes/references.routes.js";
 
 const app = express();
 
@@ -12,8 +18,12 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/api/recipes", recipesRouter);
+app.use("/api/categories", categoriesRouter);
+app.use("/api/areas", areasRouter);
+app.use("/api/ingredients", ingredientsRouter);
+app.use("/api/testimonials", testimonialsRouter);
 
-app.use((err, req, res, next) => {
+app.use((err: unknown, req: express.Request, res: express.Response, next: express.NextFunction) => {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });
 });
