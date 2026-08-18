@@ -1,14 +1,12 @@
-import { favoriteRepository } from "../repositories/favorite.repository.js";
-
-type FavoriteRepository = typeof favoriteRepository;
+import { favoriteRepository, TFavoriteRepository } from "../repositories/favorite.repository.js";
 
 export interface IFavoriteService {
-    add: FavoriteRepository["upsert"];
-    remove: FavoriteRepository["remove"];
+    add: TFavoriteRepository["upsert"];
+    remove: TFavoriteRepository["remove"];
 }
 
 class FavoriteService implements IFavoriteService {
-    constructor(private readonly favoriteRepository: FavoriteRepository) {}
+    constructor(private readonly favoriteRepository: TFavoriteRepository) {}
 
     add(userId: string, recipeId: string) {
         return this.favoriteRepository.upsert(userId, recipeId);

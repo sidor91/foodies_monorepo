@@ -18,3 +18,5 @@ class FavoriteRepository {
 }
 
 export const favoriteRepository = new FavoriteRepository(prisma);
+
+export type TFavoriteRepository = typeof favoriteRepository;
