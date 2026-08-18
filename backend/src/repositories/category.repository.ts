@@ -10,3 +10,5 @@ class CategoryRepository {
 }
 
 export const categoryRepository = new CategoryRepository(prisma);
+
+export type TCategoryRepository = typeof categoryRepository;

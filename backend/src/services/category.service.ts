@@ -1,13 +1,11 @@
-import { categoryRepository } from "../repositories/category.repository.js";
-
-type CategoryRepository = typeof categoryRepository;
+import { categoryRepository, TCategoryRepository } from "../repositories/category.repository.js";
 
 export interface ICategoryService {
-    getAll: CategoryRepository["findAllSorted"];
+    getAll: TCategoryRepository["findAllSorted"];
 }
 
 class CategoryService implements ICategoryService {
-    constructor(private readonly categoryRepository: CategoryRepository) {}
+    constructor(private readonly categoryRepository: TCategoryRepository) {}
 
     getAll() {
         return this.categoryRepository.findAllSorted();
