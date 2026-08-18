@@ -1,0 +1,53 @@
+/* ========================
+    CONTAINERS
+======================== */
+
+/* Section layout */
+.section {
+  width: 100%;
+  margin-bottom: 6.4rem;
+}
+
+/* Main container layout */
+
+.main__container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.main__container.modal__open {
+  overflow: hidden;
+  height: 100vh;
+  pointer-events: none;
+}
+
+.container {
+  max-width: 37.5rem;
+  margin: 0 auto;
+  padding: 0 1.6rem;
+}
+
+@media screen and (min-width: 48rem) {
+  .section {
+    margin-bottom: 8rem;
+  }
+
+  .container {
+    max-width: 76.8rem;
+    padding: 0 3.2rem;
+  }
+}
+
+@media screen and (min-width: 90rem) {
+  .section {
+    margin-bottom: 12rem;
+  }
+
+  .container {
+    max-width: 144.4rem;
+    padding: 0 8rem;
+  }
+}
