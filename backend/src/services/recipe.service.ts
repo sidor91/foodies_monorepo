@@ -1,8 +1,10 @@
 import crypto from "node:crypto";
 import type { Prisma } from "@prisma/client";
-import { recipeRepository, type CreateRecipeData } from "../repositories/recipe.repository.js";
-
-type RecipeRepository = typeof recipeRepository;
+import {
+    recipeRepository,
+    TRecipeRepository,
+    type CreateRecipeData,
+} from "../repositories/recipe.repository.js";
 
 export interface RecipeFilters {
     category?: string;
@@ -31,7 +33,7 @@ export interface IRecipeService {
 }
 
 class RecipeService {
-    constructor(private readonly recipeRepository: RecipeRepository) {}
+    constructor(private readonly recipeRepository: TRecipeRepository) {}
 
     async search(filters: RecipeFilters, pagination: Pagination) {
         const where: Prisma.RecipeWhereInput = {

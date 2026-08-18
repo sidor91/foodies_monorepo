@@ -90,3 +90,5 @@ class RecipeRepository {
 }
 
 export const recipeRepository = new RecipeRepository(prisma);
+
+export type TRecipeRepository = typeof recipeRepository;
