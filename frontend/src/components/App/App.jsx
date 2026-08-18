@@ -1,19 +1,16 @@
 import { Route, Routes } from "react-router-dom";
 import { lazy, useState } from "react";
 
-import Header from "../Header/Header.jsx";
-import MobileMenu from "./MobileMenu/MobileMenu.jsx";
-import Loader from "./Loader/Loader.jsx";
-import Footer from "./Footer/Footer.jsx";
+import { Header, MobileMenu, Loader, Footer } from "../index.js";
 
 import css from "./App.module.css";
-
 
 // Тут вставляйте посилання на сторінки. Це приклад
 // const Home = lazy(() => import("../pages/Home/Home.jsx"));
 
 const App = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = userState(false);
 
   const handleMobileToggle = () => {
     setIsMobileOpen(!isMobileOpen);
