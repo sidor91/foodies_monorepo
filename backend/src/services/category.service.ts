@@ -2,7 +2,11 @@ import { categoryRepository } from "../repositories/category.repository.js";
 
 type CategoryRepository = typeof categoryRepository;
 
-class CategoryService {
+export interface ICategoryService {
+    getAll: CategoryRepository["findAllSorted"];
+}
+
+class CategoryService implements ICategoryService {
     constructor(private readonly categoryRepository: CategoryRepository) {}
 
     getAll() {
@@ -10,4 +14,4 @@ class CategoryService {
     }
 }
 
-export const categoryService = new CategoryService(categoryRepository);
+export const categoryService: ICategoryService = new CategoryService(categoryRepository);
