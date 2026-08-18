@@ -2,7 +2,11 @@ import { ingredientRepository } from "../repositories/ingredient.repository.js";
 
 type IngredientRepository = typeof ingredientRepository;
 
-class IngredientService {
+export interface IIngredientService {
+    getAll: IngredientRepository["findAllSorted"];
+}
+
+class IngredientService implements IIngredientService {
     constructor(private readonly ingredientRepository: IngredientRepository) {}
 
     getAll() {
@@ -10,4 +14,4 @@ class IngredientService {
     }
 }
 
-export const ingredientService = new IngredientService(ingredientRepository);
+export const ingredientService: IIngredientService = new IngredientService(ingredientRepository);

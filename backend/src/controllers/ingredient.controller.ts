@@ -1,12 +1,16 @@
 import type { Request, Response } from "express";
-import { ingredientService } from "../services/ingredient.service.js";
+import { ingredientService, type IIngredientService } from "../services/ingredient.service.js";
 
 class IngredientController {
+    constructor(private readonly ingredientService: IIngredientService) {
+        this.getAll = this.getAll.bind(this);
+    }
+
     // GET /ingredients — public list of ingredients.
-    getAll = async (req: Request, res: Response) => {
-        const ingredients = await ingredientService.getAll();
+    async getAll(req: Request, res: Response) {
+        const ingredients = await this.ingredientService.getAll();
         res.json(ingredients);
-    };
+    }
 }
 
-export const ingredientController = new IngredientController();
+export const ingredientController = new IngredientController(ingredientService);
