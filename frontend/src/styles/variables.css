@@ -1,0 +1,32 @@
+/* ========================
+   🎨 QUICK CUSTOMIZATION
+======================== */
+
+:root {
+  --color-primary: var(--dark-grey);
+  --color-secondary: var(--grey);
+  --color-accent: var(--black);
+
+  --color-bg: var(--white);
+  --color-text: var(--dark-grey);
+
+  --color-error: var(--red);
+
+  /* ===  COLOR NAMES === */
+
+  --black: #050505;
+  --dark-grey: #1a1a1a;
+  --grey: #bfbebe;
+  --white: #ffffff;
+
+  --red: #ae0000;
+
+  /* === CHANGE FONTS HERE === */
+
+  --font-main: "Mulish", sans-serif;
+
+  /* === CHANGE TRANSITION SPEED HERE === */
+
+  --transition-fast: 100ms ease-in-out;
+  --transition-slow: 250ms ease-in-out;
+}

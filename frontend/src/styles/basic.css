@@ -1,0 +1,87 @@
+/* ========================
+    BASIC STYLES
+======================== */
+
+body {
+  font-size: 1.6rem;
+  line-height: 115%;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+
+  background-color: var(--color-bg);
+
+  font-family: var(--font-main);
+  color: var(--color-text);
+}
+
+/* --------------------------------------- */
+
+.visually__hidden {
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+/* --------------------------------------- */
+/* Texts */
+/* --------------------------------------- */
+
+.section__title {
+  font-size: 4rem;
+  line-height: 110%;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+  color: var(--color-text);
+
+  font-family: var(--font-main);
+}
+
+/* --------------------------------------- */
+/* Texts */
+/* --------------------------------------- */
+
+.btn {
+  font-size: 1.6rem;
+  line-height: 150%;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  transition: all var(--transition-fast);
+}
+
+.btn:disabled {
+  background-color: var(--color-secondary);
+  color: var(--color-bg);
+  cursor: not-allowed;
+}
+
+.btn__primary {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+}
+
+.btn__secondary {
+  color: var(--color-text);
+  border: 1px solid var(--color-text );
+}
+
+/* --------------------------------------- */
+/* Tablet */
+/* --------------------------------------- */
+
+@media screen and (min-width: 48rem) {
+}
+
+/* --------------------------------------- */
+/* Desktop */
+/* --------------------------------------- */
