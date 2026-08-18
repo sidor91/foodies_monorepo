@@ -16,3 +16,5 @@ class TestimonialRepository {
 }
 
 export const testimonialRepository = new TestimonialRepository(prisma);
+
+export type TTestimonialRepository = typeof testimonialRepository;

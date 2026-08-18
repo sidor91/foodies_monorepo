@@ -1,13 +1,14 @@
-import { testimonialRepository } from "../repositories/testimonial.repository.js";
-
-type TestimonialRepository = typeof testimonialRepository;
+import {
+    testimonialRepository,
+    TTestimonialRepository,
+} from "../repositories/testimonial.repository.js";
 
 export interface ITestimonialService {
-    getAll: TestimonialRepository["findAllWithOwner"];
+    getAll: TTestimonialRepository["findAllWithOwner"];
 }
 
 class TestimonialService implements ITestimonialService {
-    constructor(private readonly testimonialRepository: TestimonialRepository) {}
+    constructor(private readonly testimonialRepository: TTestimonialRepository) {}
 
     getAll() {
         return this.testimonialRepository.findAllWithOwner();
