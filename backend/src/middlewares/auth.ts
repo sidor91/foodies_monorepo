@@ -3,10 +3,6 @@ import type { Request, Response, NextFunction } from "express";
 
 // Expects `/auth` to issue JWTs signed with JWT_SECRET containing { id: userId }.
 class AuthMiddleware {
-    constructor() {
-        this.authenticate = this.authenticate.bind(this);
-    }
-
     authenticate(req: Request, res: Response, next: NextFunction) {
         const authHeader = req.headers.authorization;
         const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
