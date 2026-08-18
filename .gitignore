@@ -5,3 +5,8 @@ build/
 docs/
 
 settings*
+
+# local editor/formatting config — not shared via git
+.vscode/
+.editorconfig
+.prettierrc
