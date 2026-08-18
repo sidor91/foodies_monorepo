@@ -82,13 +82,13 @@ make up
 
 Database connection settings are configured via environment variables (see `.env.example`):
 
-| Variable            | Description                                             |
-| -------------------- | -------------------------------------------------------- |
-| `POSTGRES_DB`         | Database name                                            |
-| `POSTGRES_USER`       | Database user                                            |
-| `POSTGRES_PASSWORD`   | Database password                                        |
-| `POSTGRES_PORT`       | Host port mapped to PostgreSQL (container port `5432`)   |
-| `DATABASE_URL`        | Prisma connection string used by the backend/db-init containers |
+| Variable            | Description                                                     |
+| ------------------- | --------------------------------------------------------------- |
+| `POSTGRES_DB`       | Database name                                                   |
+| `POSTGRES_USER`     | Database user                                                   |
+| `POSTGRES_PASSWORD` | Database password                                               |
+| `POSTGRES_PORT`     | Host port mapped to PostgreSQL (container port `5432`)          |
+| `DATABASE_URL`      | Prisma connection string used by the backend/db-init containers |
 
 ## API Documentation
 
@@ -98,26 +98,26 @@ All routes are prefixed with `/api`. Endpoints marked **Auth** require a valid J
 
 ### Public endpoints
 
-| Method | Endpoint          | Description                    |
-| ------ | ----------------- | ------------------------------- |
-| GET    | `/health`          | Health check                    |
+| Method | Endpoint           | Description                                 |
+| ------ | ------------------ | ------------------------------------------- |
+| GET    | `/health`          | Health check                                |
 | GET    | `/recipes`         | Search/list recipes (paginated, filterable) |
-| GET    | `/recipes/popular` | Most favorited recipes          |
-| GET    | `/recipes/:id`     | Recipe details by id            |
-| GET    | `/categories`      | List all categories             |
-| GET    | `/areas`           | List all areas                  |
-| GET    | `/ingredients`     | List all ingredients            |
-| GET    | `/testimonials`    | List all testimonials           |
+| GET    | `/recipes/popular` | Most favorited recipes                      |
+| GET    | `/recipes/:id`     | Recipe details by id                        |
+| GET    | `/categories`      | List all categories                         |
+| GET    | `/areas`           | List all areas                              |
+| GET    | `/ingredients`     | List all ingredients                        |
+| GET    | `/testimonials`    | List all testimonials                       |
 
 ### Authenticated endpoints (Auth)
 
-| Method | Endpoint                | Description                          |
-| ------ | ------------------------ | ------------------------------------- |
-| GET    | `/recipes/own`           | Recipes created by the current user  |
-| GET    | `/recipes/favorites`     | Recipes favorited by the current user |
-| POST   | `/recipes`                | Create a recipe                      |
-| DELETE | `/recipes/:id`            | Delete own recipe                    |
-| POST   | `/recipes/:id/favorite`   | Add a recipe to favorites            |
-| DELETE | `/recipes/:id/favorite`   | Remove a recipe from favorites       |
+| Method | Endpoint                | Description                           |
+| ------ | ----------------------- | ------------------------------------- |
+| GET    | `/recipes/own`          | Recipes created by the current user   |
+| GET    | `/recipes/favorites`    | Recipes favorited by the current user |
+| POST   | `/recipes`              | Create a recipe                       |
+| DELETE | `/recipes/:id`          | Delete own recipe                     |
+| POST   | `/recipes/:id/favorite` | Add a recipe to favorites             |
+| DELETE | `/recipes/:id/favorite` | Remove a recipe from favorites        |
 
 > Note: user registration/login/JWT-issuing endpoints are not yet implemented — `authMiddleware` currently expects a token issued elsewhere.

@@ -17,15 +17,9 @@ const App = () => {
   };
   return (
     <div className={`main__container ${isMobileOpen && "modal__open"}`}>
-      <Header
-        isMobileMenuOpen={isMobileOpen}
-        onMobileToggle={handleMobileToggle}
-      />
+      <Header isMobileMenuOpen={isMobileOpen} onMobileToggle={handleMobileToggle} />
 
-      <MobileMenu
-        isMobileMenuOpen={isMobileOpen}
-        onMobileToggle={handleMobileToggle}
-      />
+      <MobileMenu isMobileMenuOpen={isMobileOpen} onMobileToggle={handleMobileToggle} />
 
       <main className={css.content} inert={isMobileMenuOpen ? "" : undefined}>
         <Suspense fallback={<Loader />}>
