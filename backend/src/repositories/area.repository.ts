@@ -10,3 +10,5 @@ class AreaRepository {
 }
 
 export const areaRepository = new AreaRepository(prisma);
+
+export type TAreaRepository = typeof areaRepository;

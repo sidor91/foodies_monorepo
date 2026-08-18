@@ -1,13 +1,11 @@
-import { areaRepository } from "../repositories/area.repository.js";
-
-type AreaRepository = typeof areaRepository;
+import { areaRepository, TAreaRepository } from "../repositories/area.repository.js";
 
 export interface IAreaService {
-    getAll: AreaRepository["findAllSorted"];
+    getAll: TAreaRepository["findAllSorted"];
 }
 
 class AreaService implements IAreaService {
-    constructor(private readonly areaRepository: AreaRepository) {}
+    constructor(private readonly areaRepository: TAreaRepository) {}
 
     getAll() {
         return this.areaRepository.findAllSorted();
