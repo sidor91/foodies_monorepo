@@ -2,7 +2,11 @@ import { testimonialRepository } from "../repositories/testimonial.repository.js
 
 type TestimonialRepository = typeof testimonialRepository;
 
-class TestimonialService {
+export interface ITestimonialService {
+    getAll: TestimonialRepository["findAllWithOwner"];
+}
+
+class TestimonialService implements ITestimonialService {
     constructor(private readonly testimonialRepository: TestimonialRepository) {}
 
     getAll() {
@@ -10,4 +14,6 @@ class TestimonialService {
     }
 }
 
-export const testimonialService = new TestimonialService(testimonialRepository);
+export const testimonialService: ITestimonialService = new TestimonialService(
+    testimonialRepository,
+);
