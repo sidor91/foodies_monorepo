@@ -40,6 +40,7 @@ model User {
   avatar       String?
   recipes      Recipe[]
   testimonials Testimonial[]
+  favorites    Favorite[]
 
   @@map("users")
 }
@@ -63,6 +64,7 @@ model Recipe {
   owner   User   @relation(fields: [ownerId], references: [id])
 
   ingredients RecipeIngredient[]
+  favoritedBy Favorite[]
 
   @@map("recipes")
 }
@@ -78,6 +80,19 @@ model RecipeIngredient {
 
   @@id([recipeId, ingredientId])
   @@map("recipe_ingredients")
+}
+
+model Favorite {
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  recipeId String
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@id([userId, recipeId])
+  @@map("favorites")
 }
 
 model Testimonial {
