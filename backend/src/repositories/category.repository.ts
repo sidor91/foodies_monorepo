@@ -1,10 +1,10 @@
-import type { PrismaClient } from "@prisma/client";
+import type { Category, PrismaClient } from "@prisma/client";
 import { prisma } from "../db/prisma.js";
 
 class CategoryRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  findAllSorted() {
+  findAllSorted(): Promise<Category[]> {
     return this.prisma.category.findMany({ orderBy: { name: "asc" } });
   }
 }

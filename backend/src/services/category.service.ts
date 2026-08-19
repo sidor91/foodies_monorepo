@@ -1,5 +1,4 @@
 import { categoryRepository, TCategoryRepository } from "../repositories/category.repository.js";
-
 export interface ICategoryService {
   getAll: TCategoryRepository["findAllSorted"];
 }

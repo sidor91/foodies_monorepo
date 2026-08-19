@@ -7,6 +7,7 @@ import {
   ingredientsRouter,
   testimonialsRouter,
 } from "./routes/references.routes.js";
+import { AppError } from "./utils/AppError.js";
 
 const app = express();
 
@@ -23,8 +24,14 @@ app.use("/api/areas", areasRouter);
 app.use("/api/ingredients", ingredientsRouter);
 app.use("/api/testimonials", testimonialsRouter);
 
-app.use((err: unknown, _: express.Request, res: express.Response) => {
+app.use((err: unknown, req: express.Request, res: express.Response) => {
   console.error(err);
+
+  if (err instanceof AppError) {
+    res.status(err.statusCode).json({ message: err.message });
+    return;
+  }
+
   res.status(500).json({ message: "Internal server error" });
 });
 

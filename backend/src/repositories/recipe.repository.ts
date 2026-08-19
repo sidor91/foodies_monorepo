@@ -1,4 +1,4 @@
-import type { PrismaClient, Prisma } from "@prisma/client";
+import type { PrismaClient, Prisma, Recipe } from "@prisma/client";
 import { prisma } from "../db/prisma.js";
 
 export const recipeListSelect = {
@@ -10,6 +10,32 @@ export const recipeListSelect = {
   category: { select: { id: true, name: true } },
   area: { select: { id: true, name: true } },
 } satisfies Prisma.RecipeSelect;
+
+export type RecipeListItem = Prisma.RecipeGetPayload<{ select: typeof recipeListSelect }>;
+
+const recipePopularSelect = {
+  ...recipeListSelect,
+  _count: { select: { favoritedBy: true } },
+} satisfies Prisma.RecipeSelect;
+
+export type RecipePopularItem = Prisma.RecipeGetPayload<{ select: typeof recipePopularSelect }>;
+
+const recipeDetailInclude = {
+  category: true,
+  area: true,
+  owner: { select: { id: true, name: true, avatar: true } },
+  ingredients: { include: { ingredient: true } },
+} satisfies Prisma.RecipeInclude;
+
+export type RecipeDetail = Prisma.RecipeGetPayload<{ include: typeof recipeDetailInclude }>;
+
+const recipeCreateInclude = {
+  ingredients: true,
+} satisfies Prisma.RecipeInclude;
+
+export type RecipeWithIngredients = Prisma.RecipeGetPayload<{
+  include: typeof recipeCreateInclude;
+}>;
 
 export interface CreateRecipeData {
   id: string;
@@ -28,39 +54,31 @@ export interface CreateRecipeData {
 class RecipeRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  findMany(where: Prisma.RecipeWhereInput, skip: number, take: number) {
+  findMany(where: Prisma.RecipeWhereInput, skip: number, take: number): Promise<RecipeListItem[]> {
     return this.prisma.recipe.findMany({ where, select: recipeListSelect, skip, take });
   }
 
-  count(where: Prisma.RecipeWhereInput) {
+  count(where: Prisma.RecipeWhereInput): Promise<number> {
     return this.prisma.recipe.count({ where });
   }
 
-  findPopular(limit: number) {
+  findPopular(limit: number): Promise<RecipePopularItem[]> {
     return this.prisma.recipe.findMany({
-      select: { ...recipeListSelect, _count: { select: { favoritedBy: true } } },
+      select: recipePopularSelect,
       orderBy: { favoritedBy: { _count: "desc" } },
       take: limit,
     });
   }
 
-  findDetailById(id: string) {
-    return this.prisma.recipe.findUnique({
-      where: { id },
-      include: {
-        category: true,
-        area: true,
-        owner: { select: { id: true, name: true, avatar: true } },
-        ingredients: { include: { ingredient: true } },
-      },
-    });
+  findDetailById(id: string): Promise<RecipeDetail | null> {
+    return this.prisma.recipe.findUnique({ where: { id }, include: recipeDetailInclude });
   }
 
-  findById(id: string) {
+  findById(id: string): Promise<Recipe | null> {
     return this.prisma.recipe.findUnique({ where: { id } });
   }
 
-  create(data: CreateRecipeData) {
+  create(data: CreateRecipeData): Promise<RecipeWithIngredients> {
     return this.prisma.recipe.create({
       data: {
         id: data.id,
@@ -80,11 +98,11 @@ class RecipeRepository {
           })),
         },
       },
-      include: { ingredients: true },
+      include: recipeCreateInclude,
     });
   }
 
-  deleteById(id: string) {
+  deleteById(id: string): Promise<Recipe> {
     return this.prisma.recipe.delete({ where: { id } });
   }
 }

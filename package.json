@@ -7,8 +7,12 @@
     "lint": "npm run lint --prefix backend && npm run lint --prefix frontend",
     "prepare": "husky"
   },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,css,md}": "prettier --write"
+  },
   "devDependencies": {
     "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
     "prettier": "^3.3.3"
   }
 }
