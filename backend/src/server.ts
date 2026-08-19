@@ -24,7 +24,7 @@ app.use("/api/areas", areasRouter);
 app.use("/api/ingredients", ingredientsRouter);
 app.use("/api/testimonials", testimonialsRouter);
 
-app.use((err: unknown, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err: unknown, req: express.Request, res: express.Response) => {
     console.error(err);
 
     if (err instanceof AppError) {
