@@ -1,5 +1,5 @@
-const MobileMenu = ({}) => {
+const MobileMenu = () => {
   return;
-}
+};
 
 export default MobileMenu;
