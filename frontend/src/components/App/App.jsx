@@ -12,7 +12,7 @@ const App = () => {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   const handleMobileToggle = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+    setIsMobileMenuOpen((prev) => !prev);
   };
   return (
     <div className={`main__container ${isMobileMenuOpen && "modal__open"}`}>

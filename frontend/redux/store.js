@@ -6,7 +6,7 @@ import favoritesReducer from "./favorites/favoritesSlice";
 export const store = configureStore({
   reducer: {
     filters: filtersReducer,
-    recipes: recipesReducer,
+    // recipes: recipesReducer,
     favorites: favoritesReducer,
   },
 });

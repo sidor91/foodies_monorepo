@@ -1,15 +1,18 @@
-import { ingredientRepository, TIngredientRepository } from "../repositories/ingredient.repository.js";
+import {
+  ingredientRepository,
+  TIngredientRepository,
+} from "../repositories/ingredient.repository.js";
 
 export interface IIngredientService {
-    getAll: TIngredientRepository["findAllSorted"];
+  getAll: TIngredientRepository["findAllSorted"];
 }
 
 class IngredientService implements IIngredientService {
-    constructor(private readonly ingredientRepository: TIngredientRepository) {}
+  constructor(private readonly ingredientRepository: TIngredientRepository) {}
 
-    getAll() {
-        return this.ingredientRepository.findAllSorted();
-    }
+  getAll() {
+    return this.ingredientRepository.findAllSorted();
+  }
 }
 
 export const ingredientService: IIngredientService = new IngredientService(ingredientRepository);
