@@ -32,7 +32,7 @@ app.use((_, res) => {
   res.status(404).json({ message: "Not found" });
 });
 
-app.use((err: unknown, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err: unknown, req: express.Request, res: express.Response) => {
   console.error(err);
 
   if (err instanceof AppError) {
