@@ -14,6 +14,10 @@ const app = express();
 app.use(cors({ origin: process.env.FRONTEND_URL }));
 app.use(express.json());
 
+app.get("/", (_, res) => {
+  res.json({ message: "Foodies API" });
+});
+
 app.get("/api/health", (_, res) => {
   res.json({ status: "ok" });
 });
@@ -23,6 +27,10 @@ app.use("/api/categories", categoriesRouter);
 app.use("/api/areas", areasRouter);
 app.use("/api/ingredients", ingredientsRouter);
 app.use("/api/testimonials", testimonialsRouter);
+
+app.use((_, res) => {
+  res.status(404).json({ message: "Not found" });
+});
 
 app.use((err: unknown, req: express.Request, res: express.Response) => {
   console.error(err);
