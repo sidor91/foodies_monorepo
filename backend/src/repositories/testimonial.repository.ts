@@ -1,18 +1,22 @@
-import type { PrismaClient } from "@prisma/client";
+import type { Prisma, PrismaClient } from "@prisma/client";
 import { prisma } from "../db/prisma.js";
 
-class TestimonialRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+const testimonialWithOwnerSelect = {
+	id: true,
+	testimonial: true,
+	owner: { select: { id: true, name: true, avatar: true } },
+} satisfies Prisma.TestimonialSelect;
 
-  findAllWithOwner() {
-    return this.prisma.testimonial.findMany({
-      select: {
-        id: true,
-        testimonial: true,
-        owner: { select: { id: true, name: true, avatar: true } },
-      },
-    });
-  }
+export type TestimonialWithOwner = Prisma.TestimonialGetPayload<{
+	select: typeof testimonialWithOwnerSelect;
+}>;
+
+class TestimonialRepository {
+	constructor(private readonly prisma: PrismaClient) {}
+
+	findAllWithOwner(): Promise<TestimonialWithOwner[]> {
+		return this.prisma.testimonial.findMany({ select: testimonialWithOwnerSelect });
+	}
 }
 
 export const testimonialRepository = new TestimonialRepository(prisma);

@@ -1,20 +1,20 @@
-import type { PrismaClient } from "@prisma/client";
+import type { Favorite, Prisma, PrismaClient } from "@prisma/client";
 import { prisma } from "../db/prisma.js";
 
 class FavoriteRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+	constructor(private readonly prisma: PrismaClient) {}
 
-  upsert(userId: string, recipeId: string) {
-    return this.prisma.favorite.upsert({
-      where: { userId_recipeId: { userId, recipeId } },
-      create: { userId, recipeId },
-      update: {},
-    });
-  }
+	upsert(userId: string, recipeId: string): Promise<Favorite> {
+		return this.prisma.favorite.upsert({
+			where: { userId_recipeId: { userId, recipeId } },
+			create: { userId, recipeId },
+			update: {},
+		});
+	}
 
-  remove(userId: string, recipeId: string) {
-    return this.prisma.favorite.deleteMany({ where: { userId, recipeId } });
-  }
+	remove(userId: string, recipeId: string): Promise<Prisma.BatchPayload> {
+		return this.prisma.favorite.deleteMany({ where: { userId, recipeId } });
+	}
 }
 
 export const favoriteRepository = new FavoriteRepository(prisma);
