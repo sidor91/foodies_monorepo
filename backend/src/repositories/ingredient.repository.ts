@@ -1,10 +1,10 @@
-import type { PrismaClient } from "@prisma/client";
+import type { Ingredient, PrismaClient } from "@prisma/client";
 import { prisma } from "../db/prisma.js";
 
 class IngredientRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  findAllSorted() {
+  findAllSorted(): Promise<Ingredient[]> {
     return this.prisma.ingredient.findMany({ orderBy: { name: "asc" } });
   }
 }
