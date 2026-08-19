@@ -6,9 +6,9 @@ export interface ICategoryService {
 class CategoryService implements ICategoryService {
   constructor(private readonly categoryRepository: TCategoryRepository) {}
 
-    getAll() {
-      return this.categoryRepository.findAllSorted();
-    }
+  getAll() {
+    return this.categoryRepository.findAllSorted();
+  }
 }
 
 export const categoryService: ICategoryService = new CategoryService(categoryRepository);
