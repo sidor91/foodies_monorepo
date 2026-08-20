@@ -30,6 +30,10 @@
   padding: 0 1.6rem;
 }
 
+/* --------------------------------------- */
+/* Tablet */
+/* --------------------------------------- */
+
 @media screen and (min-width: var(--tablet)) {
   .section {
     margin-bottom: 8rem;
@@ -40,6 +44,10 @@
     padding: 0 3.2rem;
   }
 }
+
+/* --------------------------------------- */
+/* Desktop */
+/* --------------------------------------- */
 
 @media screen and (min-width: var(--desktop)) {
   .section {

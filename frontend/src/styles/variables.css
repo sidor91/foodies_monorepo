@@ -12,6 +12,8 @@
 
   --color-error: var(--red);
 
+  --color-border-transparent: rgb(255, 255, 255, 0.2);
+
   /* ===  COLOR NAMES === */
 
   --black: #050505;
@@ -29,7 +31,4 @@
 
   --transition-fast: 100ms ease-in-out;
   --transition-slow: 250ms ease-in-out;
-
-  --tablet: 48rem;
-  --desktop: 90rem;
 }
