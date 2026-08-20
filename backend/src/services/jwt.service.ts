@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { parseExpiresInMs } from "../utils/expiresIn.js";
 
 export type TokenType = "access" | "refresh";
 
@@ -20,6 +21,7 @@ export interface TokenPayload {
 export interface IJwtService {
   sign(payload: TokenPayload, type: TokenType): string;
   verify(token: string, type: TokenType): TokenPayload;
+  getExpiresInMs(type: TokenType): number;
 }
 
 class JwtService implements IJwtService {
@@ -33,6 +35,10 @@ class JwtService implements IJwtService {
   verify(token: string, type: TokenType): TokenPayload {
     const { secret } = tokenConfig[type];
     return jwt.verify(token, secret as string) as TokenPayload;
+  }
+
+  getExpiresInMs(type: TokenType): number {
+    return parseExpiresInMs(tokenConfig[type].expiresIn);
   }
 }
 

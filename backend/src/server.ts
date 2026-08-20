@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import usersRouter from "./routes/users.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import recipesRouter from "./routes/recipes.routes.js";
@@ -14,8 +15,9 @@ import { prisma } from "./db/prisma.js";
 
 const app = express();
 
-app.use(cors({ origin: process.env.FRONTEND_URL }));
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use(express.json());
+app.use(cookieParser());
 app.get("/", (_, res) => {
   res.json({ message: "Foodies API" });
 });
