@@ -23,7 +23,7 @@ class AuthController implements IAuthController {
     };
     const { accessToken, refreshToken, user } = await this.authService.register(input);
     this.setAuthCookies(res, accessToken, refreshToken);
-    res.status(201).json({ user });
+    res.status(201).json(user);
   }
 
   async login(req: Request, res: Response): Promise<void> {
@@ -32,7 +32,7 @@ class AuthController implements IAuthController {
       req.body.password,
     );
     this.setAuthCookies(res, accessToken, refreshToken);
-    res.json({ user });
+    res.json(user);
   }
 
   async refresh(req: Request, res: Response): Promise<void> {
@@ -40,7 +40,7 @@ class AuthController implements IAuthController {
       req.cookies?.refreshToken,
     );
     this.setAuthCookies(res, accessToken, refreshToken);
-    res.json({ user });
+    res.json(user);
   }
 
   async logout(req: Request, res: Response): Promise<void> {

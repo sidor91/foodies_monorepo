@@ -13,13 +13,18 @@ export type FollowAction = "follow" | "unfollow";
 
 export type UserProfileResponse = Omit<UserProfile, "_count"> & {
   recipesCount: number;
-  favoritesCount: number;
   followersCount: number;
+  favoritesCount?: number;
   followingCount?: number;
 };
 
+export type UserConnectionItem = Omit<UserListItem, "_count"> & {
+  recipesCount: number;
+  followersCount: number;
+};
+
 export interface UserConnectionsResponse {
-  items: UserListItem[];
+  items: UserConnectionItem[];
   page: number;
   limit: number;
   total: number;
@@ -28,7 +33,7 @@ export interface UserConnectionsResponse {
 
 export interface IUserService {
   exists(userId: string): Promise<boolean>;
-  getProfile(userId: string, includeFollowingCount?: boolean): Promise<UserProfileResponse | null>;
+  getProfile(userId: string, isOwnProfile?: boolean): Promise<UserProfileResponse | null>;
   getFollowers(userId: string, pagination: Pagination): Promise<UserConnectionsResponse>;
   getFollowing(userId: string, pagination: Pagination): Promise<UserConnectionsResponse>;
   updateAvatar(userId: string, file: Express.Multer.File): Promise<User>;
@@ -49,10 +54,7 @@ class UserService implements IUserService {
     return this.userRepository.exists(userId);
   }
 
-  async getProfile(
-    userId: string,
-    includeFollowingCount = true,
-  ): Promise<UserProfileResponse | null> {
+  async getProfile(userId: string, isOwnProfile = true): Promise<UserProfileResponse | null> {
     const profile = await this.userRepository.findProfileById(userId);
     if (!profile) {
       return null;
@@ -62,9 +64,8 @@ class UserService implements IUserService {
     return {
       ...user,
       recipesCount: _count.recipes,
-      favoritesCount: _count.favorites,
       followersCount: _count.followers,
-      ...(includeFollowingCount && { followingCount: _count.following }),
+      ...(isOwnProfile && { favoritesCount: _count.favorites, followingCount: _count.following }),
     };
   }
 
@@ -136,7 +137,7 @@ class UserService implements IUserService {
     direction: "followers" | "following",
   ): Promise<UserConnectionsResponse> {
     const skip = (page - 1) * limit;
-    const [items, total] = await Promise.all([
+    const [rawItems, total] = await Promise.all([
       direction === "followers"
         ? this.userRepository.findFollowers(userId, skip, limit)
         : this.userRepository.findFollowing(userId, skip, limit),
@@ -144,6 +145,12 @@ class UserService implements IUserService {
         ? this.userRepository.countFollowers(userId)
         : this.userRepository.countFollowing(userId),
     ]);
+
+    const items = rawItems.map(({ _count, ...user }) => ({
+      ...user,
+      recipesCount: _count.recipes,
+      followersCount: _count.followers,
+    }));
 
     return { items, page, limit, total, totalPages: Math.ceil(total / limit) };
   }

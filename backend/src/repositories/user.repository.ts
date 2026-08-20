@@ -23,6 +23,12 @@ const userListSelect = {
   name: true,
   email: true,
   avatarUrl: true,
+  _count: {
+    select: {
+      recipes: true,
+      followers: true,
+    },
+  },
 } satisfies Prisma.UserSelect;
 
 export type UserListItem = Prisma.UserGetPayload<{ select: typeof userListSelect }>;
