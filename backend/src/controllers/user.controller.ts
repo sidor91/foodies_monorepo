@@ -43,7 +43,7 @@ class UserController implements IUserController {
 
   async getFollowers(req: Request, res: Response) {
     const userId = req.params.id as string;
-    if (!(await this.userService.getProfile(userId, false))) {
+    if (!(await this.userService.exists(userId))) {
       res.status(404).json({ message: "User not found" });
       return;
     }

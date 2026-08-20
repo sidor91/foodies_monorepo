@@ -8,7 +8,7 @@ import type { User } from "@prisma/client";
 import type { UserListItem, UserProfile } from "../repositories/user.repository.js";
 import type { Pagination } from "./recipe.service.js";
 
-export type UserFollowResult = "not_found" | "self" | "followed";
+export type UserFollowResult = "not_found" | "self" | "ok";
 export type FollowAction = "follow" | "unfollow";
 
 export type UserProfileResponse = Omit<UserProfile, "_count"> & {
@@ -27,6 +27,7 @@ export interface UserConnectionsResponse {
 }
 
 export interface IUserService {
+  exists(userId: string): Promise<boolean>;
   getProfile(userId: string, includeFollowingCount?: boolean): Promise<UserProfileResponse | null>;
   getFollowers(userId: string, pagination: Pagination): Promise<UserConnectionsResponse>;
   getFollowing(userId: string, pagination: Pagination): Promise<UserConnectionsResponse>;
@@ -43,6 +44,10 @@ class UserService implements IUserService {
     private readonly userRepository: IUserRepository,
     private readonly cloudinaryService: ICloudinaryService,
   ) {}
+
+  async exists(userId: string): Promise<boolean> {
+    return this.userRepository.exists(userId);
+  }
 
   async getProfile(
     userId: string,
@@ -122,7 +127,7 @@ class UserService implements IUserService {
       await this.userRepository.unfollow(followerId, followingId);
     }
 
-    return "followed";
+    return "ok";
   }
 
   private async getConnections(
