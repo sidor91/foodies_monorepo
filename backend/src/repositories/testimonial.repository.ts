@@ -4,7 +4,7 @@ import { prisma } from "../db/prisma.js";
 const testimonialWithOwnerSelect = {
   id: true,
   testimonial: true,
-  owner: { select: { id: true, name: true, avatar: true } },
+  owner: { select: { id: true, name: true, avatarUrl: true } },
 } satisfies Prisma.TestimonialSelect;
 
 export type TestimonialWithOwner = Prisma.TestimonialGetPayload<{
