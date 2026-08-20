@@ -37,12 +37,31 @@ model User {
   id           String        @id
   name         String
   email        String        @unique
-  avatar       String?
+  passwordHash String
+  refreshTokenHash String?
+  avatarUrl    String?
+  avatarPublicId String?
   recipes      Recipe[]
   testimonials Testimonial[]
   favorites    Favorite[]
+  following    Follow[]      @relation("UserFollowing")
+  followers    Follow[]      @relation("UserFollowers")
 
   @@map("users")
+}
+
+model Follow {
+  followerId  String
+  follower    User   @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+
+  followingId String
+  following   User   @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@id([followerId, followingId])
+  @@index([followingId])
+  @@map("follows")
 }
 
 model Recipe {
