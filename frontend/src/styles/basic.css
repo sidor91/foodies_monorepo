@@ -79,9 +79,12 @@ body {
 /* Tablet */
 /* --------------------------------------- */
 
-@media screen and (min-width: 48rem) {
+@media screen and (min-width: var(--tablet)) {
 }
 
 /* --------------------------------------- */
 /* Desktop */
 /* --------------------------------------- */
+
+@media screen and (min-width: var(--desktop)) {
+}

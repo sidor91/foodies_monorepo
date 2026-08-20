@@ -30,7 +30,7 @@
   padding: 0 1.6rem;
 }
 
-@media screen and (min-width: 48rem) {
+@media screen and (min-width: var(--tablet)) {
   .section {
     margin-bottom: 8rem;
   }
@@ -41,7 +41,7 @@
   }
 }
 
-@media screen and (min-width: 90rem) {
+@media screen and (min-width: var(--desktop)) {
   .section {
     margin-bottom: 12rem;
   }
