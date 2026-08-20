@@ -42,19 +42,23 @@ class CloudinaryService implements ICloudinaryService {
 
   deleteImage(publicId: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      cloudinary.uploader.destroy(publicId, { resource_type: "image" }, (error, result) => {
-        if (error) {
-          reject(error);
-          return;
-        }
+      cloudinary.uploader.destroy(
+        publicId,
+        { resource_type: "image", invalidate: true },
+        (error, result) => {
+          if (error) {
+            reject(error);
+            return;
+          }
 
-        if (result.result !== "ok" && result.result !== "not found") {
-          reject(new Error(`Cloudinary deletion failed: ${result.result}`));
-          return;
-        }
+          if (result.result !== "ok" && result.result !== "not found") {
+            reject(new Error(`Cloudinary deletion failed: ${result.result}`));
+            return;
+          }
 
-        resolve();
-      });
+          resolve();
+        },
+      );
     });
   }
 }
