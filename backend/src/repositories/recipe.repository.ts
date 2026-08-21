@@ -23,7 +23,7 @@ export type RecipePopularItem = Prisma.RecipeGetPayload<{ select: typeof recipeP
 const recipeDetailInclude = {
   category: true,
   area: true,
-  owner: { select: { id: true, name: true, avatar: true } },
+  owner: { select: { id: true, name: true, avatarUrl: true } },
   ingredients: { include: { ingredient: true } },
 } satisfies Prisma.RecipeInclude;
 

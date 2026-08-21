@@ -3,6 +3,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse } from "csv-parse/sync";
 import { PrismaClient } from "@prisma/client";
+import { cryptoService } from "../src/services/crypto.service.js";
+
+const SEED_USER_PASSWORD = "password123";
+const seedPasswordHash = await cryptoService.hash(SEED_USER_PASSWORD);
 
 const prisma = new PrismaClient();
 
@@ -65,7 +69,8 @@ async function main() {
       id: u.id,
       name: u.name,
       email: u.email,
-      avatar: toNullable(u.avatar),
+      avatarUrl: toNullable(u.avatar),
+      passwordHash: seedPasswordHash,
     })),
     skipDuplicates: true,
   });
