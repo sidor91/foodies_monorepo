@@ -9,13 +9,25 @@ const UserNav = ({ user, onAuthToggle }) => {
   };
   return (
     <div className="bg-primary rounded-[3rem] flex items-center relative">
-      <div className="bg-secondary w-[3.2rem] h-[3.2rem] rounded-[3rem] tablet:w-20 tablet:h-20 "></div>
+      {user?.avatarUrl ? (
+        <img
+          src={user.avatarUrl}
+          alt={user.name}
+          className="w-[3.2rem] h-[3.2rem] rounded-[3rem] object-cover tablet:w-20 tablet:h-20"
+        />
+      ) : (
+        <div className="bg-secondary w-[3.2rem] h-[3.2rem] rounded-[3rem] flex items-center justify-center tablet:w-20 tablet:h-20">
+          {user?.name && (
+            <span className="text-bg uppercase text-[2.4rem] font-bold">{user.name.charAt(0)}</span>
+          )}
+        </div>
+      )}
       <button
         type="button"
         onClick={handleExtraToggle}
         className="flex pl-[0.6rem] pr-[0.6rem] pt-[0.7rem] pb-[0.7rem] gap-[0.4rem] tablet:pr-[1.4rem]"
       >
-        <p className="text-bg uppercase text-[1.2rem] font-bold">{user.userName}</p>
+        <p className="text-bg uppercase text-[1.2rem] font-bold">{user?.name || "username"}</p>
         {!isExtra ? (
           <svg className="stroke-bg fill-none w-[1.8rem] h-[1.8rem]">
             <use href="/icons.svg#icon-arrow-down" />
@@ -36,10 +48,13 @@ const UserNav = ({ user, onAuthToggle }) => {
           >
             Profile
           </NavLink>
-          <NavLink
-            to="/logout"
+          <button
+            type="button"
             className="flex content-center"
-            onClick={`${handleExtraToggle} ${onAuthToggle}`}
+            onClick={() => {
+              handleExtraToggle();
+              onAuthToggle();
+            }}
           >
             <p className="uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold">
               Log out
@@ -47,7 +62,7 @@ const UserNav = ({ user, onAuthToggle }) => {
             <svg className="fill-none stroke-bg w-[1.8rem] h-[1.8rem]">
               <use href="/icons.svg#icon-arrow-up-right" />
             </svg>
-          </NavLink>
+          </button>
         </div>
       )}
     </div>

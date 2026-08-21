@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useId, useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { registerUser } from "../../api/auth";
@@ -17,19 +17,37 @@ const FeedbackSchema = Yup.object().shape({
   password: Yup.string().required(),
 });
 
-const RegisterForm = ({ isRegister, onRegister, onLogin }) => {
+const RegisterForm = ({ isRegister, onRegister, onLogin, onAuthSuccess }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const nameFieldId = useId();
   const emailFieldId = useId();
   const passwordFieldId = useId();
 
+  useEffect(() => {
+    if (!isRegister) {
+      return;
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        onRegister();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isRegister, onRegister]);
+
   const handleSubmit = async (values, actions) => {
     try {
-      await registerUser(values);
+      const user = await registerUser(values);
 
       actions.resetForm();
-      onRegister();
+      onAuthSuccess(user);
     } catch (error) {
       throw new Error(`${error.message}`);
     } finally {

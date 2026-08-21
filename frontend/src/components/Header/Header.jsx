@@ -18,6 +18,8 @@ const Header = ({
   onRegister,
   isAuthenticated,
   user,
+  isAuthLoading,
+  onLogout,
 }) => {
   return (
     <header className={css.header__section}>
@@ -38,13 +40,18 @@ const Header = ({
           </NavLink>
         </nav>
 
-        {!isAuthenticated && (
-          <SignInUpButton isLogin={isLogin} isRegister={isRegister} onLogin={onLogin} onRegister={onRegister} />
+        {!isAuthLoading && !isAuthenticated && (
+          <SignInUpButton
+            isLogin={isLogin}
+            isRegister={isRegister}
+            onLogin={onLogin}
+            onRegister={onRegister}
+          />
         )}
 
-        {isAuthenticated && (
+        {(isAuthLoading || isAuthenticated) && (
           <div className="flex items-center justify-between gap-[0.4rem]">
-            <UserNav user={user} />
+            <UserNav user={user} onAuthToggle={onLogout}/>
             <button
               className={css.modal__button}
               type="button"
