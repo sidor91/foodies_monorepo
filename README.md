@@ -26,7 +26,7 @@ Foodies — a full-stack recipe application (React frontend + Express/Prisma bac
 3. The app will be available at:
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:4000/api
-   - Swagger API docs: http://localhost:4000/api/docs _(planned — not yet implemented)_
+   - Swagger API docs: http://localhost:4000/api/docs
 
 Other useful commands:
 
@@ -92,9 +92,13 @@ Database connection settings are configured via environment variables (see `.env
 
 ## API Documentation
 
-Interactive Swagger/OpenAPI documentation for the backend REST API is planned but not yet implemented. Once added, it will be served at `/api/docs` and generated from route/controller annotations (e.g. via `swagger-jsdoc` + `swagger-ui-express`).
+Interactive Swagger/OpenAPI documentation for the backend REST API is available at `/api/docs`.
 
-All routes are prefixed with `/api`. Endpoints marked **Auth** require a valid JWT (`authMiddleware.authenticate`).
+The raw OpenAPI specification is available at `/api/docs.json`.
+
+The documentation is generated with `swagger-jsdoc` and served with `swagger-ui-express`. It includes request and response schemas, pagination and path parameters, error responses, and authentication schemes.
+
+All routes are prefixed with `/api`. Private endpoints accept the access token either from the HTTP-only `accessToken` cookie or as a Bearer JWT.
 
 ### Public endpoints
 
@@ -109,10 +113,26 @@ All routes are prefixed with `/api`. Endpoints marked **Auth** require a valid J
 | GET    | `/ingredients`     | List all ingredients                        |
 | GET    | `/testimonials`    | List all testimonials                       |
 
+### Authentication endpoints
+
+| Method | Endpoint         | Description                    |
+| ------ | ---------------- | ------------------------------ |
+| POST   | `/auth/register` | Register a new user            |
+| POST   | `/auth/login`    | Log in and issue auth tokens   |
+| POST   | `/auth/refresh`  | Refresh authentication tokens  |
+| POST   | `/auth/logout`   | Log out the authenticated user |
+
 ### Authenticated endpoints (Auth)
 
 | Method | Endpoint                | Description                           |
 | ------ | ----------------------- | ------------------------------------- |
+| GET    | `/users/me`             | Get current user profile              |
+| PATCH  | `/users/me/avatar`      | Update current user avatar            |
+| GET    | `/users/following`      | Get users followed by current user    |
+| GET    | `/users/:id/followers`  | Get followers of a user               |
+| POST   | `/users/:id/follow`     | Follow a user                         |
+| DELETE | `/users/:id/follow`     | Unfollow a user                       |
+| GET    | `/users/:id`            | Get another user's profile            |
 | GET    | `/recipes/own`          | Recipes created by the current user   |
 | GET    | `/recipes/favorites`    | Recipes favorited by the current user |
 | POST   | `/recipes`              | Create a recipe                       |
