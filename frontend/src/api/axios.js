@@ -12,7 +12,13 @@ api.interceptors.response.use(
   async (error) => {
     const { config, response } = error;
 
-    if (response?.status !== 401 || config._retry || config.url === "/auth/refresh") {
+    if (
+      response?.status !== 401 ||
+      config._retry ||
+      config.url === "/auth/refresh" ||
+      config.url === "/auth/login" ||
+      config.url === "/auth/register"
+    ) {
       return Promise.reject(error);
     }
 

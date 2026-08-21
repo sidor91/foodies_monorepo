@@ -55,6 +55,7 @@ body.modal__open {
   border: 1px solid var(--color-secondary);
   border-radius: 3rem;
   position: relative;
+  overflow: hidden;
 }
 
 .field__box:focus-within,

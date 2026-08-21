@@ -1,6 +1,7 @@
 import { useId, useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import toast from "react-hot-toast";
 import { registerUser } from "../../api/auth";
 
 import css from "./RegisterForm.module.css";
@@ -14,7 +15,7 @@ const initialValues = {
 const FeedbackSchema = Yup.object().shape({
   name: Yup.string().min(3, "too short").max(100, "too long").required(),
   email: Yup.string().email("must be a valid email").required(),
-  password: Yup.string().required(),
+  password: Yup.string().min(6, "must be at least 6 characters").required(),
 });
 
 const RegisterForm = ({ isRegister, onRegister, onLogin, onAuthSuccess }) => {
@@ -49,11 +50,12 @@ const RegisterForm = ({ isRegister, onRegister, onLogin, onAuthSuccess }) => {
       actions.resetForm();
       onAuthSuccess(user);
     } catch (error) {
-      throw new Error(`${error.message}`);
+      toast.error(error.response?.data?.message || "Registration failed");
     } finally {
       actions.setSubmitting(false);
     }
   };
+
   return (
     <div className={`${css.modal__overlay} ${isRegister ? css.is__open : ""}`}>
       <Formik

@@ -10,6 +10,7 @@ import css from "./App.module.css";
 
 const Home = lazy(() => import("../../pages/Home/Home.jsx"));
 const AddRecipe = lazy(() => import("../../pages/AddRecipe/AddRecipe.jsx"));
+const UserProfile = lazy(() => import("../../pages/UserProfile/UserProfile.jsx"));
 const LoginForm = lazy(() => import("../../pages/LoginForm/LoginForm.jsx"));
 const RegisterForm = lazy(() => import("../../pages/RegisterForm/RegisterForm.jsx"));
 
@@ -109,6 +110,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/add-recipe" element={<AddRecipe />} />
+            <Route path="/profile" element={<UserProfile />} />
           </Routes>
         </Suspense>
       </main>

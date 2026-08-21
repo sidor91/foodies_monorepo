@@ -2,6 +2,7 @@ import { useId, useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { loginUser } from "../../api/auth";
+import { toast } from "react-hot-toast";
 
 import css from "./LoginForm.module.css";
 
@@ -46,11 +47,12 @@ const LoginForm = ({ isLogin, onLogin, onRegister, onAuthSuccess }) => {
       actions.resetForm();
       onAuthSuccess(user);
     } catch (error) {
-      throw new Error(`${error.message}`);
+      toast.error(error.response?.data?.message || "Login failed")
     } finally {
       actions.setSubmitting(false);
     }
   };
+  
   return (
     <div className={`${css.modal__overlay} ${isLogin ? css.is__open : ""}`}>
       <Formik
