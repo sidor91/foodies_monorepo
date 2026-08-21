@@ -50,11 +50,11 @@ const LoginForm = ({ isLogin, onLogin, onRegister }) => {
 
             <button
               type="button"
-              className="text-accent text-[1.2rem] leading-[150%] tracking-[-0.02em]"
+              className="absolute top-[1.6rem] right-[1.6rem] text-accent text-[1.2rem] leading-[150%] tracking-[-0.02em]"
               onClick={onLogin}
               aria-label="Close Modal"
             >
-              <svg className="absolute top-[1.6rem] right-[1.6rem] w-[2.4rem] h-[2.4rem] fill-none stroke-accent">
+              <svg className="w-[2.4rem] h-[2.4rem] fill-none stroke-accent">
                 <use href="/icons.svg#icon-close" />
               </svg>
             </button>
@@ -67,6 +67,7 @@ const LoginForm = ({ isLogin, onLogin, onRegister }) => {
                   name="email"
                   id={emailFieldId}
                   placeholder="Email*"
+                  autoComplete="email"
                 />
               </div>
               <ErrorMessage
@@ -82,6 +83,7 @@ const LoginForm = ({ isLogin, onLogin, onRegister }) => {
                   name="password"
                   id={passwordFieldId}
                   placeholder="Password*"
+                  autoComplete="password"
                 />
 
                 <button
