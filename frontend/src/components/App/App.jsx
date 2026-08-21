@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
-import { Header, MobileMenu, Loader, Footer } from "../index.js";
+import { Header, MobileMenu, Loader, Footer, LoginForm, RegisterForm } from "../index.js";
 import { logoutUser } from "../../api/auth";
 import { getCurrentUser } from "../../api/users.js";
 
@@ -11,8 +11,6 @@ import css from "./App.module.css";
 const Home = lazy(() => import("../../pages/Home/Home.jsx"));
 const AddRecipe = lazy(() => import("../../pages/AddRecipe/AddRecipe.jsx"));
 const UserProfile = lazy(() => import("../../pages/UserProfile/UserProfile.jsx"));
-const LoginForm = lazy(() => import("../../pages/LoginForm/LoginForm.jsx"));
-const RegisterForm = lazy(() => import("../../pages/RegisterForm/RegisterForm.jsx"));
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
