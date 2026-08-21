@@ -1,0 +1,77 @@
+.modal__overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-bg-transparent);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease-in-out;
+}
+
+.modal__overlay.is__open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+  overflow-y: auto;
+  position: relative;
+
+  width: 100%;
+  max-width: 34.3rem;
+  padding: 6rem 3rem;
+  gap: 3.2rem;
+
+  background-color: var(--color-bg);
+  border-radius: 3rem;
+
+  opacity: 0;
+  transition: opacity 0.25s ease-in-out;
+}
+
+.modal__overlay.is__open .modal {
+  opacity: 1;
+}
+
+body.modal__open {
+  overflow: hidden;
+  height: 100vh;
+  position: relative;
+  pointer-events: none;
+}
+
+.field__box {
+  border: 1px solid var(--color-secondary);
+  border-radius: 3rem;
+  position: relative;
+}
+
+.field__box:focus-within,
+.has__value {
+  border-color: var(--color-accent);
+}
+
+.form__field {
+  width: 100%;
+  padding: 1.4rem;
+}
+
+.form__field::placeholder {
+  font-size: 1.4rem;
+  line-height: 145%;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+
+  color: var(--color-secondary);
+}
