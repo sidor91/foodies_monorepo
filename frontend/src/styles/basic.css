@@ -55,6 +55,8 @@ body {
   letter-spacing: -0.02em;
   font-weight: 700;
 
+  border-radius: 3rem;
+
   text-transform: uppercase;
   transition: all var(--transition-fast);
 }
