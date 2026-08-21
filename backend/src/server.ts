@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import swaggerUi from "swagger-ui-express";
 import usersRouter from "./routes/users.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import recipesRouter from "./routes/recipes.routes.js";
@@ -10,6 +11,7 @@ import {
   ingredientsRouter,
   testimonialsRouter,
 } from "./routes/references.routes.js";
+import { swaggerSpec } from "./swagger.js";
 import { AppError } from "./utils/AppError.js";
 import { prisma } from "./db/prisma.js";
 
@@ -22,9 +24,39 @@ app.get("/", (_, res) => {
   res.json({ message: "Foodies API" });
 });
 
+/**
+ * @openapi
+ * /health:
+ *   get:
+ *     tags:
+ *       - System
+ *     summary: Check backend health
+ *     description: Returns a simple response when the backend process is running.
+ *     responses:
+ *       200:
+ *         description: Backend is healthy.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/HealthResponse'
+ */
 app.get("/api/health", (_, res) => {
   res.json({ status: "ok" });
 });
+
+app.get("/api/docs.json", (_, res) => {
+  res.json(swaggerSpec);
+});
+app.use(
+  "/api/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    swaggerOptions: {
+      persistAuthorization: true,
+      withCredentials: true,
+    },
+  }),
+);
 
 app.use("/api/recipes", recipesRouter);
 app.use("/api/auth", authRouter);
