@@ -2,3 +2,17 @@
 @import url("./basic.css");
 @import url("./variables.css");
 @import url("./containers.css");
+
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1a1a1a;
+  --color-secondary: #bfbebe;
+  --color-accent: #050505;
+  --color-bg: #ffffff;
+  --color-text: #1a1a1a;
+  --color-error: #ae0000;
+
+  --breakpoint-tablet: 48rem;
+  --breakpoint-desktop: 90rem;
+}

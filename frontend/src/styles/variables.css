@@ -12,6 +12,9 @@
 
   --color-error: var(--red);
 
+  --color-border-transparent: rgb(255, 255, 255, 0.2);
+  --color-bg-transparent: rgb(5, 5, 5, 0.5);
+
   /* ===  COLOR NAMES === */
 
   --black: #050505;
