@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authMiddleware } from "../middlewares/auth.js";
+import { uploadMiddleware } from "../middlewares/upload.js";
 import { recipesController } from "../controllers/recipes.controller.js";
 
 const router = Router();
@@ -150,6 +151,7 @@ router.get("/:id", (req, res) => recipesController.getById(req, res));
  *     tags:
  *       - Recipes
  *     summary: Create a recipe
+ *     description: Creates a recipe, optionally uploading a cover image.
  *     security:
  *       - accessTokenCookie: []
  *       - bearerAuth: []
@@ -163,7 +165,7 @@ router.get("/:id", (req, res) => recipesController.getById(req, res));
  *             schema:
  *               $ref: '#/components/schemas/CreatedRecipe'
  *       400:
- *         description: Invalid recipe data.
+ *         description: Invalid recipe data or unsupported image file type.
  *         content:
  *           application/json:
  *             schema:
@@ -177,7 +179,12 @@ router.get("/:id", (req, res) => recipesController.getById(req, res));
  */
 router.get("/", (req, res) => recipesController.search(req, res));
 
-router.post("/", authMiddleware.authenticate, (req, res) => recipesController.create(req, res));
+router.post(
+  "/",
+  authMiddleware.authenticate,
+  uploadMiddleware.single("image"),
+  (req, res) => recipesController.create(req, res),
+);
 
 /**
  * @openapi

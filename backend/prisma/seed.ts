@@ -23,6 +23,12 @@ function toNullable(value: string | undefined): string | null {
 }
 
 async function main() {
+  const existing = await prisma.category.count();
+  if (existing > 0) {
+    console.log("Database already seeded, skipping.");
+    return;
+  }
+
   const categories = readCsv("categories.csv");
   const areas = readCsv("areas.csv");
   const ingredients = readCsv("ingredients.csv");
@@ -81,8 +87,7 @@ async function main() {
       title: r.title,
       instructions: r.instructions,
       description: toNullable(r.description),
-      thumb: toNullable(r.thumb),
-      preview: toNullable(r.preview),
+      image: toNullable(r.thumb),
       time: r.time ? Number(r.time) : null,
       categoryId: categoryIdByName.get(r.category)!,
       areaId: areaIdByName.get(r.area)!,
