@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { authController } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/auth.js";
-import { uploadMiddleware } from "../middlewares/upload.js";
 
 const router = Router();
 
@@ -12,7 +11,7 @@ const router = Router();
  *     tags:
  *       - Auth
  *     summary: Register a user
- *     description: Creates a user, optionally uploads an avatar, and sets HTTP-only access and refresh token cookies.
+ *     description: Creates a user and sets HTTP-only access and refresh token cookies.
  *     requestBody:
  *       $ref: '#/components/requestBodies/RegisterUser'
  *     responses:
@@ -23,7 +22,7 @@ const router = Router();
  *             schema:
  *               $ref: '#/components/schemas/AuthUser'
  *       400:
- *         description: Invalid registration data or unsupported avatar file type.
+ *         description: Invalid registration data.
  *         content:
  *           application/json:
  *             schema:
@@ -35,9 +34,7 @@ const router = Router();
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post("/register", uploadMiddleware.single("avatar"), (req, res) =>
-  authController.register(req, res),
-);
+router.post("/register", (req, res) => authController.register(req, res));
 
 /**
  * @openapi

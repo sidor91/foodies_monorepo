@@ -82,7 +82,7 @@ const options = {
         RegisterUser: {
           required: true,
           content: {
-            "multipart/form-data": {
+            "application/json": {
               schema: {
                 type: "object",
                 required: ["name", "email", "password"],
@@ -94,11 +94,6 @@ const options = {
                     format: "password",
                     minLength: 6,
                     example: "secret123",
-                  },
-                  avatar: {
-                    type: "string",
-                    format: "binary",
-                    description: "Optional JPEG, PNG, or WebP image, maximum 2 MB.",
                   },
                 },
               },
