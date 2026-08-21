@@ -4,7 +4,7 @@ import { prisma } from "../db/prisma.js";
 export const recipeListSelect = {
   id: true,
   title: true,
-  thumb: true,
+  image: true,
   description: true,
   time: true,
   category: { select: { id: true, name: true } },
@@ -20,21 +20,39 @@ const recipePopularSelect = {
 
 export type RecipePopularItem = Prisma.RecipeGetPayload<{ select: typeof recipePopularSelect }>;
 
-const recipeDetailInclude = {
+const recipeDetailSelect = {
+  id: true,
+  title: true,
+  instructions: true,
+  description: true,
+  image: true,
+  time: true,
+  categoryId: true,
+  areaId: true,
+  ownerId: true,
   category: true,
   area: true,
   owner: { select: { id: true, name: true, avatarUrl: true } },
   ingredients: { include: { ingredient: true } },
-} satisfies Prisma.RecipeInclude;
+} satisfies Prisma.RecipeSelect;
 
-export type RecipeDetail = Prisma.RecipeGetPayload<{ include: typeof recipeDetailInclude }>;
+export type RecipeDetail = Prisma.RecipeGetPayload<{ select: typeof recipeDetailSelect }>;
 
-const recipeCreateInclude = {
+const recipeCreateSelect = {
+  id: true,
+  title: true,
+  instructions: true,
+  description: true,
+  image: true,
+  time: true,
+  categoryId: true,
+  areaId: true,
+  ownerId: true,
   ingredients: true,
-} satisfies Prisma.RecipeInclude;
+} satisfies Prisma.RecipeSelect;
 
 export type RecipeWithIngredients = Prisma.RecipeGetPayload<{
-  include: typeof recipeCreateInclude;
+  select: typeof recipeCreateSelect;
 }>;
 
 export interface CreateRecipeData {
@@ -42,8 +60,8 @@ export interface CreateRecipeData {
   title: string;
   instructions: string;
   description?: string;
-  thumb?: string;
-  preview?: string;
+  image?: string;
+  imagePublicId?: string;
   time?: number;
   categoryId: string;
   areaId: string;
@@ -71,7 +89,7 @@ class RecipeRepository {
   }
 
   findDetailById(id: string): Promise<RecipeDetail | null> {
-    return this.prisma.recipe.findUnique({ where: { id }, include: recipeDetailInclude });
+    return this.prisma.recipe.findUnique({ where: { id }, select: recipeDetailSelect });
   }
 
   findById(id: string): Promise<Recipe | null> {
@@ -85,8 +103,8 @@ class RecipeRepository {
         title: data.title,
         instructions: data.instructions,
         description: data.description,
-        thumb: data.thumb,
-        preview: data.preview,
+        image: data.image,
+        imagePublicId: data.imagePublicId,
         time: data.time,
         categoryId: data.categoryId,
         areaId: data.areaId,
@@ -98,7 +116,7 @@ class RecipeRepository {
           })),
         },
       },
-      include: recipeCreateInclude,
+      select: recipeCreateSelect,
     });
   }
 
