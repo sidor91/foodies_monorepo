@@ -1,8 +1,10 @@
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
 
 import { Header, MobileMenu, Loader, Footer } from "../index.js";
-import { refreshUser, logoutUser } from "../../api/auth";
+import { logoutUser } from "../../api/auth";
+import { getCurrentUser } from "../../api/users.js";
 
 import css from "./App.module.css";
 
@@ -39,18 +41,24 @@ const App = () => {
   useEffect(() => {
     const restoreSession = async () => {
       try {
-        const user = await refreshUser();
-        setUser(user);
+        if (user) {
+          setIsAuthenticated(true);
+          return;
+        }
+
+        const currentUser = await getCurrentUser();
+
+        setUser(currentUser);
         setIsAuthenticated(true);
       } catch (error) {
-        console.log("No active session");
+        console.log(error.message);
       } finally {
         setIsAuthLoading(false);
       }
     };
 
     restoreSession();
-  }, []);
+  }, [user]);
 
   const handleMobileToggle = () => {
     setIsMobileMenuOpen((prev) => !prev);
@@ -67,6 +75,8 @@ const App = () => {
   };
   return (
     <div className={`main__container ${isMobileMenuOpen && "modal__open"}`}>
+      <Toaster />
+
       <Header
         isMobileMenuOpen={isMobileMenuOpen}
         onMobileToggle={handleMobileToggle}

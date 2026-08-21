@@ -9,20 +9,10 @@ export const loginUser = async ({ email, password }) => {
   return data;
 };
 
-export const registerUser = async ({ name, email, password, avatar }) => {
-  const formData = new FormData();
+export const registerUser = async (data) => {
+  const { user } = await api.post("/auth/register", data);
 
-  formData.append("name", name);
-  formData.append("email", email);
-  formData.append("password", password);
-
-  if (avatar) {
-    formData.append("avatar", avatar);
-  }
-
-  const { data } = await api.post("/auth/register", formData);
-
-  return data;
+  return user;
 };
 
 export const refreshUser = async () => {
