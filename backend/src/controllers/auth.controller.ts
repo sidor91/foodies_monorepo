@@ -19,7 +19,6 @@ class AuthController implements IAuthController {
       name: req.body.name,
       email: req.body.email,
       password: req.body.password,
-      avatar: req.file,
     };
     const { accessToken, refreshToken, user } = await this.authService.register(input);
     this.setAuthCookies(res, accessToken, refreshToken);
