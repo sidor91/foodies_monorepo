@@ -23,6 +23,12 @@ function toNullable(value: string | undefined): string | null {
 }
 
 async function main() {
+  const existing = await prisma.category.count();
+  if (existing > 0) {
+    console.log("Database already seeded, skipping.");
+    return;
+  }
+
   const categories = readCsv("categories.csv");
   const areas = readCsv("areas.csv");
   const ingredients = readCsv("ingredients.csv");
