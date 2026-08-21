@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import recipesRouter from "./routes/recipes.routes.js";
+import authRouter from "./routes/auth.routes.js";
 import {
   categoriesRouter,
   areasRouter,
@@ -23,6 +24,7 @@ app.get("/api/health", (_, res) => {
 });
 
 app.use("/api/recipes", recipesRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/categories", categoriesRouter);
 app.use("/api/areas", areasRouter);
 app.use("/api/ingredients", ingredientsRouter);

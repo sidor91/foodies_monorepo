@@ -1,11 +1,11 @@
-import jwt from "jsonwebtoken";
 import type { Request, Response, NextFunction } from "express";
+import { jwtService } from "../services/jwt.service.js";
 
-// Expects `/auth` to issue JWTs signed with JWT_SECRET containing { id: userId }.
 class AuthMiddleware {
   authenticate(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
-    const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
+    const headerToken = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
+    const token = req.cookies?.accessToken || headerToken;
 
     if (!token) {
       res.status(401).json({ message: "Authorization token required" });
@@ -13,7 +13,7 @@ class AuthMiddleware {
     }
 
     try {
-      const payload = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
+      const payload = jwtService.verify(token, "access");
       req.user = { id: payload.id };
       next();
     } catch {
