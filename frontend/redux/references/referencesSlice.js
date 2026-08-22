@@ -12,9 +12,12 @@ const initialState = {
   areas: [],
   ingredients: [],
   testimonials: [],
+  pending: [],
   isLoading: false,
   error: null,
 };
+
+const listKey = (action) => action.type.split("/")[1];
 
 const referencesSlice = createSlice({
   name: "references",
@@ -23,19 +26,15 @@ const referencesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchCategories.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.categories = action.payload;
       })
       .addCase(fetchAreas.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.areas = action.payload;
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.ingredients = action.payload;
       })
       .addCase(fetchTestimonials.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.testimonials = action.payload;
       })
       .addMatcher(
@@ -45,7 +44,8 @@ const referencesSlice = createSlice({
           fetchIngredients.pending,
           fetchTestimonials.pending,
         ),
-        (state) => {
+        (state, action) => {
+          state.pending.push(listKey(action));
           state.isLoading = true;
           state.error = null;
         },
@@ -58,8 +58,14 @@ const referencesSlice = createSlice({
           fetchTestimonials.rejected,
         ),
         (state, action) => {
-          state.isLoading = false;
           state.error = action.payload;
+        },
+      )
+      .addMatcher(
+        (action) => /^references\/\w+\/(fulfilled|rejected)$/.test(action.type),
+        (state, action) => {
+          state.pending = state.pending.filter((key) => key !== listKey(action));
+          state.isLoading = state.pending.length > 0;
         },
       );
   },

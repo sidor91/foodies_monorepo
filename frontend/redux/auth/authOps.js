@@ -31,15 +31,19 @@ export const logOut = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   }
 });
 
-export const refreshUser = createAsyncThunk("auth/refresh", async (_, thunkAPI) => {
-  try {
-    const { data } = await api.get("/users/me");
+export const refreshUser = createAsyncThunk(
+  "auth/refresh",
+  async (_, thunkAPI) => {
+    try {
+      const { data } = await api.get("/users/me");
 
-    return data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(getErrorMessage(error));
-  }
-});
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(getErrorMessage(error));
+    }
+  },
+  { condition: (_, { getState }) => !getState().auth.isRefreshing },
+);
 
 export const updateAvatar = createAsyncThunk("auth/updateAvatar", async (file, thunkAPI) => {
   try {
