@@ -1,19 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormikContext } from "formik";
 import { useSelector } from "react-redux";
-import { selectRecipeMetadata } from "../../redux/recipes/recipesSlice";
+import { selectIngredients } from "../../redux/references/referencesSelectors.js";
 import { useDispatch } from "react-redux";
-import { clearDraft } from "../../redux/recipeDraft/recipeDraftSlice.js";
+import { clearDraft, updateDraft } from "../../redux/recipeDraft/recipeDraftSlice.js";
 
 const useRecipeForm = () => {
   const { values, setFieldValue, errors } = useFormikContext();
-  const { ingredientsList } = useSelector(selectRecipeMetadata);
+  const ingredientsList = useSelector(selectIngredients);
   const dispatch = useDispatch();
 
   const [currentIngredientId, setCurrentIngredientId] = useState("");
   const [currentIngredientName, setCurrentIngredientName] = useState("");
   const [currentQuantity, setCurrentQuantity] = useState("");
   const [previewUrl, setPreviewUrl] = useState(null);
+
+  // Автозбереження форми в Redux при кожній зміні
+  useEffect(() => {
+    dispatch(updateDraft(values));
+  }, [values, dispatch]);
 
   const handleResetForm = (resetForm) => {
     dispatch(clearDraft());

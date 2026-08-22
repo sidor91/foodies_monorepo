@@ -1,34 +1,89 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import api from "../../src/api/axios";
 
-axios.defaults.baseURL = import.meta.env.BACKEND_URL || "http://localhost:4000";
+import api from "../../src/api/axios.js";
+import getErrorMessage from "../getErrorMessage.js";
 
-export const fetchRecipeMetadata = createAsyncThunk(
-  "recipes/fetchRecipeMetadata",
-  async (_, thunkAPI) => {
+const cleanParams = (params = {}) =>
+  Object.fromEntries(
+    Object.entries(params).filter(
+      ([, value]) => value !== null && value !== undefined && value !== "",
+    ),
+  );
+
+export const fetchRecipes = createAsyncThunk("recipes/fetchAll", async (params, thunkAPI) => {
+  try {
+    const { data } = await api.get("/recipes", { params: cleanParams(params) });
+
+    return data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(getErrorMessage(error));
+  }
+});
+
+export const fetchPopularRecipes = createAsyncThunk(
+  "recipes/fetchPopular",
+  async (limit, thunkAPI) => {
     try {
-      const [categoriesRes, areasRes, ingredientsRes] = await Promise.all([
-        axios.get("/api/categories"),
-        axios.get("/api/areas"),
-        axios.get("/api/ingredients"),
-      ]);
-      console.log("Fetched metadata:", {
-        categories: categoriesRes.data,
-        areas: areasRes.data,
-        ingredientsList: ingredientsRes.data,
-      });
+      const { data } = await api.get("/recipes/popular", { params: cleanParams({ limit }) });
 
-      return {
-        categories: categoriesRes.data,
-        areas: areasRes.data,
-        ingredientsList: ingredientsRes.data,
-      };
+      return data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(getErrorMessage(error));
     }
   },
 );
+
+export const fetchRecipeById = createAsyncThunk("recipes/fetchById", async (id, thunkAPI) => {
+  try {
+    const { data } = await api.get(`/recipes/${id}`);
+
+    return data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(getErrorMessage(error));
+  }
+});
+
+export const fetchOwnRecipes = createAsyncThunk("recipes/fetchOwn", async (params, thunkAPI) => {
+  try {
+    const { data } = await api.get("/recipes/own", { params: cleanParams(params) });
+
+    return data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(getErrorMessage(error));
+  }
+});
+
+export const createRecipe = createAsyncThunk("recipes/create", async (recipe, thunkAPI) => {
+  try {
+    const { image, ingredients = [], ...fields } = recipe;
+    const formData = new FormData();
+
+    Object.entries(cleanParams(fields)).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    formData.append("ingredients", JSON.stringify(ingredients));
+
+    if (image) {
+      formData.append("image", image);
+    }
+
+    const { data } = await api.post("/recipes", formData);
+
+    return data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(getErrorMessage(error));
+  }
+});
+
+export const deleteRecipe = createAsyncThunk("recipes/delete", async (id, thunkAPI) => {
+  try {
+    await api.delete(`/recipes/${id}`);
+
+    return id;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(getErrorMessage(error));
+  }
+});
 
 export const addRecipe = createAsyncThunk("recipes/addRecipe", async (formData, thunkAPI) => {
   try {
@@ -37,6 +92,6 @@ export const addRecipe = createAsyncThunk("recipes/addRecipe", async (formData, 
     });
     return response.data;
   } catch (error) {
-    return thunkAPI.rejectWithValue(error.message);
+    return thunkAPI.rejectWithValue(getErrorMessage(error));
   }
 });

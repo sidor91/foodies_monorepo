@@ -1,14 +1,25 @@
 import { Form, Field, ErrorMessage } from "formik";
 import { useSelector } from "react-redux";
-import { selectRecipeMetadata } from "../../../redux/recipes/recipesSlice";
+// import { selectRecipeMetadata } from "../../../redux/recipes/recipesSlice";
 import useRecipeForm from "../../hooks/useRecipeForm.js";
 import css from "./RecipeFormContent.module.css";
 import IngredientList from "../IngredientList/IngredientList.jsx";
 import { useFormikContext } from "formik";
+import {
+  selectCategories,
+  selectAreas,
+  selectIngredients,
+  // selectReferencesError,
+  // selectReferencesIsLoading,
+} from "../../../redux/references/referencesSelectors.js";
 
 const RecipeFormContent = ({ isSubmitting }) => {
-  const { categories, areas, ingredientsList, error, isLoading } =
-    useSelector(selectRecipeMetadata);
+  const categories = useSelector(selectCategories);
+  const areas = useSelector(selectAreas);
+  const ingredientsList = useSelector(selectIngredients);
+  // const error = useSelector(selectReferencesError);
+  // const loading = useSelector(selectReferencesIsLoading);
+
   const { resetForm } = useFormikContext();
 
   const {

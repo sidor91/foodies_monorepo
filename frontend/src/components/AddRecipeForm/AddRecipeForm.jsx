@@ -7,8 +7,11 @@ import clsx from "clsx";
 import css from "./AddRecipeForm.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { selectRecipeDraft, clearDraft } from "../../../redux/recipeDraft/recipeDraftSlice.js";
-import { fetchRecipeMetadata } from "../../../redux/recipes/recipesOps.js";
-
+import {
+  fetchCategories,
+  fetchAreas,
+  fetchIngredients,
+} from "../../../redux/references/referencesOps.js";
 import prepareRecipeFormData from "../../services/recipeService.js";
 import { addRecipe } from "../../../redux/recipes/recipesOps.js";
 import RecipeFormContent from "../RecipeFormContent/RecipeFormContent.jsx";
@@ -42,13 +45,14 @@ const AddRecipeForm = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchRecipeMetadata());
+    dispatch(fetchCategories());
+    dispatch(fetchAreas());
+    dispatch(fetchIngredients());
   }, [dispatch]);
 
   // heandleSubmit function to handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = prepareRecipeFormData(values);
-    console.log("Prepared FormData2222222227777777772222:", formData);
     try {
       const result = await dispatch(addRecipe(formData)).unwrap();
       alert("Successfully created: " + JSON.stringify(result));

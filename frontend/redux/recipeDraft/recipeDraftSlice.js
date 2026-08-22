@@ -29,7 +29,7 @@ const recipeDraftSlice = createSlice({
 });
 
 export const { updateDraft, clearDraft } = recipeDraftSlice.actions;
-export const recipeDraftReducer = recipeDraftSlice.reducer;
+export default recipeDraftSlice.reducer;
 
 //selector to get the draft from the state
 export const selectRecipeDraft = (state) => state.recipeDraft.draft;
