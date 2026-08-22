@@ -2,21 +2,33 @@ import { useState } from "react";
 import { useFormikContext } from "formik";
 import { useSelector } from "react-redux";
 import { selectRecipeMetadata } from "../../redux/recipes/recipesSlice";
+import { useDispatch } from "react-redux";
+import { clearDraft } from "../../redux/recipeDraft/recipeDraftSlice.js";
 
 const useRecipeForm = () => {
-  const { values, setFieldValue } = useFormikContext();
+  const { values, setFieldValue, errors } = useFormikContext();
   const { ingredientsList } = useSelector(selectRecipeMetadata);
+  const dispatch = useDispatch();
 
   const [currentIngredientId, setCurrentIngredientId] = useState("");
   const [currentIngredientName, setCurrentIngredientName] = useState("");
   const [currentQuantity, setCurrentQuantity] = useState("");
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  // Функція для видалення інгредієнта зі списку
+  const handleResetForm = (resetForm) => {
+    dispatch(clearDraft());
+    setPreviewUrl(null);
+    if (resetForm) {
+      resetForm();
+    }
+  };
+
+  // function to remove an ingredient from the list by its index
   const handleRemoveIngredient = (indexToRemove) => {
     const updatedIngredients = values.ingredients.filter((_, index) => index !== indexToRemove);
     // setCurrentIngredient("");
     // setCurrentQuantity("");
+    // console.log("Updated Ingredients after removal:", currentIngredientId);
     setFieldValue("ingredients", updatedIngredients);
   };
 
@@ -46,7 +58,7 @@ const useRecipeForm = () => {
     if (!selectedItem) return;
 
     const newIngredient = {
-      ingredient: selectedItem.id,
+      ingredientId: selectedItem.id,
       name: selectedItem.name, // Назва
       quantity: currentQuantity, // Кількість
       img: selectedItem.img,
@@ -62,6 +74,7 @@ const useRecipeForm = () => {
 
   return {
     values,
+    errors,
     setFieldValue,
     currentIngredientId,
     setCurrentIngredientId,
@@ -73,6 +86,7 @@ const useRecipeForm = () => {
     handleRemoveIngredient,
     handleImageUpload,
     previewUrl,
+    handleResetForm,
   };
 };
 

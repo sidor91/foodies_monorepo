@@ -4,10 +4,12 @@ import { selectRecipeMetadata } from "../../../redux/recipes/recipesSlice";
 import useRecipeForm from "../../hooks/useRecipeForm.js";
 import css from "./RecipeFormContent.module.css";
 import IngredientList from "../IngredientList/IngredientList.jsx";
+import { useFormikContext } from "formik";
 
 const RecipeFormContent = ({ isSubmitting }) => {
   const { categories, areas, ingredientsList, error, isLoading } =
     useSelector(selectRecipeMetadata);
+  const { resetForm } = useFormikContext();
 
   const {
     currentIngredientId,
@@ -22,17 +24,25 @@ const RecipeFormContent = ({ isSubmitting }) => {
     previewUrl,
     values,
     setFieldValue,
+    handleResetForm,
+    errors,
   } = useRecipeForm();
 
   return (
     <Form>
       {/* Дебаг блок */}
-      {/* <div style={{ backgroundColor: "pink", padding: "10px", marginBottom: "20px" }}>
+      <div style={{ backgroundColor: "pink", padding: "10px", marginBottom: "20px" }}>
         <p>
           <strong>Поточні значення:</strong>
         </p>
         <pre>{JSON.stringify(values, null, 2)}</pre>
-      </div> */}
+      </div>
+      <div style={{ backgroundColor: "#ffcccc", padding: "10px", marginBottom: "20px" }}>
+        <p>
+          <strong>Помилки валідації (Errors):</strong>
+        </p>
+        <pre>{JSON.stringify(errors, null, 2)}</pre>
+      </div>
 
       <div className="upload-container">
         <label className="upload-content" style={{ cursor: "pointer", display: "block" }}>
@@ -94,7 +104,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
               Select category
             </option>
             {categories.map((cat) => (
-              <option key={cat.id} value={cat.name}>
+              <option key={cat.id} value={cat.id}>
                 {cat.name}
               </option>
             ))}
@@ -132,7 +142,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
             Area
           </option>
           {areas.map((ar) => (
-            <option key={ar.id} value={ar.name}>
+            <option key={ar.id} value={ar.id}>
               {ar.name}
             </option>
           ))}
@@ -202,7 +212,12 @@ const RecipeFormContent = ({ isSubmitting }) => {
       </div>
 
       <div className="form-actions">
-        <button type="reset" className="publish-btn" disabled={isSubmitting}>
+        <button
+          type="button"
+          className="publish-btn"
+          disabled={isSubmitting}
+          onClick={() => handleResetForm(resetForm)}
+        >
           del11
         </button>
         <button type="submit" className="publish-btn" disabled={isSubmitting}>

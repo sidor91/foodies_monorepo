@@ -7,8 +7,6 @@ interface CreateRecipeBody {
   title: string;
   instructions: string;
   description?: string;
-  thumb?: string;
-  preview?: string;
   time?: number;
   categoryId: string;
   areaId: string;
@@ -68,17 +66,7 @@ class RecipesController {
 
   // POST /recipes — private, create own recipe.
   async create(req: Request, res: Response) {
-    const {
-      title,
-      instructions,
-      description,
-      thumb,
-      preview,
-      time,
-      categoryId,
-      areaId,
-      ingredients = [],
-    } = req.body as CreateRecipeBody;
+    const { title, instructions, description, categoryId, areaId } = req.body as CreateRecipeBody;
 
     if (!title || !instructions || !categoryId || !areaId) {
       res.status(400).json({
@@ -87,17 +75,29 @@ class RecipesController {
       return;
     }
 
-    const recipe = await this.recipeService.create(req.user!.id, {
-      title,
-      instructions,
-      description,
-      thumb,
-      preview,
-      time,
-      categoryId,
-      areaId,
-      ingredients,
-    });
+    const time = req.body.time !== undefined ? Number(req.body.time) : undefined;
+
+    let ingredients: { id: string; measure?: string }[] = [];
+    try {
+      ingredients = req.body.ingredients ? JSON.parse(req.body.ingredients) : [];
+    } catch {
+      res.status(400).json({ message: "ingredients must be a JSON array" });
+      return;
+    }
+
+    const recipe = await this.recipeService.create(
+      req.user!.id,
+      {
+        title,
+        instructions,
+        description,
+        time,
+        categoryId,
+        areaId,
+        ingredients,
+      },
+      req.file,
+    );
 
     res.status(201).json(recipe);
   }

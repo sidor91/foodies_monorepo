@@ -5,7 +5,6 @@ import {
   type IUserRepository,
   type UserAuth,
 } from "../repositories/user.repository.js";
-import { cloudinaryService, type ICloudinaryService } from "./cloudinary.service.js";
 import { cryptoService, type ICryptoService } from "./crypto.service.js";
 import { jwtService, type IJwtService } from "./jwt.service.js";
 import { AppError } from "../utils/AppError.js";
@@ -14,7 +13,6 @@ export interface RegisterInput {
   name: string;
   email: string;
   password: string;
-  avatar?: Express.Multer.File;
 }
 
 export interface AuthResponse {
@@ -33,12 +31,11 @@ export interface IAuthService {
 class AuthService implements IAuthService {
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly cloudinaryService: ICloudinaryService,
     private readonly cryptoService: ICryptoService,
     private readonly jwtService: IJwtService,
   ) {}
 
-  async register({ name, email, password, avatar }: RegisterInput): Promise<AuthResponse> {
+  async register({ name, email, password }: RegisterInput): Promise<AuthResponse> {
     if (
       typeof name !== "string" ||
       typeof email !== "string" ||
@@ -56,35 +53,15 @@ class AuthService implements IAuthService {
       throw new AppError(409, "Email is already registered");
     }
 
-    const uploadedAvatar = avatar
-      ? await this.cloudinaryService.uploadImage(avatar.buffer, "foodies/avatars")
-      : null;
-
     const data: CreateUserData = {
       id: randomUUID(),
       name: name.trim(),
       email: normalizedEmail,
       passwordHash: await this.cryptoService.hash(password),
-      ...(uploadedAvatar && {
-        avatarUrl: uploadedAvatar.secureUrl,
-        avatarPublicId: uploadedAvatar.publicId,
-      }),
     };
 
-    try {
-      const user = await this.userRepository.createUser(data);
-      return this.createAuthResponse(user);
-    } catch (error) {
-      if (uploadedAvatar) {
-        try {
-          await this.cloudinaryService.deleteImage(uploadedAvatar.publicId);
-        } catch (cleanupError) {
-          console.error("Failed to clean up registration avatar", cleanupError);
-        }
-      }
-
-      throw error;
-    }
+    const user = await this.userRepository.createUser(data);
+    return this.createAuthResponse(user);
   }
 
   async login(email: string, password: string): Promise<AuthResponse> {
@@ -145,9 +122,4 @@ class AuthService implements IAuthService {
   }
 }
 
-export const authService: IAuthService = new AuthService(
-  userRepository,
-  cloudinaryService,
-  cryptoService,
-  jwtService,
-);
+export const authService: IAuthService = new AuthService(userRepository, cryptoService, jwtService);

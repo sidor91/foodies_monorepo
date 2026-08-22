@@ -69,8 +69,8 @@ model Recipe {
   title        String
   instructions String
   description  String?
-  thumb        String?
-  preview      String?
+  image        String?
+  imagePublicId String?
   time         Int?
 
   categoryId String

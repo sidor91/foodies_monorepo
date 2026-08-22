@@ -2,64 +2,67 @@
     RESETS
 ======================== */
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+@import "tailwindcss";
 
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-  font-size: 62.5%;
-}
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-button,
-body,
-svg,
-img,
-ul,
-a,
-picture,
-textarea,
-input {
-  margin: 0;
-  padding: 0;
-}
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    font-size: 62.5%;
+  }
 
-a {
-  cursor: pointer;
-  text-decoration: none;
-  color: currentColor;
-}
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  button,
+  body,
+  svg,
+  img,
+  ul,
+  a,
+  picture,
+  textarea,
+  input {
+    margin: 0;
+    padding: 0;
+  }
 
-button {
-  cursor: pointer;
-  background: none;
-  border: none;
-}
+  a {
+    cursor: pointer;
+    text-decoration: none;
+  }
 
-input,
-textarea {
-  resize: none;
-  outline: none;
-  border: none;
-}
+  button {
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
 
-ul,
-ol {
-  list-style: none;
-}
+  input,
+  textarea {
+    resize: none;
+    outline: none;
+    border: none;
+  }
 
-img {
-  display: block;
-  width: 100%;
-  height: auto;
+  ul,
+  ol {
+    list-style: none;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
 }

@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
 /* eslint-disable no-undef */
-import React, { useState, useEffect } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useEffect } from "react";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import clsx from "clsx";
-import css from "./AddRecipe.module.css";
+import css from "./AddRecipeForm.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { selectRecipeDraft } from "../../../redux/recipeDraft/recipeDraftSlice";
+import { selectRecipeDraft, clearDraft } from "../../../redux/recipeDraft/recipeDraftSlice.js";
 import { fetchRecipeMetadata } from "../../../redux/recipes/recipesOps.js";
 
 import prepareRecipeFormData from "../../services/recipeService.js";
@@ -15,19 +15,17 @@ import RecipeFormContent from "../RecipeFormContent/RecipeFormContent.jsx";
 
 // 1. Схема валідації Yup
 const RecipeSchema = Yup.object().shape({
-  // photo: Yup.mixed(),
+  photo: Yup.mixed().optional().notRequired(),
   title: Yup.string().required("Title is required").max(100, "Max 100 characters"),
   description: Yup.string().max(200, "Max 200 characters").required("Description is required"),
   category: Yup.string().required("Category is required"),
   time: Yup.number().min(1, "Time must be at least 1 min").required("Required"),
   area: Yup.string().required("Area is required"),
-  // ingredients: Yup.string().required("Ingredients are required"),
   ingredients: Yup.array()
     .of(
       Yup.object().shape({
         quantity: Yup.string().required(),
-        ingredient: Yup.string().required("Ingredient is required"),
-        // Можемо додати ще img та name, щоб було зручно малювати картки
+        ingredientId: Yup.string().required("Ingredient is required"),
         name: Yup.string(),
         img: Yup.string(),
       }),
@@ -39,7 +37,7 @@ const RecipeSchema = Yup.object().shape({
     .required("Preparation steps are required"),
 });
 
-const AddRecipe = () => {
+const AddRecipeForm = () => {
   const initialValues = useSelector(selectRecipeDraft);
   const dispatch = useDispatch();
 
@@ -50,12 +48,14 @@ const AddRecipe = () => {
   // heandleSubmit function to handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = prepareRecipeFormData(values);
+    console.log("Prepared FormData2222222227777777772222:", formData);
     try {
       const result = await dispatch(addRecipe(formData)).unwrap();
-      console.log("Successfully created:", result);
+      alert("Successfully created: " + JSON.stringify(result));
+
       dispatch(clearDraft()); // clear the draft in Redux
       resetForm(); // clear Formik form
-      setPreviewUrl(null);
+
       // redirect to another page
     } catch (error) {
       console.error("Error:", error);
@@ -80,4 +80,4 @@ const AddRecipe = () => {
   );
 };
 
-export default AddRecipe;
+export default AddRecipeForm;

@@ -6,11 +6,16 @@ const prepareRecipeFormData = (values) => {
   if (values.photo) formData.append("photo", values.photo);
   formData.append("title", values.title);
   formData.append("description", values.description);
-  formData.append("category", values.category);
+  formData.append("categoryId", values.category);
   formData.append("time", values.time);
-  formData.append("area", values.area);
+  formData.append("areaId", values.area);
   formData.append("instructions", values.instructions);
-  formData.append("ingredients", JSON.stringify(values.ingredients));
+  const cleanedIngredients = values.ingredients.map(({ ingredientId, quantity }) => ({
+    ingredientId,
+    measure: quantity,
+  }));
+
+  formData.append("ingredients", JSON.stringify(cleanedIngredients));
   return formData;
 };
 

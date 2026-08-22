@@ -5,6 +5,7 @@ import {
   TRecipeRepository,
   type CreateRecipeData,
 } from "../repositories/recipe.repository.js";
+import { cloudinaryService, type ICloudinaryService } from "./cloudinary.service.js";
 
 export interface RecipeFilters {
   category?: string;
@@ -17,7 +18,10 @@ export interface Pagination {
   limit: number;
 }
 
-export type CreateRecipeInput = Omit<CreateRecipeData, "id" | "ownerId">;
+export type CreateRecipeInput = Omit<
+  CreateRecipeData,
+  "id" | "ownerId" | "image" | "imagePublicId"
+>;
 
 type DeleteOwnResult = "not_found" | "forbidden" | "deleted";
 
@@ -33,7 +37,10 @@ export interface IRecipeService {
 }
 
 class RecipeService {
-  constructor(private readonly recipeRepository: TRecipeRepository) {}
+  constructor(
+    private readonly recipeRepository: TRecipeRepository,
+    private readonly cloudinaryService: ICloudinaryService,
+  ) {}
 
   async search(filters: RecipeFilters, pagination: Pagination) {
     const where: Prisma.RecipeWhereInput = {
@@ -71,8 +78,32 @@ class RecipeService {
     return (await this.recipeRepository.findById(id)) !== null;
   }
 
-  create(ownerId: string, data: CreateRecipeInput) {
-    return this.recipeRepository.create({ id: crypto.randomUUID(), ownerId, ...data });
+  async create(ownerId: string, data: CreateRecipeInput, file?: Express.Multer.File) {
+    const uploadedImage = file
+      ? await this.cloudinaryService.uploadImage(file.buffer, "foodies/recipes")
+      : null;
+
+    try {
+      return await this.recipeRepository.create({
+        id: crypto.randomUUID(),
+        ownerId,
+        ...data,
+        ...(uploadedImage && {
+          image: uploadedImage.secureUrl,
+          imagePublicId: uploadedImage.publicId,
+        }),
+      });
+    } catch (error) {
+      if (uploadedImage) {
+        try {
+          await this.cloudinaryService.deleteImage(uploadedImage.publicId);
+        } catch (cleanupError) {
+          console.error("Failed to clean up recipe image", cleanupError);
+        }
+      }
+
+      throw error;
+    }
   }
 
   async deleteOwn(userId: string, recipeId: string): Promise<DeleteOwnResult> {
@@ -100,4 +131,4 @@ class RecipeService {
   }
 }
 
-export const recipeService: IRecipeService = new RecipeService(recipeRepository);
+export const recipeService: IRecipeService = new RecipeService(recipeRepository, cloudinaryService);

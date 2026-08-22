@@ -30,7 +30,7 @@ export const fetchRecipeMetadata = createAsyncThunk(
 );
 
 export const addRecipe = createAsyncThunk("recipes/addRecipe", async (formData, thunkAPI) => {
-  console.log("addRecipe called with formData:", formData);
+  console.log("addRecipe called with formData:111111111111111111111", formData);
   try {
     const response = await axios.post("/api/recipes", formData, {
       headers: { "Content-Type": "multipart/form-data" },
