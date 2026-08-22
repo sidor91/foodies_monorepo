@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import api from "../../src/api/axios";
 
 axios.defaults.baseURL = import.meta.env.BACKEND_URL || "http://localhost:4000";
 
@@ -30,9 +31,8 @@ export const fetchRecipeMetadata = createAsyncThunk(
 );
 
 export const addRecipe = createAsyncThunk("recipes/addRecipe", async (formData, thunkAPI) => {
-  console.log("addRecipe called with formData:111111111111111111111", formData);
   try {
-    const response = await axios.post("/api/recipes", formData, {
+    const response = await api.post("/recipes", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;

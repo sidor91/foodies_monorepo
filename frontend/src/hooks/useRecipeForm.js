@@ -26,24 +26,21 @@ const useRecipeForm = () => {
   // function to remove an ingredient from the list by its index
   const handleRemoveIngredient = (indexToRemove) => {
     const updatedIngredients = values.ingredients.filter((_, index) => index !== indexToRemove);
-    // setCurrentIngredient("");
-    // setCurrentQuantity("");
-    // console.log("Updated Ingredients after removal:", currentIngredientId);
     setFieldValue("ingredients", updatedIngredients);
   };
 
   const handleImageUpload = (e, setFieldValue) => {
     const file = e.target.files[0];
     if (file) {
-      // 1. Записуємо новий файл у Formik
+      // 1. Set the file in Formik's state
       setFieldValue("photo", file);
 
-      // 2. Якщо вже було старе прев'ю, видаляємо його з пам'яті браузера
+      // 2. If there was a previous preview, revoke it from the browser's memory
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
       }
 
-      // 3. Створюємо нове посилання для прев'ю
+      // 3. Create a new preview URL
       setPreviewUrl(URL.createObjectURL(file));
     }
   };
@@ -52,22 +49,22 @@ const useRecipeForm = () => {
     if (!currentIngredientId || !currentQuantity) return;
     if (values.ingredients.length >= 30) return;
 
-    // Шукаємо одразу в Redux-списку повний об'єкт інгредієнта за ID
+    // Find the selected ingredient from the ingredientsList using the currentIngredientId
     const selectedItem = ingredientsList.find((item) => item.id === currentIngredientId);
 
     if (!selectedItem) return;
 
     const newIngredient = {
       ingredientId: selectedItem.id,
-      name: selectedItem.name, // Назва
-      quantity: currentQuantity, // Кількість
+      name: selectedItem.name,
+      quantity: currentQuantity,
       img: selectedItem.img,
     };
 
-    // Записуємо у Formik
+    // Set the new ingredient in Formik's state
     setFieldValue("ingredients", [...values.ingredients, newIngredient]);
 
-    // Очищаємо поля
+    // Clear the fields
     setCurrentIngredientId("");
     setCurrentQuantity("");
   };

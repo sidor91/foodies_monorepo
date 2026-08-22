@@ -179,11 +179,8 @@ router.get("/:id", (req, res) => recipesController.getById(req, res));
  */
 router.get("/", (req, res) => recipesController.search(req, res));
 
-router.post(
-  "/",
-  authMiddleware.authenticate,
-  uploadMiddleware.single("image"),
-  (req, res) => recipesController.create(req, res),
+router.post("/", authMiddleware.authenticate, uploadMiddleware.single("image"), (req, res) =>
+  recipesController.create(req, res),
 );
 
 /**

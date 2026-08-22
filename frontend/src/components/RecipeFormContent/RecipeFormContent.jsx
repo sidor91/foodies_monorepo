@@ -30,20 +30,6 @@ const RecipeFormContent = ({ isSubmitting }) => {
 
   return (
     <Form>
-      {/* Дебаг блок */}
-      <div style={{ backgroundColor: "pink", padding: "10px", marginBottom: "20px" }}>
-        <p>
-          <strong>Поточні значення:</strong>
-        </p>
-        <pre>{JSON.stringify(values, null, 2)}</pre>
-      </div>
-      <div style={{ backgroundColor: "#ffcccc", padding: "10px", marginBottom: "20px" }}>
-        <p>
-          <strong>Помилки валідації (Errors):</strong>
-        </p>
-        <pre>{JSON.stringify(errors, null, 2)}</pre>
-      </div>
-
       <div className="upload-container">
         <label className="upload-content" style={{ cursor: "pointer", display: "block" }}>
           {previewUrl ? (
@@ -73,7 +59,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
         <ErrorMessage name="photo" component="div" className={css.error} />
       </div>
 
-      {/* Назва та опис */}
+      {/* title and description */}
       <div className="form-group">
         <Field
           name="title"
@@ -95,7 +81,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
         <ErrorMessage name="description" component="div" className={css.error} />
       </div>
 
-      {/* Категорія та час */}
+      {/* category and time */}
       <div className="form-row" style={{ display: "flex", gap: "20px" }}>
         <div className="form-group half">
           <label>CATEGORY</label>
@@ -134,7 +120,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
         </div>
       </div>
 
-      {/* Регіон */}
+      {/* area */}
       <div className="form-group">
         <label>AREA</label>
         <Field as="select" name="area" className="select-box">
@@ -150,7 +136,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
         <ErrorMessage name="area" component="div" className={css.error} />
       </div>
 
-      {/* Інгредієнти */}
+      {/* ingredients */}
       <div className={css.ingredientsSection}>
         <h3>INGREDIENTS</h3>
         <div className={css.addControls}>
@@ -195,7 +181,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
         )}
       </div>
 
-      {/* Інструкції */}
+      {/* instructions */}
       <div className="form-group">
         <label>RECIPE PREPARATION</label>
         <div className="input-with-counter">
@@ -218,7 +204,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
           disabled={isSubmitting}
           onClick={() => handleResetForm(resetForm)}
         >
-          del11
+          del11111
         </button>
         <button type="submit" className="publish-btn" disabled={isSubmitting}>
           PUBLISH
