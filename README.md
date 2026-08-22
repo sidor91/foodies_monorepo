@@ -40,7 +40,7 @@ make clean    # stop containers, remove volumes and prune images
 
 ## Database
 
-The database is PostgreSQL, accessed through [Prisma ORM](https://www.prisma.io/). The schema (`backend/prisma/schema.prisma`) defines the following tables: `categories`, `areas`, `ingredients`, `users`, `recipes`, `recipe_ingredients`, and `testimonials`.
+The database is PostgreSQL, accessed through [Prisma ORM](https://www.prisma.io/). The schema (`backend/prisma/schema.prisma`) defines the following tables: `categories`, `areas`, `ingredients`, `users`, `follows`, `recipes`, `recipe_ingredients`, `favorites`, and `testimonials`.
 
 ### Automatic setup (recommended)
 
@@ -65,7 +65,7 @@ npx prisma migrate deploy
 npm run db:seed
 ```
 
-`npm run db:seed` runs `backend/prisma/seed.js`, which reads the CSV files in `backend/prisma/seed-data/` and populates the corresponding tables.
+`npm run db:seed` runs `backend/prisma/seed.ts`, which reads the CSV files in `backend/prisma/seed-data/` and populates the corresponding tables.
 
 ### Resetting the database
 
@@ -89,6 +89,81 @@ Database connection settings are configured via environment variables (see `.env
 | `POSTGRES_PASSWORD` | Database password                                               |
 | `POSTGRES_PORT`     | Host port mapped to PostgreSQL (container port `5432`)          |
 | `DATABASE_URL`      | Prisma connection string used by the backend/db-init containers |
+
+## Backend Testing
+
+Backend API integration tests use Vitest and Supertest against a separate PostgreSQL test database.
+
+The tests require `TEST_DATABASE_URL` and include a safety check that refuses to run against a database whose name does not contain `test`. This prevents the integration tests from accidentally modifying the development database.
+
+### Start the test database
+
+The existing PostgreSQL Docker Compose service can be started as a separate Compose project with its own database and Docker volume.
+
+#### Windows CMD
+
+From the project root:
+
+```cmd
+set "POSTGRES_DB=foodies_test"
+set "POSTGRES_USER=postgres"
+set "POSTGRES_PASSWORD=postgres"
+set "POSTGRES_PORT=5433"
+
+docker compose -p foodies-test up -d postgres
+```
+
+Then from `backend`:
+
+```cmd
+set "TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5433/foodies_test"
+
+cmd /C "set DATABASE_URL=%TEST_DATABASE_URL%&& npx prisma migrate deploy"
+cmd /C "set DATABASE_URL=%TEST_DATABASE_URL%&& npx prisma db seed"
+
+npm test
+```
+
+#### macOS / Linux
+
+From the project root:
+
+```bash
+POSTGRES_DB=foodies_test \
+POSTGRES_USER=postgres \
+POSTGRES_PASSWORD=postgres \
+POSTGRES_PORT=5433 \
+docker compose -p foodies-test up -d postgres
+```
+
+Then from `backend`:
+
+```bash
+export TEST_DATABASE_URL="postgresql://postgres:postgres@localhost:5433/foodies_test"
+
+DATABASE_URL="$TEST_DATABASE_URL" npx prisma migrate deploy
+DATABASE_URL="$TEST_DATABASE_URL" npx prisma db seed
+
+npm test
+```
+
+The integration suite covers system and reference endpoints, authentication, user profiles and follows, public and private recipe operations, favorites, pagination, filtering, validation, authorization, and logout behavior.
+
+Test-created users, recipes, follows, and favorites are cleaned up by the suite after execution.
+
+### Stop the test database
+
+From the project root:
+
+```bash
+docker compose -p foodies-test down
+```
+
+To also remove the isolated test database volume:
+
+```bash
+docker compose -p foodies-test down -v
+```
 
 ## API Documentation
 
