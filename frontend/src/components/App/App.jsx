@@ -107,7 +107,8 @@ const App = () => {
         <Suspense fallback={<Loader />}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/add-recipe" element={<AddRecipe />} />
+            <Route path="/recipe/add" element={<AddRecipe />} />
+            {/* <Route path="/add-recipe" element={<AddRecipe />} /> */}
             <Route path="/profile" element={<UserProfile />} />
           </Routes>
         </Suspense>

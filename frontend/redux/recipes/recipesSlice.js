@@ -7,6 +7,7 @@ import {
   fetchPopularRecipes,
   fetchRecipeById,
   fetchRecipes,
+  addRecipe,
 } from "./recipesOps.js";
 import { logOut } from "../auth/authOps.js";
 
@@ -23,6 +24,9 @@ const initialState = {
   own: createList(),
   popular: [],
   current: null,
+  categories: [],
+  areas: [],
+  ingredientsList: [],
   isLoading: false,
   error: null,
 };
@@ -86,6 +90,9 @@ const recipesSlice = createSlice({
       })
       .addCase(logOut.fulfilled, (state) => {
         state.own = createList();
+      })
+      .addCase(addRecipe.fulfilled, (state) => {
+        state.isLoading = false;
       })
       .addMatcher(
         isAnyOf(

@@ -66,7 +66,7 @@ export interface CreateRecipeData {
   categoryId: string;
   areaId: string;
   ownerId: string;
-  ingredients: { id: string; measure?: string }[];
+  ingredients: { ingredientId: string; measure?: string }[];
 }
 
 class RecipeRepository {
@@ -111,7 +111,7 @@ class RecipeRepository {
         ownerId: data.ownerId,
         ingredients: {
           create: data.ingredients.map((ingredient) => ({
-            ingredientId: ingredient.id,
+            ingredientId: ingredient.ingredientId,
             measure: ingredient.measure,
           })),
         },
