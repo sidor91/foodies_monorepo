@@ -6,6 +6,7 @@ import { Header, MobileMenu, Loader, Footer } from "../index.js";
 import css from "./App.module.css";
 
 const Home = lazy(() => import("../../pages/Home/Home.jsx"));
+const AddRecipePage = lazy(() => import("../../pages/AddRecipePage/AddRecipePage.jsx"));
 
 const App = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -24,6 +25,7 @@ const App = () => {
         <Suspense fallback={<Loader />}>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/recipe/add" element={<AddRecipePage />} />
           </Routes>
         </Suspense>
       </main>
