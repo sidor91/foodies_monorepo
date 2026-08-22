@@ -5,12 +5,20 @@
 }
 
 .categoriesSwitcher {
-  position: relative;
+  display: grid;
+  overflow: hidden;
+}
+
+.categoriesBase,
+.categoriePanel {
+  grid-area: 1 / 1;
+}
+
+.categoriesBase {
+  z-index: 1;
 }
 
 .categoriePanel {
-  position: absolute;
-  inset: 0;
   z-index: 5;
   background: var(--color-bg);
   animation: slideInFromRight 320ms ease both;

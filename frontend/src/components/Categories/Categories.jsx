@@ -26,12 +26,7 @@ const Categories = ({ categories, isLoading, error, onCategorySelect }) => {
     const assetName = getAssetName(category.name);
 
     return (
-      <button
-        className={css.card}
-        key={category.id}
-        type="button"
-        onClick={() => onCategorySelect?.(category)}
-      >
+      <article className={css.card} key={category.id}>
         <img
           src={`/categories/${assetName}.webp`}
           alt=""
@@ -40,31 +35,34 @@ const Categories = ({ categories, isLoading, error, onCategorySelect }) => {
           }}
         />
         <div className={css.overlay}>
-          <span className={css.overlayLabel}>{category.name}</span>
-          <span className={css.overlayIcon} aria-hidden="true">
+          <button
+            className={css.overlayLabelBtn}
+            type="button"
+            onClick={() => onCategorySelect?.(category)}
+          >
+            {category.name}
+          </button>
+          <button
+            className={css.overlayIconBtn}
+            type="button"
+            onClick={() => onCategorySelect?.(category)}
+            aria-label={`Open ${category.name} category`}
+          >
             <svg>
               <use href="/icons.svg#icon-arrow-up-right" />
             </svg>
-          </span>
+          </button>
         </div>
-      </button>
+      </article>
     );
   });
 
   const allCategoriesCard = (
-    <button
-      className={`${css.card} ${css.card_all}`}
-      key="all-categories"
-      type="button"
-      onClick={() => onCategorySelect?.(null)}
-    >
-      <span>All categories</span>
-      <span className={css.overlayIcon} aria-hidden="true">
-        <svg>
-          <use href="/icons.svg#icon-arrow-up-right" />
-        </svg>
-      </span>
-    </button>
+    <article className={`${css.card} ${css.card_all}`} key="all-categories">
+      <button className={css.cardAllButton} type="button" onClick={() => onCategorySelect?.(null)}>
+        <span className={css.cardAllText}>All categories</span>
+      </button>
+    </article>
   );
 
   const cards = [...categoryCards, allCategoriesCard].slice(0, 12);

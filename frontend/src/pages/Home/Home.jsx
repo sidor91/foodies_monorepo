@@ -155,12 +155,14 @@ const Home = () => {
       <Hero recipes={popularRecipes} isLoading={recipesLoading} />
 
       <div className={css.categoriesSwitcher}>
-        <Categories
-          categories={categories}
-          isLoading={referencesLoading}
-          error={referencesError}
-          onCategorySelect={handleCategorySelect}
-        />
+        <div className={css.categoriesBase}>
+          <Categories
+            categories={categories}
+            isLoading={referencesLoading}
+            error={referencesError}
+            onCategorySelect={handleCategorySelect}
+          />
+        </div>
 
         {shouldShowCategorie && (
           <div

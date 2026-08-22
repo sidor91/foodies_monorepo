@@ -1,6 +1,6 @@
 .categories {
   margin: 0 auto 8rem;
-  padding: 0 1.6rem;
+  /* padding: 0 1.6rem; */
 }
 
 .heading h2 {
@@ -13,10 +13,12 @@
 }
 
 .heading p {
-  max-width: 40rem;
-  margin-bottom: 0.8rem;
-  font-size: 1.2rem;
-  line-height: 150%;
+  max-width: 60rem;
+  margin-bottom: 2rem;
+  font-size: 1.6rem;
+  line-height: 2.4rem;
+  font-weight: 500;
+  letter-spacing: -2%;
 }
 
 .grid {
@@ -43,17 +45,8 @@
   align-items: flex-end;
   width: 100%;
   padding: 0;
-  text-align: left;
-  cursor: pointer;
-  border: 0;
-  text-decoration: none;
   background: var(--color-accent);
   border-radius: 2.4rem;
-}
-
-.card:focus-visible {
-  outline: 2px solid var(--color-bg);
-  outline-offset: 2px;
 }
 
 .card img {
@@ -62,11 +55,6 @@
   object-fit: cover;
   position: absolute;
   inset: 0;
-  transition: transform var(--transition-slow);
-}
-
-.card:hover img {
-  transform: scale(1.04);
 }
 
 .overlay {
@@ -77,31 +65,35 @@
   margin: 1.2rem;
 }
 
-.overlayLabel {
+.overlayLabelBtn {
   display: inline-flex;
   align-items: center;
-  padding: 0.8rem 1.8rem;
+  height: 4.4rem;
+  padding: 0 1.8rem;
   color: var(--color-bg);
-  background: rgb(5 5 5 / 0.55);
-  border: 1px solid rgb(255 255 255 / 0.22);
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 3rem;
-  font-size: 1.2rem;
-  line-height: 150%;
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 700;
   text-transform: capitalize;
+  cursor: pointer;
 }
 
-.overlayIcon {
+.overlayIconBtn {
   display: grid;
   width: 4.4rem;
   height: 4.4rem;
   place-items: center;
   color: var(--color-bg);
-  background: rgb(5 5 5 / 0.55);
-  border: 1px solid rgb(255 255 255 / 0.45);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
+  cursor: pointer;
 }
 
-.overlayIcon svg {
+.overlayIconBtn svg {
   width: 2rem;
   height: 2rem;
   fill: none;
@@ -109,16 +101,27 @@
 }
 
 .card_all {
+  color: var(--color-bg);
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  color: var(--color-bg);
-  font-size: 1.4rem;
-  font-weight: 800;
-  text-transform: uppercase;
 }
 
-.card_all span:first-child {
+.cardAllButton {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.cardAllText {
+  color: var(--color-bg);
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 100%;
+  letter-spacing: -0.02em;
   text-transform: uppercase;
 }
 
@@ -134,17 +137,25 @@
 @media screen and (min-width: 48rem) {
   .categories {
     margin-bottom: 12rem;
-    padding: 0 1.6rem;
+    /* padding: 0 1.6rem; */
   }
 
   .card {
     min-height: 20rem;
+  }
+
+  .cardAllText {
+    font-size: 2.4rem;
   }
 }
 
 @media screen and (min-width: 90rem) {
   .card {
     min-height: 37rem;
+  }
+
+  .cardAllText {
+    font-size: 4rem;
   }
 
   .row1 > .card:nth-child(1),
