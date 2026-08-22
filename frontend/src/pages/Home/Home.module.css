@@ -1,0 +1,57 @@
+.home {
+  width: 100%;
+  max-width: 144rem;
+  margin: 0 auto;
+}
+
+.categoriesSwitcher {
+  position: relative;
+}
+
+.categoriePanel {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: var(--color-bg);
+  animation: slideInFromRight 320ms ease both;
+}
+
+.categoriePanel_out {
+  animation: slideOutToRight 320ms ease both;
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0.98;
+    transform: translateX(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutToRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0.98;
+    transform: translateX(100%);
+  }
+}
+
+@media screen and (min-width: 48rem) {
+  /* .home {
+    padding: 0 1.6rem;
+  } */
+}
+
+@media screen and (min-width: 90rem) {
+  /* .home {
+    padding: 0 2rem;
+  } */
+}
