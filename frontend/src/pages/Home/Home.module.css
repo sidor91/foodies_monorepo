@@ -5,12 +5,11 @@
 }
 
 .categoriesSwitcher {
-  display: grid;
-  overflow: hidden;
+  width: 100%;
 }
 
 .categoriesBase,
-.categoriePanel {
+.categoryPanel {
   grid-area: 1 / 1;
 }
 
@@ -18,13 +17,12 @@
   z-index: 1;
 }
 
-.categoriePanel {
+.categoryPanel {
   z-index: 5;
   background: var(--color-bg);
-  animation: slideInFromRight 320ms ease both;
 }
 
-.categoriePanel_out {
+.categoryPanelOut {
   animation: slideOutToRight 320ms ease both;
 }
 

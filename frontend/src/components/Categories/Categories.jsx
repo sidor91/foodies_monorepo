@@ -1,11 +1,19 @@
 import css from "./Categories.module.css";
+import CategoryCard from "../CategoryCard/CategoryCard.jsx";
 
 const getAssetName = (name) => {
   const aliases = { Dessert: "Desserts" };
   return aliases[name] || name;
 };
 
-const Categories = ({ categories, isLoading, error, onCategorySelect }) => {
+const Categories = ({
+  categories,
+  isLoading,
+  error,
+  onCategorySelect,
+  isAllExpanded = false,
+  onShowAllCategories,
+}) => {
   if (isLoading && categories.length === 0) {
     return (
       <section aria-label="Categories" className={css.state}>
@@ -22,51 +30,32 @@ const Categories = ({ categories, isLoading, error, onCategorySelect }) => {
     );
   }
 
-  const categoryCards = categories.slice(0, 11).map((category) => {
+  const visibleCategories = isAllExpanded ? categories : categories.slice(0, 11);
+
+  const categoryCards = visibleCategories.map((category) => {
     const assetName = getAssetName(category.name);
 
     return (
       <article className={css.card} key={category.id}>
-        <img
-          src={`/categories/${assetName}.webp`}
-          alt=""
-          onError={(event) => {
-            event.currentTarget.style.display = "none";
-          }}
+        <CategoryCard
+          name={category.name}
+          image={`/categories/${assetName}.webp`}
+          onSelect={() => onCategorySelect?.(category)}
         />
-        <div className={css.overlay}>
-          <button
-            className={css.overlayLabelBtn}
-            type="button"
-            onClick={() => onCategorySelect?.(category)}
-          >
-            {category.name}
-          </button>
-          <button
-            className={css.overlayIconBtn}
-            type="button"
-            onClick={() => onCategorySelect?.(category)}
-            aria-label={`Open ${category.name} category`}
-          >
-            <svg>
-              <use href="/icons.svg#icon-arrow-up-right" />
-            </svg>
-          </button>
-        </div>
       </article>
     );
   });
 
   const allCategoriesCard = (
     <article className={`${css.card} ${css.card_all}`} key="all-categories">
-      <button className={css.cardAllButton} type="button" onClick={() => onCategorySelect?.(null)}>
+      <button className={css.cardAllButton} type="button" onClick={() => onShowAllCategories?.()}>
         <span className={css.cardAllText}>All categories</span>
       </button>
     </article>
   );
 
-  const cards = [...categoryCards, allCategoriesCard].slice(0, 12);
-  const rows = Array.from({ length: 4 }, (_, rowIndex) =>
+  const cards = isAllExpanded ? categoryCards : [...categoryCards, allCategoriesCard];
+  const rows = Array.from({ length: Math.ceil(cards.length / 3) }, (_, rowIndex) =>
     cards.slice(rowIndex * 3, rowIndex * 3 + 3),
   ).filter((row) => row.length > 0);
 
@@ -81,7 +70,10 @@ const Categories = ({ categories, isLoading, error, onCategorySelect }) => {
       </div>
       <div className={css.grid}>
         {rows.map((row, rowIndex) => (
-          <div className={`${css.row} ${css[`row${rowIndex + 1}`]}`} key={`row-${rowIndex + 1}`}>
+          <div
+            className={`${css.row} ${css[`row${(rowIndex % 4) + 1}`]}`}
+            key={`row-${rowIndex + 1}`}
+          >
             {row}
           </div>
         ))}

@@ -24,7 +24,7 @@ import {
   selectRecipesIsLoading,
   selectRecipesPagination,
 } from "../../../redux/recipes/recipesSelectors.js";
-import { Categorie, Categories, Hero, Testimonials } from "../../components/index.js";
+import { Category, Categories, Hero, Testimonials } from "../../components/index.js";
 
 import css from "./Home.module.css";
 
@@ -49,9 +49,9 @@ const Home = () => {
   const [selectedIngredient, setSelectedIngredient] = useState("");
   const [selectedArea, setSelectedArea] = useState("");
   const [page, setPage] = useState(1);
+  const [isAllExpanded, setIsAllExpanded] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
-  const [isClosingCategorie, setIsClosingCategorie] = useState(false);
-  const backAnimationRef = useRef(null);
+  const categoryOpenDelayRef = useRef(null);
 
   const slugify = (value) =>
     value
@@ -77,19 +77,14 @@ const Home = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (isAllCategoriesSlug) {
-      setActiveCategory({ id: null, name: "All categories", isAll: true });
-      setIsClosingCategorie(false);
-      dispatch(fetchCategories());
+    if (selectedCategory) {
+      setActiveCategory({ ...selectedCategory, isAll: false });
+      dispatch(fetchAreas());
+      dispatch(fetchIngredients());
       return;
     }
 
-    if (selectedCategory) {
-      setActiveCategory({ ...selectedCategory, isAll: false });
-      setIsClosingCategorie(false);
-      dispatch(fetchAreas());
-      dispatch(fetchIngredients());
-    }
+    setActiveCategory(null);
   }, [dispatch, isAllCategoriesSlug, selectedCategory]);
 
   useEffect(() => {
@@ -99,7 +94,7 @@ const Home = () => {
   }, [categorySlug]);
 
   useEffect(() => {
-    if (!activeCategory || activeCategory.isAll || isClosingCategorie) {
+    if (!activeCategory || activeCategory.isAll) {
       return;
     }
 
@@ -111,7 +106,7 @@ const Home = () => {
         page,
       }),
     );
-  }, [activeCategory, dispatch, isClosingCategorie, page, selectedArea, selectedIngredient]);
+  }, [activeCategory, dispatch, page, selectedArea, selectedIngredient]);
 
   useEffect(() => {
     setTestimonialIndex(0);
@@ -119,75 +114,82 @@ const Home = () => {
 
   useEffect(() => {
     return () => {
-      if (backAnimationRef.current) {
-        clearTimeout(backAnimationRef.current);
+      if (categoryOpenDelayRef.current) {
+        clearTimeout(categoryOpenDelayRef.current);
       }
     };
   }, []);
 
   const handleCategorySelect = (category) => {
     if (!category) {
-      navigate("/categories/all-categories");
       return;
+    }
+
+    if (categoryOpenDelayRef.current) {
+      clearTimeout(categoryOpenDelayRef.current);
+    }
+
+    if (isAllExpanded) {
+      categoryOpenDelayRef.current = setTimeout(() => {
+        setIsAllExpanded(false);
+      }, 1000);
+    } else {
+      setIsAllExpanded(false);
     }
 
     navigate(`/categories/${slugify(category.name)}`);
   };
 
-  const handleBackFromCategorie = () => {
-    setIsClosingCategorie(true);
-    navigate("/");
-
-    if (backAnimationRef.current) {
-      clearTimeout(backAnimationRef.current);
-    }
-
-    backAnimationRef.current = setTimeout(() => {
-      setIsClosingCategorie(false);
-      setActiveCategory(null);
-    }, 320);
+  const handleShowAllCategories = () => {
+    setIsAllExpanded(true);
   };
 
-  const shouldShowCategorie = Boolean(activeCategory);
+  const handleBackFromCategory = () => {
+    if (categoryOpenDelayRef.current) {
+      clearTimeout(categoryOpenDelayRef.current);
+    }
+
+    setIsAllExpanded(false);
+    navigate("/");
+    setActiveCategory(null);
+  };
+
+  const shouldShowCategory = Boolean(activeCategory);
 
   return (
     <div className={css.home}>
       <Hero recipes={popularRecipes} isLoading={recipesLoading} />
 
       <div className={css.categoriesSwitcher}>
-        <div className={css.categoriesBase}>
+        {shouldShowCategory ? (
+          <Category
+            title={activeCategory.name}
+            allCategories={categories}
+            isAllCategories={Boolean(activeCategory.isAll)}
+            onCategorySelect={handleCategorySelect}
+            recipes={recipes}
+            ingredients={ingredients}
+            areas={areas}
+            selectedIngredient={selectedIngredient}
+            selectedArea={selectedArea}
+            onIngredientChange={setSelectedIngredient}
+            onAreaChange={setSelectedArea}
+            onBack={handleBackFromCategory}
+            page={recipesPagination.page || page}
+            totalPages={recipesPagination.totalPages || 1}
+            onPageChange={setPage}
+            isLoading={activeCategory.isAll ? referencesLoading : recipesLoading}
+            error={activeCategory.isAll ? referencesError : recipesError}
+          />
+        ) : (
           <Categories
             categories={categories}
             isLoading={referencesLoading}
             error={referencesError}
             onCategorySelect={handleCategorySelect}
+            isAllExpanded={isAllExpanded}
+            onShowAllCategories={handleShowAllCategories}
           />
-        </div>
-
-        {shouldShowCategorie && (
-          <div
-            className={`${css.categoriePanel} ${isClosingCategorie ? css.categoriePanel_out : ""}`}
-          >
-            <Categorie
-              title={activeCategory.name}
-              allCategories={categories}
-              isAllCategories={Boolean(activeCategory.isAll)}
-              onCategorySelect={handleCategorySelect}
-              recipes={recipes}
-              ingredients={ingredients}
-              areas={areas}
-              selectedIngredient={selectedIngredient}
-              selectedArea={selectedArea}
-              onIngredientChange={setSelectedIngredient}
-              onAreaChange={setSelectedArea}
-              onBack={handleBackFromCategorie}
-              page={recipesPagination.page || page}
-              totalPages={recipesPagination.totalPages || 1}
-              onPageChange={setPage}
-              isLoading={activeCategory.isAll ? referencesLoading : recipesLoading}
-              error={activeCategory.isAll ? referencesError : recipesError}
-            />
-          </div>
         )}
       </div>
 
