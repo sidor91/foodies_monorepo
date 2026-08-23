@@ -1,12 +1,12 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 
 import {
-  createRecipe,
   deleteRecipe,
   fetchOwnRecipes,
   fetchPopularRecipes,
   fetchRecipeById,
   fetchRecipes,
+  addRecipe,
 } from "./recipesOps.js";
 import { logOut } from "../auth/authOps.js";
 
@@ -23,6 +23,9 @@ const initialState = {
   own: createList(),
   popular: [],
   current: null,
+  categories: [],
+  areas: [],
+  ingredientsList: [],
   isLoading: false,
   error: null,
 };
@@ -71,10 +74,6 @@ const recipesSlice = createSlice({
         state.isLoading = false;
         state.current = action.payload;
       })
-      .addCase(createRecipe.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.current = action.payload;
-      })
       .addCase(deleteRecipe.fulfilled, (state, action) => {
         state.isLoading = false;
         removeFromList(state.own, action.payload);
@@ -87,13 +86,16 @@ const recipesSlice = createSlice({
       .addCase(logOut.fulfilled, (state) => {
         state.own = createList();
       })
+      .addCase(addRecipe.fulfilled, (state) => {
+        state.isLoading = false;
+      })
       .addMatcher(
         isAnyOf(
           fetchRecipes.pending,
           fetchOwnRecipes.pending,
           fetchPopularRecipes.pending,
           fetchRecipeById.pending,
-          createRecipe.pending,
+          addRecipe.pending,
           deleteRecipe.pending,
         ),
         (state) => {
@@ -107,7 +109,7 @@ const recipesSlice = createSlice({
           fetchOwnRecipes.rejected,
           fetchPopularRecipes.rejected,
           fetchRecipeById.rejected,
-          createRecipe.rejected,
+          addRecipe.rejected,
           deleteRecipe.rejected,
         ),
         (state, action) => {

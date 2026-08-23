@@ -17,6 +17,7 @@ import recipesReducer from "./recipes/recipesSlice.js";
 import favoritesReducer from "./favorites/favoritesSlice.js";
 import referencesReducer from "./references/referencesSlice.js";
 import usersReducer from "./users/usersSlice.js";
+import recipeDraftReducer from "./recipeFormDraftSlice/recipeFormDraftSlice.js";
 
 const authPersistConfig = {
   key: "auth",
@@ -30,6 +31,11 @@ const referencesPersistConfig = {
   whitelist: ["categories", "areas", "ingredients", "testimonials"],
 };
 
+const recipeDraftPersistConfig = {
+  key: "recipeDraft",
+  storage,
+};
+
 export const store = configureStore({
   reducer: {
     auth: persistReducer(authPersistConfig, authReducer),
@@ -38,6 +44,7 @@ export const store = configureStore({
     favorites: favoritesReducer,
     references: persistReducer(referencesPersistConfig, referencesReducer),
     users: usersReducer,
+    recipeDraft: persistReducer(recipeDraftPersistConfig, recipeDraftReducer),
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

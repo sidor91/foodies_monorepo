@@ -299,9 +299,9 @@ const options = {
         },
         RecipeIngredientInput: {
           type: "object",
-          required: ["id"],
+          required: ["ingredientId"],
           properties: {
-            id: { type: "string", description: "Ingredient id." },
+            ingredientId: { type: "string", description: "Ingredient id." },
             measure: { type: "string", nullable: true, example: "2 tbsp" },
           },
         },

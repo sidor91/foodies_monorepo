@@ -134,7 +134,7 @@ const App = () => {
                 <Recipe isAuthenticated={isAuthenticated} onRequireLogin={handleLoginToggle} />
               }
             />
-            <Route path="/add-recipe" element={<AddRecipe />} />
+            <Route path="/recipe/add" element={<AddRecipe />} />
             <Route path="/profile" element={<UserProfile />} />
           </Routes>
         </Suspense>
