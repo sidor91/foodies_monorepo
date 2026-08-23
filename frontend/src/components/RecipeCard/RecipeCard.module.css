@@ -77,3 +77,8 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+.favoriteActive svg {
+  fill: var(--color-accent);
+  stroke: var(--color-accent);
+}

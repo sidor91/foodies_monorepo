@@ -1,6 +1,6 @@
 import css from "./RecipeCard.module.css";
 
-const RecipeCard = ({ recipe, onFavoriteToggle, onOpenRecipe }) => {
+const RecipeCard = ({ recipe, isFavorite = false, onFavoriteToggle, onOpenRecipe }) => {
   return (
     <article className={css.card}>
       <img className={css.image} src={recipe.image} alt={recipe.title} />
@@ -16,8 +16,10 @@ const RecipeCard = ({ recipe, onFavoriteToggle, onOpenRecipe }) => {
         <div className={css.actions}>
           <button
             type="button"
+            className={isFavorite ? css.favoriteActive : ""}
             onClick={() => onFavoriteToggle?.(recipe.id)}
-            aria-label="Toggle favorite"
+            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            aria-pressed={isFavorite}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 21s-7-4.7-9.2-8.2C1.4 10.5 2 7.2 4.7 5.6A5.2 5.2 0 0 1 12 8a5.2 5.2 0 0 1 7.3-2.4c2.7 1.6 3.3 4.9 1.9 7.2C19 16.3 12 21 12 21Z" />

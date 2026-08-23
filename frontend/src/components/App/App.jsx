@@ -1,18 +1,22 @@
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Toaster } from "react-hot-toast";
 
 import { Header, MobileMenu, Loader, Footer, LoginForm, RegisterForm } from "../index.js";
 import { logoutUser } from "../../api/auth";
 import { getCurrentUser } from "../../api/users.js";
+import { fetchFavorites } from "../../../redux/favorites/favoritesOps.js";
 
 import css from "./App.module.css";
 
 const Home = lazy(() => import("../../pages/Home/Home.jsx"));
+const Recipe = lazy(() => import("../../pages/Recipe/Recipe.jsx"));
 const AddRecipe = lazy(() => import("../../pages/AddRecipe/AddRecipe.jsx"));
 const UserProfile = lazy(() => import("../../pages/UserProfile/UserProfile.jsx"));
 
 const App = () => {
+  const dispatch = useDispatch();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -58,6 +62,12 @@ const App = () => {
 
     restoreSession();
   }, [user]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchFavorites());
+    }
+  }, [dispatch, isAuthenticated]);
 
   const handleMobileToggle = () => {
     setIsMobileMenuOpen((prev) => !prev);
@@ -106,8 +116,24 @@ const App = () => {
       <main className={css.content} inert={isMobileMenuOpen ? "" : undefined}>
         <Suspense fallback={<Loader />}>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/categories/:categorySlug" element={<Home />} />
+            <Route
+              path="/"
+              element={
+                <Home isAuthenticated={isAuthenticated} onRequireLogin={handleLoginToggle} />
+              }
+            />
+            <Route
+              path="/categories/:categorySlug"
+              element={
+                <Home isAuthenticated={isAuthenticated} onRequireLogin={handleLoginToggle} />
+              }
+            />
+            <Route
+              path="/recipes/:recipeId"
+              element={
+                <Recipe isAuthenticated={isAuthenticated} onRequireLogin={handleLoginToggle} />
+              }
+            />
             <Route path="/add-recipe" element={<AddRecipe />} />
             <Route path="/profile" element={<UserProfile />} />
           </Routes>

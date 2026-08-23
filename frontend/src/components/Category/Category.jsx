@@ -5,6 +5,7 @@ const Category = ({
   title = "Desserts",
   description = "Go on a taste journey, where every sip is a sophisticated creative chord, and every dessert is an expression of the most refined gastronomic desires.",
   recipes = [],
+  favoriteIds = [],
   ingredients = [],
   areas = [],
   selectedIngredient = "",
@@ -76,6 +77,7 @@ const Category = ({
                   <li key={recipe.id}>
                     <RecipeCard
                       recipe={recipe}
+                      isFavorite={favoriteIds.includes(recipe.id)}
                       onFavoriteToggle={onFavoriteToggle}
                       onOpenRecipe={onOpenRecipe}
                     />

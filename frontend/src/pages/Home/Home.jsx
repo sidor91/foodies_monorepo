@@ -23,11 +23,13 @@ import {
   selectRecipesIsLoading,
   selectRecipesPagination,
 } from "../../../redux/recipes/recipesSelectors.js";
+import { addFavorite, removeFavorite } from "../../../redux/favorites/favoritesOps.js";
+import { selectFavoriteIds } from "../../../redux/favorites/favoritesSelectors.js";
 import { Category, Categories, Hero, Testimonials } from "../../components/index.js";
 
 import css from "./Home.module.css";
 
-const Home = () => {
+const Home = ({ isAuthenticated, onRequireLogin }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { categorySlug } = useParams();
@@ -42,6 +44,7 @@ const Home = () => {
   const referencesLoading = useSelector(selectReferencesIsLoading);
   const recipesLoading = useSelector(selectRecipesIsLoading);
   const referencesError = useSelector(selectReferencesError);
+  const favoriteIds = useSelector(selectFavoriteIds);
 
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [selectedIngredient, setSelectedIngredient] = useState("");
@@ -125,6 +128,19 @@ const Home = () => {
     setActiveCategory(null);
   };
 
+  const handleFavoriteToggle = (recipeId) => {
+    if (!isAuthenticated) {
+      onRequireLogin?.();
+      return;
+    }
+
+    dispatch(favoriteIds.includes(recipeId) ? removeFavorite(recipeId) : addFavorite(recipeId));
+  };
+
+  const handleOpenRecipe = (recipeId) => {
+    navigate(`/recipes/${recipeId}`);
+  };
+
   const shouldShowCategory = Boolean(activeCategory);
 
   return (
@@ -136,6 +152,7 @@ const Home = () => {
           <Category
             title={activeCategory.name}
             recipes={recipes}
+            favoriteIds={favoriteIds}
             ingredients={ingredients}
             areas={areas}
             selectedIngredient={selectedIngredient}
@@ -146,6 +163,8 @@ const Home = () => {
             page={recipesPagination.page || page}
             totalPages={recipesPagination.totalPages || 1}
             onPageChange={setPage}
+            onFavoriteToggle={handleFavoriteToggle}
+            onOpenRecipe={handleOpenRecipe}
             isLoading={recipesLoading}
             error={recipesError}
           />
