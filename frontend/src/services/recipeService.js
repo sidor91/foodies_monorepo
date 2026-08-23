@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable no-undef */
-
 const prepareRecipeFormData = (values) => {
   const formData = new FormData();
   if (values.photo) formData.append("image", values.photo);

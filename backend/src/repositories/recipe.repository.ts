@@ -110,10 +110,7 @@ class RecipeRepository {
         areaId: data.areaId,
         ownerId: data.ownerId,
         ingredients: {
-          create: data.ingredients.map((ingredient) => ({
-            ingredientId: ingredient.ingredientId,
-            measure: ingredient.measure,
-          })),
+          create: data.ingredients,
         },
       },
       select: recipeCreateSelect,

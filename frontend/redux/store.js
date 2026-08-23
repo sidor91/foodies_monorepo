@@ -17,7 +17,7 @@ import recipesReducer from "./recipes/recipesSlice.js";
 import favoritesReducer from "./favorites/favoritesSlice.js";
 import referencesReducer from "./references/referencesSlice.js";
 import usersReducer from "./users/usersSlice.js";
-import recipeDraftReducer from "./recipeDraft/recipeDraftSlice.js";
+import recipeDraftReducer from "./recipeFormDraftSlice/recipeFormDraftSlice.js";
 
 const authPersistConfig = {
   key: "auth",

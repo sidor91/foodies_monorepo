@@ -1,7 +1,6 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 
 import {
-  createRecipe,
   deleteRecipe,
   fetchOwnRecipes,
   fetchPopularRecipes,
@@ -75,10 +74,6 @@ const recipesSlice = createSlice({
         state.isLoading = false;
         state.current = action.payload;
       })
-      .addCase(createRecipe.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.current = action.payload;
-      })
       .addCase(deleteRecipe.fulfilled, (state, action) => {
         state.isLoading = false;
         removeFromList(state.own, action.payload);
@@ -100,7 +95,7 @@ const recipesSlice = createSlice({
           fetchOwnRecipes.pending,
           fetchPopularRecipes.pending,
           fetchRecipeById.pending,
-          createRecipe.pending,
+          addRecipe.pending,
           deleteRecipe.pending,
         ),
         (state) => {
@@ -114,7 +109,7 @@ const recipesSlice = createSlice({
           fetchOwnRecipes.rejected,
           fetchPopularRecipes.rejected,
           fetchRecipeById.rejected,
-          createRecipe.rejected,
+          addRecipe.rejected,
           deleteRecipe.rejected,
         ),
         (state, action) => {

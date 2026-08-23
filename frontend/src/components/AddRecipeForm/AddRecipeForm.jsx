@@ -1,12 +1,13 @@
-/* eslint-disable no-console */
-/* eslint-disable no-undef */
 import { useEffect } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import clsx from "clsx";
 import css from "./AddRecipeForm.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { selectRecipeDraft, clearDraft } from "../../../redux/recipeDraft/recipeDraftSlice.js";
+import {
+  selectRecipeDraft,
+  clearDraft,
+} from "../../../redux/recipeFormDraftSlice/recipeFormDraftSlice.js";
 import {
   fetchCategories,
   fetchAreas,
@@ -15,6 +16,7 @@ import {
 import prepareRecipeFormData from "../../services/recipeService.js";
 import { addRecipe } from "../../../redux/recipes/recipesOps.js";
 import RecipeFormContent from "../RecipeFormContent/RecipeFormContent.jsx";
+import { toast } from "react-hot-toast";
 
 // 1. Схема валідації Yup
 const RecipeSchema = Yup.object().shape({
@@ -41,8 +43,19 @@ const RecipeSchema = Yup.object().shape({
 });
 
 const AddRecipeForm = () => {
-  const initialValues = useSelector(selectRecipeDraft);
+  const savedDraft = useSelector(selectRecipeDraft);
   const dispatch = useDispatch();
+
+  const initialValues = {
+    photo: savedDraft?.photo || null,
+    title: savedDraft?.title || "",
+    description: savedDraft?.description || "",
+    category: savedDraft?.category || "",
+    time: savedDraft?.time || 10,
+    area: savedDraft?.area || "",
+    ingredients: savedDraft?.ingredients || [],
+    instructions: savedDraft?.instructions || "",
+  };
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -54,8 +67,8 @@ const AddRecipeForm = () => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = prepareRecipeFormData(values);
     try {
-      const result = await dispatch(addRecipe(formData)).unwrap();
-      alert("Successfully created: " + JSON.stringify(result));
+      await dispatch(addRecipe(formData)).unwrap();
+      toast.success("Successfully created a recipe!");
 
       dispatch(clearDraft()); // clear the draft in Redux
       resetForm(); // clear Formik form
@@ -75,7 +88,7 @@ const AddRecipeForm = () => {
           initialValues={initialValues}
           validationSchema={RecipeSchema}
           onSubmit={handleSubmit}
-          enableReinitialize={true}
+          // enableReinitialize={true}
         >
           {({ isSubmitting }) => <RecipeFormContent isSubmitting={isSubmitting} />}
         </Formik>

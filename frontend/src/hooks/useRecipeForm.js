@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useFormikContext } from "formik";
 import { useSelector } from "react-redux";
 import { selectIngredients } from "../../redux/references/referencesSelectors.js";
 import { useDispatch } from "react-redux";
-import { clearDraft, updateDraft } from "../../redux/recipeDraft/recipeDraftSlice.js";
-
+import {
+  clearDraft,
+  updateDraft,
+  selectRecipeDraft,
+} from "../../redux/recipeFormDraftSlice/recipeFormDraftSlice.js";
 const useRecipeForm = () => {
   const { values, setFieldValue, errors } = useFormikContext();
   const ingredientsList = useSelector(selectIngredients);
@@ -15,10 +18,9 @@ const useRecipeForm = () => {
   const [currentQuantity, setCurrentQuantity] = useState("");
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  // Автозбереження форми в Redux при кожній зміні
-  useEffect(() => {
+  const saveCurrentDraft = () => {
     dispatch(updateDraft(values));
-  }, [values, dispatch]);
+  };
 
   const handleResetForm = (resetForm) => {
     dispatch(clearDraft());
@@ -32,6 +34,7 @@ const useRecipeForm = () => {
   const handleRemoveIngredient = (indexToRemove) => {
     const updatedIngredients = values.ingredients.filter((_, index) => index !== indexToRemove);
     setFieldValue("ingredients", updatedIngredients);
+    dispatch(updateDraft({ ...values, ingredients: updatedIngredients }));
   };
 
   const handleImageUpload = (e, setFieldValue) => {
@@ -69,6 +72,8 @@ const useRecipeForm = () => {
     // Set the new ingredient in Formik's state
     setFieldValue("ingredients", [...values.ingredients, newIngredient]);
 
+    dispatch(updateDraft({ ...values, ingredients: [...values.ingredients, newIngredient] }));
+
     // Clear the fields
     setCurrentIngredientId("");
     setCurrentQuantity("");
@@ -89,6 +94,7 @@ const useRecipeForm = () => {
     handleImageUpload,
     previewUrl,
     handleResetForm,
+    saveCurrentDraft,
   };
 };
 

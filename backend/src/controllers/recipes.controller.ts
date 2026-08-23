@@ -10,7 +10,7 @@ interface CreateRecipeBody {
   time?: number;
   categoryId: string;
   areaId: string;
-  ingredients?: { id: string; measure?: string }[];
+  ingredients?: { ingredientId: string; measure?: string }[];
 }
 
 class RecipesController {

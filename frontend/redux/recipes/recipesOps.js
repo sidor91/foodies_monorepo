@@ -53,28 +53,6 @@ export const fetchOwnRecipes = createAsyncThunk("recipes/fetchOwn", async (param
   }
 });
 
-export const createRecipe = createAsyncThunk("recipes/create", async (recipe, thunkAPI) => {
-  try {
-    const { image, ingredients = [], ...fields } = recipe;
-    const formData = new FormData();
-
-    Object.entries(cleanParams(fields)).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-    formData.append("ingredients", JSON.stringify(ingredients));
-
-    if (image) {
-      formData.append("image", image);
-    }
-
-    const { data } = await api.post("/recipes", formData);
-
-    return data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(getErrorMessage(error));
-  }
-});
-
 export const deleteRecipe = createAsyncThunk("recipes/delete", async (id, thunkAPI) => {
   try {
     await api.delete(`/recipes/${id}`);

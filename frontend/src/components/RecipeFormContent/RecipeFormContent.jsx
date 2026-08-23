@@ -37,10 +37,11 @@ const RecipeFormContent = ({ isSubmitting }) => {
     setFieldValue,
     handleResetForm,
     errors,
+    saveCurrentDraft,
   } = useRecipeForm();
 
   return (
-    <Form>
+    <Form onBlur={saveCurrentDraft}>
       <div className="upload-container">
         <label className="upload-content" style={{ cursor: "pointer", display: "block" }}>
           {previewUrl ? (
