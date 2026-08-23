@@ -42,24 +42,6 @@
   letter-spacing: -2%;
 }
 
-.categoriesHeading h2 {
-  margin: 0 0 2.4rem;
-  font-size: 4.4rem;
-  font-weight: 800;
-  line-height: 100%;
-  letter-spacing: -2%;
-  text-transform: uppercase;
-}
-
-.categoriesHeading p {
-  max-width: 60rem;
-  margin-bottom: 2rem;
-  font-size: 1.6rem;
-  line-height: 2.4rem;
-  font-weight: 500;
-  letter-spacing: -2%;
-}
-
 .contentLayout {
   display: flex;
   gap: 3.2rem;
@@ -123,35 +105,6 @@
   gap: 2.4rem 1.2rem;
 }
 
-.categoryGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  margin-top: 3.2rem;
-}
-
-.categoryRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-}
-
-.categoryCard {
-  min-height: 37rem;
-  flex: 1 1 100%;
-  width: 100%;
-  padding: 0;
-  overflow: hidden;
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  cursor: pointer;
-  border: 0;
-  text-align: left;
-  background: var(--color-accent);
-  border-radius: 1.6rem;
-}
-
 .pagination {
   display: flex;
   justify-content: center;
@@ -196,16 +149,8 @@
     padding-top: 3.2rem;
   }
 
-  .filters {
-    grid-template-columns: repeat(2, minmax(0, 31.5rem));
-  }
-
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .categoryCard {
-    min-height: 20rem;
   }
 }
 
@@ -217,36 +162,5 @@
 
   .grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .categoryCard {
-    min-height: 37rem;
-  }
-
-  .categoryRow1 > .categoryCard:nth-child(1),
-  .categoryRow1 > .categoryCard:nth-child(2),
-  .categoryRow4 > .categoryCard:nth-child(1),
-  .categoryRow4 > .categoryCard:nth-child(2) {
-    flex: 0 1 calc((100% - 4rem) * 0.3);
-  }
-
-  .categoryRow1 > .categoryCard:nth-child(3),
-  .categoryRow4 > .categoryCard:nth-child(3) {
-    flex: 0 1 calc((100% - 4rem) * 0.4);
-  }
-
-  .categoryRow2 > .categoryCard:nth-child(1) {
-    flex: 0 1 calc((100% - 4rem) * 0.4);
-  }
-
-  .categoryRow2 > .categoryCard:nth-child(2),
-  .categoryRow2 > .categoryCard:nth-child(3),
-  .categoryRow3 > .categoryCard:nth-child(1),
-  .categoryRow3 > .categoryCard:nth-child(3) {
-    flex: 0 1 calc((100% - 4rem) * 0.3);
-  }
-
-  .categoryRow3 > .categoryCard:nth-child(2) {
-    flex: 0 1 calc((100% - 4rem) * 0.4);
   }
 }

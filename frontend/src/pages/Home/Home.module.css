@@ -8,48 +8,6 @@
   width: 100%;
 }
 
-.categoriesBase,
-.categoryPanel {
-  grid-area: 1 / 1;
-}
-
-.categoriesBase {
-  z-index: 1;
-}
-
-.categoryPanel {
-  z-index: 5;
-  background: var(--color-bg);
-}
-
-.categoryPanelOut {
-  animation: slideOutToRight 320ms ease both;
-}
-
-@keyframes slideInFromRight {
-  from {
-    opacity: 0.98;
-    transform: translateX(100%);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideOutToRight {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  to {
-    opacity: 0.98;
-    transform: translateX(100%);
-  }
-}
-
 @media screen and (min-width: 48rem) {
   /* .home {
     padding: 0 1.6rem;
