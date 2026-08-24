@@ -67,17 +67,16 @@ class RecipesController {
 
   // POST /recipes — private, create own recipe.
   async create(req: Request, res: Response) {
-    const { title, instructions, description, categoryId, areaId } = req.body as CreateRecipeBody;
+    const {
+      title,
+      instructions,
+      description,
+      categoryId,
+      areaId,
+      ingredients = [],
+    } = req.body as CreateRecipeBody;
 
     const time = req.body.time !== undefined ? Number(req.body.time) : undefined;
-
-    let ingredients: { ingredientId: string; measure?: string }[] = [];
-    try {
-      ingredients = req.body.ingredients ? JSON.parse(req.body.ingredients) : [];
-    } catch {
-      res.status(400).json({ message: "ingredients must be a JSON array" });
-      return;
-    }
 
     const recipe = await this.recipeService.create(
       req.user!.id,
