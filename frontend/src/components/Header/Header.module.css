@@ -4,7 +4,7 @@
 }
 
 .header__container {
-  max-width: 37.5rem;
+  /* max-width: 37.5rem; */
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -46,7 +46,7 @@
   }
 
   .header__container {
-    max-width: 76.8rem;
+    /* max-width: 76.8rem; */
     padding: 2rem 3.2rem;
   }
 
@@ -64,7 +64,7 @@
 /* --------------------------------------- */
 
 @media screen and (min-width: 90rem) {
-   .header__section {
+  .header__section {
     padding: 2rem 2rem 0 2rem;
   }
 

@@ -2,6 +2,7 @@
   width: 100%;
   max-width: 144rem;
   margin: 0 auto;
+  padding: 0 0.8rem;
 }
 
 .categoriesSwitcher {
@@ -9,13 +10,13 @@
 }
 
 @media screen and (min-width: 48rem) {
-  /* .home {
+  .home {
     padding: 0 1.6rem;
-  } */
+  }
 }
 
 @media screen and (min-width: 90rem) {
-  /* .home {
-    padding: 0 2rem;
-  } */
+  .home {
+    padding: 0;
+  }
 }
