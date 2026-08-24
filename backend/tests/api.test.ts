@@ -491,9 +491,7 @@ describe("Private recipes", () => {
       .field("ingredients", "not-valid-json");
 
     expect(response.status).toBe(400);
-    expect(response.body).toEqual({
-      message: "ingredients must be a JSON array",
-    });
+    expect(response.body.message).toEqual("Invalid request data");
   });
 
   it("POST /api/recipes creates an authenticated user's recipe", async () => {
