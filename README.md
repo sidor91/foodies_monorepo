@@ -180,7 +180,7 @@ All routes are prefixed with `/api`. Private endpoints accept the access token e
 | Method | Endpoint           | Description                                 |
 | ------ | ------------------ | ------------------------------------------- |
 | GET    | `/health`          | Health check                                |
-| GET    | `/recipes`         | Search/list recipes (paginated, filterable) |
+| GET    | `/recipes`         | Search/list recipes (paginated, filterable by category/ingredient/area/userId) |
 | GET    | `/recipes/popular` | Most favorited recipes                      |
 | GET    | `/recipes/:id`     | Recipe details by id                        |
 | GET    | `/categories`      | List all categories                         |
