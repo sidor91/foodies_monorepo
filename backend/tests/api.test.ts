@@ -516,6 +516,18 @@ describe("Private recipes", () => {
     ).toBe(true);
   });
 
+  it("GET /api/recipes filters by userId", async () => {
+    const response = await request(app).get("/api/recipes").query({ userId: testUserId });
+
+    expect(response.status).toBe(200);
+    expect(
+      response.body.items.some((recipe: { id: string }) => recipe.id === createdRecipeId),
+    ).toBe(true);
+    expect(
+      response.body.items.some((recipe: { id: string }) => recipe.id === seedRecipeId),
+    ).toBe(false);
+  });
+
   it("DELETE /api/recipes/:id prevents deleting another user's recipe", async () => {
     const response = await agent.delete(`/api/recipes/${seedRecipeId}`);
 
