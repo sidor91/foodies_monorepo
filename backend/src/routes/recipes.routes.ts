@@ -140,6 +140,11 @@ router.get("/:id", (req, res) => recipesController.getById(req, res));
  *         description: Area ID.
  *         schema:
  *           type: string
+ *       - name: userId
+ *         in: query
+ *         description: Filter recipes by owner (user) ID.
+ *         schema:
+ *           type: string
  *       - $ref: '#/components/parameters/Page'
  *       - $ref: '#/components/parameters/Limit'
  *     responses:

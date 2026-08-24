@@ -16,7 +16,7 @@ import { swaggerSpec } from "./swagger.js";
 import { AppError } from "./utils/AppError.js";
 import { prisma } from "./db/prisma.js";
 
-const app = express();
+export const app = express();
 
 app.use(helmet());
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
@@ -101,4 +101,6 @@ async function start() {
   });
 }
 
-start();
+if (process.env.NODE_ENV !== "test") {
+  start();
+}

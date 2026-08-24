@@ -1,5 +1,7 @@
+import AddRecipeForm from "../../components/AddRecipeForm/AddRecipeForm";
+
 const AddRecipe = () => {
-  return;
-}
+  return <AddRecipeForm />;
+};
 
 export default AddRecipe;

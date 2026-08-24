@@ -10,7 +10,7 @@ interface CreateRecipeBody {
   time?: number;
   categoryId: string;
   areaId: string;
-  ingredients?: { id: string; measure?: string }[];
+  ingredients?: { ingredientId: string; measure?: string }[];
 }
 
 class RecipesController {
@@ -19,13 +19,14 @@ class RecipesController {
     private readonly favoriteService: IFavoriteService,
   ) {}
 
-  // GET /recipes?category=&ingredient=&area=&page=&limit= — public search with pagination.
+  // GET /recipes?category=&ingredient=&area=&userId=&page=&limit= — public search with pagination.
   async search(req: Request, res: Response) {
     const result = await this.recipeService.search(
       {
         category: req.query.category as string | undefined,
         area: req.query.area as string | undefined,
         ingredient: req.query.ingredient as string | undefined,
+        userId: req.query.userId as string | undefined,
       },
       parsePagination(req.query),
     );
@@ -70,7 +71,7 @@ class RecipesController {
 
     const time = req.body.time !== undefined ? Number(req.body.time) : undefined;
 
-    let ingredients: { id: string; measure?: string }[] = [];
+    let ingredients: { ingredientId: string; measure?: string }[] = [];
     try {
       ingredients = req.body.ingredients ? JSON.parse(req.body.ingredients) : [];
     } catch {

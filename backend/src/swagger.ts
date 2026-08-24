@@ -196,7 +196,28 @@ const options = {
           ],
         },
         UserConnectionItem: {
-          allOf: [{ $ref: "#/components/schemas/PublicUserProfile" }],
+          allOf: [
+            { $ref: "#/components/schemas/PublicUserProfile" },
+            {
+              type: "object",
+              required: ["recipes"],
+              properties: {
+                recipes: {
+                  type: "array",
+                  maxItems: 4,
+                  items: {
+                    type: "object",
+                    required: ["id", "title", "image"],
+                    properties: {
+                      id: { type: "string" },
+                      title: { type: "string" },
+                      image: { type: "string", format: "uri", nullable: true },
+                    },
+                  },
+                },
+              },
+            },
+          ],
         },
         PaginatedUserConnections: {
           type: "object",
@@ -299,9 +320,9 @@ const options = {
         },
         RecipeIngredientInput: {
           type: "object",
-          required: ["id"],
+          required: ["ingredientId"],
           properties: {
-            id: { type: "string", description: "Ingredient id." },
+            ingredientId: { type: "string", description: "Ingredient id." },
             measure: { type: "string", nullable: true, example: "2 tbsp" },
           },
         },
