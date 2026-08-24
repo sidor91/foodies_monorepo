@@ -316,6 +316,16 @@ describe("Users", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.items.some((user: { id: string }) => user.id === seedUserId)).toBe(true);
+    for (const user of response.body.items) {
+      expect(Array.isArray(user.recipes)).toBe(true);
+      expect(user.recipes.length).toBeLessThanOrEqual(4);
+
+      for (const recipe of user.recipes) {
+        expect(recipe).toHaveProperty("id");
+        expect(recipe).toHaveProperty("title");
+        expect(recipe).toHaveProperty("image");
+      }
+    }
     expect(response.body.page).toBe(1);
     expect(response.body).toHaveProperty("total");
     expect(response.body).toHaveProperty("totalPages");
@@ -326,6 +336,16 @@ describe("Users", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.items.some((user: { id: string }) => user.id === testUserId)).toBe(true);
+    for (const user of response.body.items) {
+      expect(Array.isArray(user.recipes)).toBe(true);
+      expect(user.recipes.length).toBeLessThanOrEqual(4);
+
+      for (const recipe of user.recipes) {
+        expect(recipe).toHaveProperty("id");
+        expect(recipe).toHaveProperty("title");
+        expect(recipe).toHaveProperty("image");
+      }
+    }
   });
 
   it("POST /api/users/:id/follow rejects following yourself", async () => {

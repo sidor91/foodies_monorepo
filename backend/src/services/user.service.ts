@@ -5,7 +5,11 @@ import {
   type CloudinaryUploadResult,
 } from "./cloudinary.service.js";
 import type { User } from "@prisma/client";
-import type { UserListItem, UserProfile } from "../repositories/user.repository.js";
+import type {
+  UserConnectionRecipe,
+  UserListItem,
+  UserProfile,
+} from "../repositories/user.repository.js";
 import type { Pagination } from "./recipe.service.js";
 
 export type UserFollowResult = "not_found" | "self" | "ok";
@@ -21,6 +25,7 @@ export type UserProfileResponse = Omit<UserProfile, "_count"> & {
 export type UserConnectionItem = Omit<UserListItem, "_count"> & {
   recipesCount: number;
   followersCount: number;
+  recipes: UserConnectionRecipe[];
 };
 
 export interface UserConnectionsResponse {
