@@ -134,6 +134,7 @@ const Recipe = ({ isAuthenticated, onRequireLogin }) => {
             variant="secondary"
             isActive={isFavorite}
             disabled={isFavoritePending}
+            className={css.favoriteButton}
             onClick={() => handleFavoriteToggle(recipe.id)}
           >
             {isFavorite ? "Remove from favorites" : "Add to favorites"}

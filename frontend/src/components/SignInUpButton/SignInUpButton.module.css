@@ -26,7 +26,7 @@
 /* Tablet */
 /* --------------------------------------- */
 
-@media screen and (min-width: 48rem) {
+@media screen and (min-width: 480px) {
   .sign__btn {
     padding: 1.4rem 2.8rem;
     border-radius: 3rem;
@@ -37,7 +37,7 @@
 /* Desktop */
 /* --------------------------------------- */
 
-@media screen and (min-width: 90rem) {
+@media screen and (min-width: 900px) {
   .sign__btn:hover,
   .sign__btn:focus {
     background-color: var(--color-accent);

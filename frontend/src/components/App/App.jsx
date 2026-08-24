@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Toaster } from "react-hot-toast";
@@ -17,6 +17,7 @@ const UserProfile = lazy(() => import("../../pages/UserProfile/UserProfile.jsx")
 
 const App = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -82,6 +83,9 @@ const App = () => {
     setIsRegister((prev) => !prev);
     setIsLogin(false);
   };
+
+  const isRecipePage = location.pathname.startsWith("/recipes/");
+
   return (
     <div className={`main__container ${isMobileMenuOpen && "modal__open"}`}>
       <Toaster />
@@ -97,6 +101,7 @@ const App = () => {
         user={user}
         isAuthLoading={isAuthLoading}
         onLogout={handleLogout}
+        isLight={isRecipePage}
       />
 
       <MobileMenu isMobileMenuOpen={isMobileMenuOpen} onMobileToggle={handleMobileToggle} />

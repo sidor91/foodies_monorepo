@@ -15,6 +15,10 @@
   border-top-right-radius: 3rem;
 }
 
+.header__container_light {
+  background-color: var(--color-bg);
+}
+
 .nav__link {
   display: none;
   padding: 1.4rem;
@@ -27,9 +31,17 @@
   color: var(--color-bg);
 }
 
+.nav__link_light {
+  color: var(--color-text);
+}
+
 .nav__link.active {
   border: 1px solid var(--color-border-transparent);
   border-radius: 3rem;
+}
+
+.nav__link.active.active_light {
+  border-color: #d9d9d9;
 }
 
 .modal__button {
@@ -40,7 +52,7 @@
 /* Tablet */
 /* --------------------------------------- */
 
-@media screen and (min-width: 48rem) {
+@media screen and (min-width: 480px) {
   .header__section {
     padding: 1.6rem 1.6rem 0 1.6rem;
   }
@@ -63,7 +75,7 @@
 /* Desktop */
 /* --------------------------------------- */
 
-@media screen and (min-width: 90rem) {
+@media screen and (min-width: 900px) {
   .header__section {
     padding: 2rem 2rem 0 2rem;
   }

@@ -5,11 +5,6 @@
 
 .heading h2 {
   margin: 0 0 2.4rem;
-  font-size: 4.4rem;
-  font-weight: 800;
-  line-height: 100%;
-  letter-spacing: -2%;
-  text-transform: uppercase;
 }
 
 .heading p {
@@ -91,10 +86,18 @@
   color: var(--color-secondary);
 }
 
-@media screen and (min-width: 48rem) {
+/* mobile: 0 - 768px, single column, capped to 9 visible rows when collapsed */
+@media screen and (max-width: 767.98px) {
+  .grid_collapsed .row3 > .card:nth-child(3),
+  .grid_collapsed .row4 > .card:nth-child(1),
+  .grid_collapsed .row4 > .card:nth-child(2) {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
   .categories {
     margin-bottom: 12rem;
-    /* padding: 0 1.6rem; */
   }
 
   .card {
@@ -106,7 +109,29 @@
   }
 }
 
-@media screen and (min-width: 90rem) {
+/* tablet: 768px - 900px, pair rows with two full-width feature rows, max 7 rows */
+@media screen and (min-width: 768px) and (max-width: 899.98px) {
+  .grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .row {
+    display: contents;
+  }
+
+  .row > .card {
+    flex: 1 1 calc(50% - 1rem);
+  }
+
+  .row1 > .card:nth-child(3),
+  .row3 > .card:nth-child(2) {
+    flex: 1 1 100%;
+    min-height: 32rem;
+  }
+}
+
+@media screen and (min-width: 900px) {
   .card {
     min-height: 37rem;
   }

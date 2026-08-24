@@ -33,7 +33,9 @@ const Category = ({
         Back
       </button>
 
-      <h1 id="category-title">{title}</h1>
+      <h1 id="category-title" className="section__title">
+        {title}
+      </h1>
       <p className={css.description}>{description}</p>
 
       <div className={css.contentLayout}>

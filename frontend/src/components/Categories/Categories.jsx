@@ -62,13 +62,15 @@ const Categories = ({
   return (
     <section className={css.categories} aria-labelledby="categories-title">
       <div className={css.heading}>
-        <h2 id="categories-title">Categories</h2>
+        <h2 id="categories-title" className="section__title">
+          Categories
+        </h2>
         <p>
           Discover a limitless world of culinary possibilities and enjoy exquisite recipes that
           combine taste, style and the warm atmosphere of the kitchen.
         </p>
       </div>
-      <div className={css.grid}>
+      <div className={`${css.grid} ${!isAllExpanded ? css.grid_collapsed : ""}`}>
         {rows.map((row, rowIndex) => (
           <div
             className={`${css.row} ${css[`row${(rowIndex % 4) + 1}`]}`}
