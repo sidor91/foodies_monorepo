@@ -94,7 +94,15 @@ Database connection settings are configured via environment variables (see `.env
 
 Backend API integration tests use Vitest and Supertest against a separate PostgreSQL test database.
 
-The tests require `TEST_DATABASE_URL` and include a safety check that refuses to run against a database whose name does not contain `test`. This prevents the integration tests from accidentally modifying the development database.
+Tests are configured through `backend/.env.test`, where `DATABASE_URL` must point to a test database (for example, `foodies_test`). The test suite includes a safety check and refuses to run if the database name does not contain `test`.
+
+Before the first test run, create the test env file from the example:
+
+```bash
+cp backend/.env.test.example backend/.env.test
+```
+
+Then adjust values in `backend/.env.test` if needed.
 
 ### Start the test database
 
@@ -116,11 +124,7 @@ docker compose -p foodies-test up -d postgres
 Then from `backend`:
 
 ```cmd
-set "TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5433/foodies_test"
-
-cmd /C "set DATABASE_URL=%TEST_DATABASE_URL%&& npx prisma migrate deploy"
-cmd /C "set DATABASE_URL=%TEST_DATABASE_URL%&& npx prisma db seed"
-
+cd backend
 npm test
 ```
 
@@ -139,13 +143,19 @@ docker compose -p foodies-test up -d postgres
 Then from `backend`:
 
 ```bash
-export TEST_DATABASE_URL="postgresql://postgres:postgres@localhost:5433/foodies_test"
-
-DATABASE_URL="$TEST_DATABASE_URL" npx prisma migrate deploy
-DATABASE_URL="$TEST_DATABASE_URL" npx prisma db seed
-
+cd backend
 npm test
 ```
+
+If you run the test database on a non-default port (for example `5433`), update `backend/.env.test` accordingly before `npm test`.
+
+By default, test config is read from `backend/.env.test`:
+
+```bash
+npm test
+```
+
+`npm test` runs test migrations, then seeds the test database, and finally starts Vitest.
 
 The integration suite covers system and reference endpoints, authentication, user profiles and follows, public and private recipe operations, favorites, pagination, filtering, validation, authorization, and logout behavior.
 
@@ -177,16 +187,16 @@ All routes are prefixed with `/api`. Private endpoints accept the access token e
 
 ### Public endpoints
 
-| Method | Endpoint           | Description                                 |
-| ------ | ------------------ | ------------------------------------------- |
-| GET    | `/health`          | Health check                                |
-| GET    | `/recipes`         | Search/list recipes (paginated, filterable) |
-| GET    | `/recipes/popular` | Most favorited recipes                      |
-| GET    | `/recipes/:id`     | Recipe details by id                        |
-| GET    | `/categories`      | List all categories                         |
-| GET    | `/areas`           | List all areas                              |
-| GET    | `/ingredients`     | List all ingredients                        |
-| GET    | `/testimonials`    | List all testimonials                       |
+| Method | Endpoint           | Description                                                                    |
+| ------ | ------------------ | ------------------------------------------------------------------------------ |
+| GET    | `/health`          | Health check                                                                   |
+| GET    | `/recipes`         | Search/list recipes (paginated, filterable by category/ingredient/area/userId) |
+| GET    | `/recipes/popular` | Most favorited recipes                                                         |
+| GET    | `/recipes/:id`     | Recipe details by id                                                           |
+| GET    | `/categories`      | List all categories                                                            |
+| GET    | `/areas`           | List all areas                                                                 |
+| GET    | `/ingredients`     | List all ingredients                                                           |
+| GET    | `/testimonials`    | List all testimonials                                                          |
 
 ### Authentication endpoints
 

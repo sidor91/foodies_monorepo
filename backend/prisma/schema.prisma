@@ -72,6 +72,7 @@ model Recipe {
   image        String?
   imagePublicId String?
   time         Int?
+  createdAt    DateTime           @default(now())
 
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])

@@ -49,11 +49,11 @@ async function cleanupTestUser() {
 }
 
 beforeAll(async () => {
-  const testDatabaseUrl = process.env.TEST_DATABASE_URL;
+  const testDatabaseUrl = process.env.DATABASE_URL;
 
   if (!testDatabaseUrl) {
     throw new Error(
-      "TEST_DATABASE_URL is required. Tests will not run without an explicit test database.",
+      "DATABASE_URL is required. Tests will not run without an explicit test database.",
     );
   }
 
@@ -61,18 +61,16 @@ beforeAll(async () => {
 
   if (!databaseName.toLowerCase().includes("test")) {
     throw new Error(
-      `Refusing to run tests against database "${databaseName}". TEST_DATABASE_URL must point to a test database.`,
+      `Refusing to run tests against database "${databaseName}". DATABASE_URL must point to a test database.`,
     );
   }
 
-  process.env.NODE_ENV = "test";
-  process.env.DATABASE_URL = testDatabaseUrl;
-
-  process.env.ACCESS_TOKEN_SECRET = "foodies-test-access-secret";
-  process.env.REFRESH_TOKEN_SECRET = "foodies-test-refresh-secret";
-  process.env.ACCESS_TOKEN_EXPIRES_IN = "15m";
-  process.env.REFRESH_TOKEN_EXPIRES_IN = "30d";
-  process.env.BCRYPT_ROUNDS = "4";
+  process.env.NODE_ENV ??= "test";
+  process.env.ACCESS_TOKEN_SECRET ??= "foodies-test-access-secret";
+  process.env.REFRESH_TOKEN_SECRET ??= "foodies-test-refresh-secret";
+  process.env.ACCESS_TOKEN_EXPIRES_IN ??= "15m";
+  process.env.REFRESH_TOKEN_EXPIRES_IN ??= "30d";
+  process.env.BCRYPT_ROUNDS ??= "4";
 
   const serverModule = await import("../src/server.js");
   const prismaModule = await import("../src/db/prisma.js");
@@ -316,6 +314,16 @@ describe("Users", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.items.some((user: { id: string }) => user.id === seedUserId)).toBe(true);
+    for (const user of response.body.items) {
+      expect(Array.isArray(user.recipes)).toBe(true);
+      expect(user.recipes.length).toBeLessThanOrEqual(4);
+
+      for (const recipe of user.recipes) {
+        expect(recipe).toHaveProperty("id");
+        expect(recipe).toHaveProperty("title");
+        expect(recipe).toHaveProperty("image");
+      }
+    }
     expect(response.body.page).toBe(1);
     expect(response.body).toHaveProperty("total");
     expect(response.body).toHaveProperty("totalPages");
@@ -326,6 +334,16 @@ describe("Users", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.items.some((user: { id: string }) => user.id === testUserId)).toBe(true);
+    for (const user of response.body.items) {
+      expect(Array.isArray(user.recipes)).toBe(true);
+      expect(user.recipes.length).toBeLessThanOrEqual(4);
+
+      for (const recipe of user.recipes) {
+        expect(recipe).toHaveProperty("id");
+        expect(recipe).toHaveProperty("title");
+        expect(recipe).toHaveProperty("image");
+      }
+    }
   });
 
   it("POST /api/users/:id/follow rejects following yourself", async () => {
@@ -473,9 +491,7 @@ describe("Private recipes", () => {
       .field("ingredients", "not-valid-json");
 
     expect(response.status).toBe(400);
-    expect(response.body).toEqual({
-      message: "ingredients must be a JSON array",
-    });
+    expect(response.body.message).toEqual("Invalid request data");
   });
 
   it("POST /api/recipes creates an authenticated user's recipe", async () => {
@@ -491,7 +507,7 @@ describe("Private recipes", () => {
         "ingredients",
         JSON.stringify([
           {
-            id: ingredientId,
+            ingredientId,
             measure: "1 cup",
           },
         ]),
@@ -514,6 +530,18 @@ describe("Private recipes", () => {
     expect(
       response.body.items.some((recipe: { id: string }) => recipe.id === createdRecipeId),
     ).toBe(true);
+  });
+
+  it("GET /api/recipes filters by userId", async () => {
+    const response = await request(app).get("/api/recipes").query({ userId: testUserId });
+
+    expect(response.status).toBe(200);
+    expect(
+      response.body.items.some((recipe: { id: string }) => recipe.id === createdRecipeId),
+    ).toBe(true);
+    expect(response.body.items.some((recipe: { id: string }) => recipe.id === seedRecipeId)).toBe(
+      false,
+    );
   });
 
   it("DELETE /api/recipes/:id prevents deleting another user's recipe", async () => {

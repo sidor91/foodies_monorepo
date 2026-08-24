@@ -11,6 +11,7 @@ export interface RecipeFilters {
   category?: string;
   area?: string;
   ingredient?: string;
+  userId?: string;
 }
 
 export interface Pagination {
@@ -49,6 +50,7 @@ class RecipeService {
       ...(filters.ingredient && {
         ingredients: { some: { ingredientId: filters.ingredient } },
       }),
+      ...(filters.userId && { ownerId: filters.userId }),
     };
 
     return this.paginate(where, pagination);
