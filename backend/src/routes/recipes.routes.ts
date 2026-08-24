@@ -2,6 +2,8 @@ import { Router } from "express";
 import { authMiddleware } from "../middlewares/auth.js";
 import { uploadMiddleware } from "../middlewares/upload.js";
 import { recipesController } from "../controllers/recipes.controller.js";
+import { validate } from "../middlewares/validate.js";
+import { createRecipeSchema } from "../validationSchemas/recipe.schema.js";
 
 const router = Router();
 
@@ -184,8 +186,12 @@ router.get("/:id", (req, res) => recipesController.getById(req, res));
  */
 router.get("/", (req, res) => recipesController.search(req, res));
 
-router.post("/", authMiddleware.authenticate, uploadMiddleware.single("image"), (req, res) =>
-  recipesController.create(req, res),
+router.post(
+  "/",
+  authMiddleware.authenticate,
+  uploadMiddleware.single("image"),
+  validate(createRecipeSchema),
+  (req, res) => recipesController.create(req, res),
 );
 
 /**

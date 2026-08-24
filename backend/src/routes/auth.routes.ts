@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { authController } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/auth.js";
+import { validate } from "../middlewares/validate.js";
+import { loginSchema, registerSchema } from "../validationSchemas/auth.schema.js";
 
 const router = Router();
 
@@ -34,7 +36,7 @@ const router = Router();
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post("/register", (req, res) => authController.register(req, res));
+router.post("/register", validate(registerSchema), (req, res) => authController.register(req, res));
 
 /**
  * @openapi
@@ -66,7 +68,7 @@ router.post("/register", (req, res) => authController.register(req, res));
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post("/login", (req, res) => authController.login(req, res));
+router.post("/login", validate(loginSchema), (req, res) => authController.login(req, res));
 
 /**
  * @openapi
