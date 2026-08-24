@@ -23,11 +23,19 @@ import {
   selectRecipesIsLoading,
   selectRecipesPagination,
 } from "../../../redux/recipes/recipesSelectors.js";
-import { addFavorite, removeFavorite } from "../../../redux/favorites/favoritesOps.js";
 import { selectFavoriteIds } from "../../../redux/favorites/favoritesSelectors.js";
 import { Category, Categories, Hero, Testimonials } from "../../components/index.js";
+import useFavoriteToggle from "../../hooks/useFavoriteToggle.js";
+import useOpenRecipe from "../../hooks/useOpenRecipe.js";
 
 import css from "./Home.module.css";
+
+const slugify = (value) =>
+  value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
 const Home = ({ isAuthenticated, onRequireLogin }) => {
   const dispatch = useDispatch();
@@ -53,13 +61,6 @@ const Home = ({ isAuthenticated, onRequireLogin }) => {
   const [isAllExpanded, setIsAllExpanded] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
 
-  const slugify = (value) =>
-    value
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-
   const selectedCategory = useMemo(() => {
     if (!categorySlug) {
       return null;
@@ -71,18 +72,13 @@ const Home = ({ isAuthenticated, onRequireLogin }) => {
   useEffect(() => {
     dispatch(fetchCategories());
     dispatch(fetchTestimonials());
+    dispatch(fetchAreas());
+    dispatch(fetchIngredients());
   }, [dispatch]);
 
   useEffect(() => {
-    if (selectedCategory) {
-      setActiveCategory(selectedCategory);
-      dispatch(fetchAreas());
-      dispatch(fetchIngredients());
-      return;
-    }
-
-    setActiveCategory(null);
-  }, [dispatch, selectedCategory]);
+    setActiveCategory(selectedCategory);
+  }, [selectedCategory]);
 
   useEffect(() => {
     setSelectedArea("");
@@ -128,18 +124,8 @@ const Home = ({ isAuthenticated, onRequireLogin }) => {
     setActiveCategory(null);
   };
 
-  const handleFavoriteToggle = (recipeId) => {
-    if (!isAuthenticated) {
-      onRequireLogin?.();
-      return;
-    }
-
-    dispatch(favoriteIds.includes(recipeId) ? removeFavorite(recipeId) : addFavorite(recipeId));
-  };
-
-  const handleOpenRecipe = (recipeId) => {
-    navigate(`/recipes/${recipeId}`);
-  };
+  const handleFavoriteToggle = useFavoriteToggle({ favoriteIds, isAuthenticated, onRequireLogin });
+  const handleOpenRecipe = useOpenRecipe();
 
   const shouldShowCategory = Boolean(activeCategory);
 

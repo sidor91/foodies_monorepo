@@ -1,33 +1,33 @@
 import { useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { fetchPopularRecipes, fetchRecipeById } from "../../../redux/recipes/recipesOps.js";
 import { clearCurrentRecipe } from "../../../redux/recipes/recipesSlice.js";
 import {
   selectCurrentRecipe,
+  selectCurrentRecipeError,
+  selectCurrentRecipeIsLoading,
   selectPopularRecipes,
-  selectRecipesError,
-  selectRecipesIsLoading,
 } from "../../../redux/recipes/recipesSelectors.js";
-import { addFavorite, removeFavorite } from "../../../redux/favorites/favoritesOps.js";
 import {
   selectFavoriteIds,
   selectFavoritesPendingIds,
 } from "../../../redux/favorites/favoritesSelectors.js";
 import { Button, RecipeCard } from "../../components/index.js";
+import useFavoriteToggle from "../../hooks/useFavoriteToggle.js";
+import useOpenRecipe from "../../hooks/useOpenRecipe.js";
 
 import css from "./Recipe.module.css";
 
 const Recipe = ({ isAuthenticated, onRequireLogin }) => {
   const { recipeId } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const recipe = useSelector(selectCurrentRecipe);
   const popularRecipes = useSelector(selectPopularRecipes);
-  const isLoading = useSelector(selectRecipesIsLoading);
-  const error = useSelector(selectRecipesError);
+  const isLoading = useSelector(selectCurrentRecipeIsLoading);
+  const error = useSelector(selectCurrentRecipeError);
   const favoriteIds = useSelector(selectFavoriteIds);
   const pendingIds = useSelector(selectFavoritesPendingIds);
 
@@ -44,18 +44,8 @@ const Recipe = ({ isAuthenticated, onRequireLogin }) => {
     };
   }, [dispatch, recipeId]);
 
-  const handleFavoriteToggle = (id) => {
-    if (!isAuthenticated) {
-      onRequireLogin?.();
-      return;
-    }
-
-    dispatch(favoriteIds.includes(id) ? removeFavorite(id) : addFavorite(id));
-  };
-
-  const handleOpenRecipe = (id) => {
-    navigate(`/recipes/${id}`);
-  };
+  const handleFavoriteToggle = useFavoriteToggle({ favoriteIds, isAuthenticated, onRequireLogin });
+  const handleOpenRecipe = useOpenRecipe();
 
   if (!isReady) {
     if (isLoading) {
@@ -109,7 +99,7 @@ const Recipe = ({ isAuthenticated, onRequireLogin }) => {
 
           <h2>Ingredients</h2>
           <ul className={css.ingredients}>
-            {recipe.ingredients.map((item) => (
+            {(recipe.ingredients ?? []).map((item) => (
               <li className={css.ingredient} key={item.ingredientId}>
                 <img
                   className={css.ingredientImage}
