@@ -1,10 +1,7 @@
-import { Form, Field, ErrorMessage } from "formik";
+import { Form, Field, ErrorMessage, useFormikContext } from "formik";
 import { useSelector } from "react-redux";
-// import { selectRecipeMetadata } from "../../../redux/recipes/recipesSlice";
 import useRecipeForm from "../../hooks/useRecipeForm.js";
-import css from "./RecipeFormContent.module.css";
 import IngredientList from "../IngredientList/IngredientList.jsx";
-import { useFormikContext } from "formik";
 import {
   selectCategories,
   selectAreas,
@@ -12,6 +9,9 @@ import {
   // selectReferencesError,
   // selectReferencesIsLoading,
 } from "../../../redux/references/referencesSelectors.js";
+import CustomSelect from "../CustomSelect/CustomSelect.jsx";
+import Icon from "../Icon/Icon.jsx";
+import clsx from "clsx";
 
 const RecipeFormContent = ({ isSubmitting }) => {
   const categories = useSelector(selectCategories);
@@ -23,12 +23,6 @@ const RecipeFormContent = ({ isSubmitting }) => {
   const { resetForm } = useFormikContext();
 
   const {
-    currentIngredientId,
-    setCurrentIngredientId,
-    currentIngredientName,
-    setCurrentIngredientName,
-    currentQuantity,
-    setCurrentQuantity,
     handleAddIngredient,
     handleRemoveIngredient,
     handleImageUpload,
@@ -42,188 +36,209 @@ const RecipeFormContent = ({ isSubmitting }) => {
 
   return (
     <Form onBlur={saveCurrentDraft}>
-      <div className="upload-container">
-        <label className="upload-content" style={{ cursor: "pointer", display: "block" }}>
-          {previewUrl ? (
-            <img
-              src={previewUrl}
-              alt="Recipe preview"
-              style={{
-                width: "100%",
-                height: "200px",
-                objectFit: "cover",
-              }}
+      <div>
+        <div className="max-w-[34.3rem] h-[31.8rem] rounded-[3rem] border border-dashed border-(--gray) overflow-hidden mb-[3.2rem]">
+          <label className="upload-content" style={{ cursor: "pointer", display: "block" }}>
+            {previewUrl ? (
+              <img src={previewUrl} alt="Recipe preview" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-[12.0rem] mx-auto flex flex-col items-center justify-center my-[12.0rem] gap-[0.8rem] ">
+                <svg className="w-[5rem] h-[5rem] fill-(--black)/20">
+                  <use href="/icons.svg#icon-add-image" />
+                </svg>
+                <span
+                  className="font-size: 1.4rem line-height: 143% 
+                text-decoration: underline
+                color: var(--black)"
+                >
+                  Upload a photo
+                </span>
+              </div>
+            )}
+
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={(e) => handleImageUpload(e, setFieldValue)}
             />
-          ) : (
-            <div className="upload-placeholder">
-              <span className="camera-icon">📷</span>
-              <span className="upload-btn">Upload a photo</span>
-            </div>
-          )}
-
-          <input
-            type="file"
-            accept="image/*"
-            style={{ display: "none" }}
-            onChange={(e) => handleImageUpload(e, setFieldValue)}
-          />
-        </label>
-        <ErrorMessage name="photo" component="div" className={css.error} />
+          </label>
+        </div>
       </div>
-
-      {/* title and description */}
-      <div className="form-group">
+      <div>
+        {/* title and description */}
         <Field
           name="title"
           type="text"
           placeholder="The name of the recipe"
-          className="recipe-title-input"
+          className="font-extrabold text-[1.8rem] leading-[133%] uppercase text-(--gray) mb-[3.2rem]"
         />
-        <ErrorMessage name="title" component="div" className={css.error} />
+        <FormError name="title" />
 
-        <div className="input-with-counter">
-          <Field
-            name="description"
-            type="text"
-            placeholder="Enter a description of the dish"
-            className="recipe-desc-input"
-          />
-          <span className="counter">{values.description.length}/200</span>
-        </div>
-        <ErrorMessage name="description" component="div" className={css.error} />
-      </div>
+        <CustomTextarea name="description" placeholder="Enter a description of the dish" />
+        <FormError name="description" />
+        <div className="flex flex-col gap-[2rem] mb-[32px]">
+          {/* category and time */}
+          <div className="flex flex-col w-full gap-[2rem]">
+            <div className="flex flex-col">
+              <CustomSelect
+                name="category"
+                placeholder="Select category"
+                options={categories}
+                value={values.category}
+                label="CATEGORY"
+              />
+            </div>
 
-      {/* category and time */}
-      <div className="form-row" style={{ display: "flex", gap: "20px" }}>
-        <div className="form-group half">
-          <label>CATEGORY</label>
-          <Field as="select" name="category" className="select-box">
-            <option value="" disabled>
-              Select category
-            </option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
-          </Field>
-          <ErrorMessage name="category" component="div" className={css.error} />
-        </div>
-
-        <div className="form-group half">
-          <label>COOKING TIME</label>
-          <div className="time-controls" style={{ display: "flex", alignItems: "center" }}>
-            <button
-              type="button"
-              className="circle-btn"
-              onClick={() => setFieldValue("time", Math.max(1, values.time - 5))}
-            >
-              -
-            </button>
-            <span style={{ margin: "0 10px" }}>{values.time} min</span>
-            <button
-              type="button"
-              className="circle-btn"
-              onClick={() => setFieldValue("time", values.time + 5)}
-            >
-              +
-            </button>
+            <div className="flex flex-col gap-[0.8rem]">
+              <label className="uppercase font-extrabold leading-[150%]">COOKING TIME</label>
+              <div className="flex items-center gap-[1.2rem]">
+                <button
+                  type="button"
+                  className="border rounded-[50%] flex justify-center items-center p-[1.6rem] border-(--grey)"
+                  onClick={() => setFieldValue("time", Math.max(1, values.time - 5))}
+                >
+                  <Icon name="minus" size={16} className="stroke-(--black)" />
+                </button>
+                <span className="font-medium text-[1.4rem] leading-[143%] text-(--grey)">
+                  {values.time} min
+                </span>
+                <button
+                  type="button"
+                  className="border rounded-[50%] flex justify-center items-center p-[1.6rem]  border-(--grey)"
+                  onClick={() => setFieldValue("time", values.time + 5)}
+                >
+                  <Icon name="plus" size={16} className="stroke-(--black)" />
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+          {/* area */}
+          <div className="form-group">
+            <CustomSelect
+              name="area"
+              placeholder="Select area"
+              options={areas}
+              value={values.area}
+              label="AREA"
+            />
+          </div>
+          {/* ingredients */}
+          <div className="">
+            <div className="flex flex-col gap-[2rem]">
+              <CustomSelect
+                name="selectedIngredientId"
+                placeholder="Add the ingredient"
+                options={ingredientsList}
+                value={values.selectedIngredientId}
+                label="Ingredient"
+              />
 
-      {/* area */}
-      <div className="form-group">
-        <label>AREA</label>
-        <Field as="select" name="area" className="select-box">
-          <option value="" disabled>
-            Area
-          </option>
-          {areas.map((ar) => (
-            <option key={ar.id} value={ar.id}>
-              {ar.name}
-            </option>
-          ))}
-        </Field>
-        <ErrorMessage name="area" component="div" className={css.error} />
-      </div>
+              <Field
+                type="text"
+                name="ingredientQuantity"
+                placeholder="Enter quantity"
+                className="text-[1.4rem] border-b pb-[1.6rem] border-(--grey) focus:outline-none bg-transparent"
+              />
+            </div>
 
-      {/* ingredients */}
-      <div className={css.ingredientsSection}>
-        <h3>INGREDIENTS</h3>
-        <div className={css.addControls}>
-          <select
-            value={currentIngredientId}
-            onChange={(e) => {
-              const selectedOption = e.target.options[e.target.selectedIndex];
-              setCurrentIngredientId(e.target.value);
-              setCurrentIngredientName(selectedOption.text);
-            }}
-            className={css.select}
-          >
-            <option value="">Add the ingredient</option>
-            {ingredientsList.map((ing) => (
-              <option key={ing.id} value={ing.id}>
-                {ing.name}
-              </option>
-            ))}
-          </select>
-
-          <input
-            type="text"
-            value={currentQuantity}
-            onChange={(e) => setCurrentQuantity(e.target.value)}
-            placeholder="Enter quantity"
-            className={css.input}
-          />
+            <FormError name="ingredientQuantity" />
+          </div>
         </div>
 
         <button
           type="button"
           onClick={handleAddIngredient}
-          className={css.addBtn}
-          disabled={!currentIngredientId || !currentQuantity || values.ingredients.length >= 30}
+          className={`border border-(--gray) rounded-[3rem] px-[2rem] py-[1.4rem] 
+             flex items-center justify-center w-[18.8rem] text-[1.4rem] font-[700] gap-[0.8rem] uppercase 
+             leading-[143%] border-(--grey) ${values.ingredients.length > 0 ? "mb-[3.2rem]" : "mb-[6.4rem]"} `}
         >
-          ADD INGREDIENT +
+          ADD INGREDIENT
+          <Icon name="plus" size={16} className="fill-(--black) stroke-(--black)" />
         </button>
-
-        <ErrorMessage name="ingredients" component="div" className={css.error} />
         {values.ingredients.length > 0 && (
           <IngredientList ingredients={values.ingredients} onRemove={handleRemoveIngredient} />
         )}
-      </div>
 
-      {/* instructions */}
-      <div className="form-group">
-        <label>RECIPE PREPARATION</label>
-        <div className="input-with-counter">
-          <Field
-            as="textarea"
-            name="instructions"
-            placeholder="Enter recipe"
-            rows="4"
-            className="preparation-textarea"
-          />
-          <span className="counter">{values.instructions.length}/1000</span>
+        {/* instructions */}
+        <div className="">
+          <label className="uppercase font-[800] leading-[150%] mb-[3.2rem] block">
+            RECIPE PREPARATION
+          </label>
+
+          <CustomTextarea name="instructions" placeholder="Enter recipe" />
         </div>
-        <ErrorMessage name="instructions" component="div" className={css.error} />
-      </div>
 
-      <div className="form-actions">
-        <button
-          type="button"
-          className="publish-btn"
-          disabled={isSubmitting}
-          onClick={() => handleResetForm(resetForm)}
-        >
-          del11111
-        </button>
-        <button type="submit" className="publish-btn" disabled={isSubmitting}>
-          PUBLISH
-        </button>
+        <div className="flex items-center gap-[0.8rem]">
+          <button
+            type="button"
+            className="border border-(--grey) rounded-[50%] p-[1.4rem] flex items-center justify-center"
+            disabled={isSubmitting}
+            onClick={() => handleResetForm(resetForm)}
+          >
+            <Icon name="trash-04" size={20} className="stroke-(--grey)" />
+          </button>
+          <button
+            type="submit"
+            className="bg-(--black) text-(--white) rounded-[3rem] px-[3.2rem] py-[1.4rem] 
+            flex items-center justify-center font-[700] text-[1.4rem] uppercase leading-[143%] 
+             transition-opacity"
+            disabled={isSubmitting}
+          >
+            PUBLISH
+          </button>
+        </div>
       </div>
     </Form>
   );
 };
 
 export default RecipeFormContent;
+
+// added FormError component to be used in CustomSelect and RecipeFormContent
+export const FormError = ({ name }) => {
+  return (
+    <ErrorMessage name={name} component="div" className="text-(--red) text-[1.2rem] mt-[4px]" />
+  );
+};
+
+const CustomTextarea = ({ name, placeholder, maxLength = 200, className }) => {
+  const { values } = useFormikContext();
+  const currentLength = values[name] ? values[name].length : 0;
+
+  return (
+    <div
+      className={clsx(
+        "relative w-full mb-[3.2rem] border-b border-(--grey) pb-[1.2rem]",
+        className,
+      )}
+    >
+      <Field
+        as="textarea"
+        name={name}
+        rows={1} // <--- Робить поле в один рядок, коли воно порожнє
+        placeholder={placeholder}
+        maxLength={maxLength}
+        className="scrollbar-none w-full pr-[8rem] focus:outline-none 
+          bg-transparent text-[1.4rem] resize-none overflow-hidden block min-h-[2.4rem]"
+        onInput={(e) => {
+          e.target.style.height = "auto";
+          e.target.style.height = `${e.target.scrollHeight}px`;
+        }}
+      />
+
+      {/* Лічильник символів праворуч зверху */}
+      <span className="absolute right-0 top-0 text-[1.4rem] flex items-center">
+        <span className="text-(--black)">{currentLength}</span>
+        <span className="text-(--grey)">/{maxLength}</span>
+      </span>
+
+      {/* Помилка валідації знизу */}
+      <ErrorMessage
+        name={name}
+        component="div"
+        className="absolute left-0 -bottom-[2rem] text-(--red) text-[1.2rem]"
+      />
+    </div>
+  );
+};
