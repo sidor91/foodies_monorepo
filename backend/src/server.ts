@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
 import usersRouter from "./routes/users.routes.js";
 import authRouter from "./routes/auth.routes.js";
@@ -17,6 +18,7 @@ import { prisma } from "./db/prisma.js";
 
 const app = express();
 
+app.use(helmet());
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());

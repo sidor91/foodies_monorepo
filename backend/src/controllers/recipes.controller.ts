@@ -68,13 +68,6 @@ class RecipesController {
   async create(req: Request, res: Response) {
     const { title, instructions, description, categoryId, areaId } = req.body as CreateRecipeBody;
 
-    if (!title || !instructions || !categoryId || !areaId) {
-      res.status(400).json({
-        message: "title, instructions, categoryId and areaId are required",
-      });
-      return;
-    }
-
     const time = req.body.time !== undefined ? Number(req.body.time) : undefined;
 
     let ingredients: { id: string; measure?: string }[] = [];
