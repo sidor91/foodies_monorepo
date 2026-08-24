@@ -36,17 +36,6 @@ class AuthService implements IAuthService {
   ) {}
 
   async register({ name, email, password }: RegisterInput): Promise<AuthResponse> {
-    if (
-      typeof name !== "string" ||
-      typeof email !== "string" ||
-      typeof password !== "string" ||
-      !name.trim() ||
-      !email.trim() ||
-      password.length < 6
-    ) {
-      throw new AppError(400, "Name, email, and a password of at least 6 characters are required");
-    }
-
     const normalizedEmail = email.trim().toLowerCase();
     const existingUser = await this.userRepository.findAuthByEmail(normalizedEmail);
     if (existingUser) {
@@ -65,10 +54,6 @@ class AuthService implements IAuthService {
   }
 
   async login(email: string, password: string): Promise<AuthResponse> {
-    if (typeof email !== "string" || typeof password !== "string") {
-      throw new AppError(400, "Email and password are required");
-    }
-
     const user = await this.userRepository.findAuthByEmail(email.trim().toLowerCase());
     if (!user?.passwordHash || !(await this.cryptoService.compare(password, user.passwordHash))) {
       throw new AppError(401, "Invalid email or password");
