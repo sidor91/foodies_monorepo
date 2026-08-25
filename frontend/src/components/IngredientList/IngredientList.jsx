@@ -6,7 +6,7 @@ const IngredientList = ({ ingredients, onRemove }) => {
     <div className="mb-[6.4rem] flex">
       {ingredients.map((ing, index) => (
         <div key={index} className="flex">
-          <div className="w-[7.5rem] h-[7.5rem] rounded-[0.3rem">
+          <div className="w-[7.5rem] h-[7.5rem] rounded-[0.3rem]">
             {ing.img && <img src={ing.img} alt={ing.name} className={css.cardImg} />}
           </div>
 

@@ -42,15 +42,9 @@ const RecipeFormContent = ({ isSubmitting }) => {
             {previewUrl ? (
               <img src={previewUrl} alt="Recipe preview" className="w-full h-full object-cover" />
             ) : (
-              <div className="w-[12.0rem] mx-auto flex flex-col items-center justify-center my-[12.0rem] gap-[0.8rem] ">
-                <svg className="w-[5rem] h-[5rem] fill-(--black)/20">
-                  <use href="/icons.svg#icon-add-image" />
-                </svg>
-                <span
-                  className="font-size: 1.4rem line-height: 143% 
-                text-decoration: underline
-                color: var(--black)"
-                >
+              <div className="mx-auto flex flex-col items-center justify-center my-[12rem] gap-[0.8rem] ">
+                <Icon name="add-image" size={50} className="fill-(--black)/20" />
+                <span className="text-[1.4rem] block leading-[143%] underline text-(--black)">
                   Upload a photo
                 </span>
               </div>
@@ -216,7 +210,7 @@ const CustomTextarea = ({ name, placeholder, maxLength = 200, className }) => {
       <Field
         as="textarea"
         name={name}
-        rows={1} // <--- Робить поле в один рядок, коли воно порожнє
+        rows={1}
         placeholder={placeholder}
         maxLength={maxLength}
         className="scrollbar-none w-full pr-[8rem] focus:outline-none 
@@ -227,17 +221,15 @@ const CustomTextarea = ({ name, placeholder, maxLength = 200, className }) => {
         }}
       />
 
-      {/* Лічильник символів праворуч зверху */}
       <span className="absolute right-0 top-0 text-[1.4rem] flex items-center">
         <span className="text-(--black)">{currentLength}</span>
         <span className="text-(--grey)">/{maxLength}</span>
       </span>
 
-      {/* Помилка валідації знизу */}
       <ErrorMessage
         name={name}
         component="div"
-        className="absolute left-0 -bottom-[2rem] text-(--red) text-[1.2rem]"
+        className="absolute left-0 bottom-[2rem] text-(--red) text-[1.2rem]"
       />
     </div>
   );

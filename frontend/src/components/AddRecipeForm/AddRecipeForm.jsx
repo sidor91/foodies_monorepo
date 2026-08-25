@@ -22,22 +22,20 @@ import { toast } from "react-hot-toast";
 const RecipeSchema = Yup.object().shape({
   photo: Yup.mixed().optional().notRequired(),
   title: Yup.string().required("Title is required").max(100, "Max 100 characters"),
-  description: Yup.string().max(200, "Max 200 characters").required("Description is required"),
+  description: Yup.string().max(200, "Max 200 characters"),
   category: Yup.string().required("Category is required"),
-  time: Yup.number().min(1, "Time must be at least 1 min").required("Required"),
+  time: Yup.number().min(1, "Time must be at least 1 min"),
   area: Yup.string().required("Area is required"),
   selectedIngredientId: Yup.string(),
   ingredientQuantity: Yup.string(),
-  ingredients: Yup.array()
-    .of(
-      Yup.object().shape({
-        quantity: Yup.string().required("Quantity is required"),
-        ingredientId: Yup.string().required("Ingredient is required"),
-        name: Yup.string(),
-        img: Yup.string(),
-      }),
-    )
-    .notRequired(),
+  ingredients: Yup.array().of(
+    Yup.object().shape({
+      quantity: Yup.string(),
+      ingredientId: Yup.string(),
+      name: Yup.string(),
+      img: Yup.string(),
+    }),
+  ),
   instructions: Yup.string().max(1000, "Max 1000 characters").required("Instructions are required"),
 });
 
@@ -64,19 +62,17 @@ const AddRecipeForm = () => {
   }, [dispatch]);
 
   // heandleSubmit function to handle form submission
-  const handleSubmit = async (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = prepareRecipeFormData(values);
-    if (values.ingredients.length === 0) {
-      toast.error("Please add at least one ingredient.");
-      setSubmitting(false);
-      return;
-    }
+
     try {
       await dispatch(addRecipe(formData)).unwrap();
       toast.success("Successfully created a recipe!");
 
       dispatch(clearDraft()); // clear the draft in Redux
-      // redirect to another page
+      resetForm(); // reset the form fields
+
+      // redirect to another page    TODO
     } catch (error) {
       console.error("Error:", error);
     } finally {
