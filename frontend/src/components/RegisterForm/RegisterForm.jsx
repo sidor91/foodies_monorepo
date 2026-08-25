@@ -70,13 +70,13 @@ const RegisterForm = ({ isRegister, onRegister, onLogin }) => {
       >
         {({ values, isSubmitting }) => (
           <Form className={css.modal}>
-            <p className="uppercase text-[3.2rem] leading-[125%] tracking-[-0.02em] font-extrabold">
+            <p className="uppercase text-[2.8rem] leading-[125%] tracking-[-0.02em] font-extrabold tablet:text-[3.2rem]">
               Sign Up
             </p>
 
             <button
               type="button"
-              className="absolute top-[1.6rem] right-[1.6rem] text-accent text-[1.2rem] leading-[150%] tracking-[-0.02em]"
+              className="absolute top-[1.6rem] right-[1.6rem] text-accent text-[1.2rem] leading-[150%] tracking-[-0.02em] tablet:top-8 tablet:right-8"
               onClick={onRegister}
               aria-label="Close Modal"
             >
@@ -157,7 +157,7 @@ const RegisterForm = ({ isRegister, onRegister, onLogin }) => {
                   !values.password.trim() ||
                   isSubmitting
                 }
-                className="btn btn__primary w-full p-[1.4rem]"
+                className="btn btn__primary w-full p-[1.4rem] tablet:pt-[1.6rem] tablet:pb-[1.6rem]"
                 aria-label="Submit SignIn"
               >
                 Create

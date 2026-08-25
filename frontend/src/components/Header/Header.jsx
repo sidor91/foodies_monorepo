@@ -1,9 +1,16 @@
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 import clsx from "clsx";
 
 import css from "./Header.module.css";
 import SignInUpButton from "../SignInUpButton/SignInUpButton";
 import UserNav from "../UserNav/UserNav";
+
+import {
+  selectUser,
+  selectIsLoggedIn,
+  selectIsRefreshing,
+} from "../../../redux/auth/authSelectors";
 
 const buildLinkClass = ({ isActive }) => {
   return clsx(css.nav__link, isActive && css.active);
@@ -16,11 +23,12 @@ const Header = ({
   isRegister,
   onLogin,
   onRegister,
-  isAuthenticated,
-  user,
-  isAuthLoading,
   onLogout,
 }) => {
+  const user = useSelector(selectUser);
+  const isAuthenticated = useSelector(selectIsLoggedIn);
+  const isAuthLoading = useSelector(selectIsRefreshing);
+
   return (
     <header className={css.header__section}>
       <div className={css.header__container}>
@@ -51,7 +59,7 @@ const Header = ({
 
         {(isAuthLoading || isAuthenticated) && (
           <div className="flex items-center justify-between gap-[0.4rem]">
-            <UserNav user={user} onAuthToggle={onLogout} />
+            <UserNav user={user} onLogout={onLogout} />
             <button
               className={css.modal__button}
               type="button"

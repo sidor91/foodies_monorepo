@@ -1,18 +1,19 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-const UserNav = ({ user, onAuthToggle }) => {
+const UserNav = ({ user, onLogout }) => {
   const [isExtra, setIsExtra] = useState(false);
 
   const handleExtraToggle = () => {
     setIsExtra((prev) => !prev);
   };
+
   return (
     <div className="bg-primary rounded-[3rem] flex items-center relative">
       {user?.avatarUrl ? (
         <img
           src={user.avatarUrl}
-          alt={user.name}
+          alt={`${user.name} profile photo`}
           className="w-[3.2rem] h-[3.2rem] rounded-[3rem] object-cover tablet:w-20 tablet:h-20"
         />
       ) : (
@@ -53,7 +54,7 @@ const UserNav = ({ user, onAuthToggle }) => {
             className="flex content-center"
             onClick={() => {
               handleExtraToggle();
-              onAuthToggle();
+              onLogout();
             }}
           >
             <p className="uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold">

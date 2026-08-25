@@ -1,18 +1,14 @@
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { Toaster, toast } from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
 import { Header, MobileMenu, Loader, Footer, LoginForm, RegisterForm } from "../index.js";
 
 import { logOut, refreshUser } from "../../../redux/auth/authOps.js";
-import {
-  selectIsLoggedIn,
-  selectUser,
-  selectIsRefreshing,
-} from "../../../redux/auth/authSelectors.js";
 
 import css from "./App.module.css";
+import LogoutModal from "../LogoutModal/LogoutModal.jsx";
 
 const Home = lazy(() => import("../../pages/Home/Home.jsx"));
 const AddRecipe = lazy(() => import("../../pages/AddRecipe/AddRecipe.jsx"));
@@ -21,20 +17,22 @@ const UserProfile = lazy(() => import("../../pages/UserProfile/UserProfile.jsx")
 const App = () => {
   const dispatch = useDispatch();
 
-  const user = useSelector(selectUser);
-  const isAuthenticated = useSelector(selectIsLoggedIn);
-  const isAuthLoading = useSelector(selectIsRefreshing);
-
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
+  const [isLogout, setIsLogout] = useState(false);
 
   useEffect(() => {
     dispatch(refreshUser());
   }, [dispatch]);
 
   const handleLogout = async () => {
-    dispatch(logOut);
+    try {
+      await dispatch(logOut()).unwrap();
+      setIsLogout(false);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Logout failed");
+    }
   };
 
   const handleMobileToggle = () => {
@@ -51,6 +49,10 @@ const App = () => {
     setIsLogin(false);
   };
 
+  const handleLogoutToggle = () => {
+    setIsLogout((prev) => !prev);
+  };
+
   return (
     <div className={`main__container ${isMobileMenuOpen && "modal__open"}`}>
       <Toaster />
@@ -62,10 +64,7 @@ const App = () => {
         isRegister={isRegister}
         onLogin={handleLoginToggle}
         onRegister={handleRegisterToggle}
-        isAuthenticated={isAuthenticated}
-        user={user}
-        isAuthLoading={isAuthLoading}
-        onLogout={handleLogout}
+        onLogout={handleLogoutToggle}
       />
 
       <MobileMenu isMobileMenuOpen={isMobileMenuOpen} onMobileToggle={handleMobileToggle} />
@@ -74,6 +73,11 @@ const App = () => {
         isRegister={isRegister}
         onRegister={handleRegisterToggle}
         onLogin={handleLoginToggle}
+      />
+      <LogoutModal
+        isLogout={isLogout}
+        onLogoutToggle={handleLogoutToggle}
+        onLogout={handleLogout}
       />
 
       <main className={css.content} inert={isMobileMenuOpen ? "" : undefined}>
