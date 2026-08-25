@@ -140,7 +140,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
           onClick={handleAddIngredient}
           className={`border border-secondary rounded-[3rem] px-8 py-[1.4rem] 
              flex items-center justify-center w-[18.8rem] text-[1.4rem] font-bold gap-[0.8rem] uppercase 
-             leading-[143%] border-secondary ${values.ingredients.length > 0 ? "mb-[3.2rem]" : "mb-[6.4rem]"} `}
+             leading-[143%] ${values.ingredients.length > 0 ? "mb-[3.2rem]" : "mb-[6.4rem]"} `}
         >
           ADD INGREDIENT
           <Icon name="plus" size={16} className="fill-(--black) stroke-(--black)" />
