@@ -397,6 +397,12 @@ describe("Public recipes", () => {
     expect(response.body.items.length).toBeLessThanOrEqual(2);
     expect(response.body.total).toBeGreaterThan(0);
     expect(response.body.totalPages).toBeGreaterThan(0);
+
+    for (const recipe of response.body.items) {
+      expect(recipe.owner).toHaveProperty("id");
+      expect(recipe.owner).toHaveProperty("name");
+      expect(recipe.owner).toHaveProperty("avatarUrl");
+    }
   });
 
   it("GET /api/recipes applies category, area and ingredient filters", async () => {
