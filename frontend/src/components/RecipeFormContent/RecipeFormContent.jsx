@@ -71,10 +71,10 @@ const RecipeFormContent = ({ isSubmitting }) => {
           <FormError name="title" />
         </label>
 
-        <label className="mb-[3.2rem] block">
+        <div className="mb-[3.2rem]">
           <CustomTextarea name="description" placeholder="Enter a description of the dish" />
           <FormError name="description" />
-        </label>
+        </div>
         <div className="flex flex-col gap-[2rem] mb-[32px]">
           {/* category and time */}
           <div className="flex flex-col w-full gap-[2rem]">
@@ -160,13 +160,18 @@ const RecipeFormContent = ({ isSubmitting }) => {
 
         {/* instructions */}
         <div className="">
-          <label className="uppercase font-[800] leading-[150%] mb-[3.2rem] block">
-            RECIPE PREPARATION
-            <span className="block mt-[3.2rem]">
-              <CustomTextarea name="instructions" placeholder="Enter recipe" />
+          <div className="flex flex-col mb-[3.2rem]">
+            {/* Текст підпису (лейбл) */}
+            <span className="uppercase font-[800] leading-[150%] mb-[3.2rem] block">
+              Recipe preparation
             </span>
+
+            {/* Поле вводу */}
+            <CustomTextarea name="instructions" placeholder="Enter recipe" />
+
+            {/* Повідомлення про помилку */}
             <FormError name="instructions" />
-          </label>
+          </div>
         </div>
 
         <div className="flex items-center gap-[0.8rem]">

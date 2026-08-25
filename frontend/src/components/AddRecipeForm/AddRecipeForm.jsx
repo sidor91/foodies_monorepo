@@ -21,21 +21,26 @@ import { toast } from "react-hot-toast";
 // 1. schema for form validation using Yup
 const RecipeSchema = Yup.object().shape({
   photo: Yup.mixed().optional().notRequired(),
-  title: Yup.string().required("Title is required").max(100, "Max 100 characters"),
-  description: Yup.string().max(200, "Max 200 characters"),
+  title: Yup.string().required("Title is required").max(100, "Max 100 characters").trim(),
+  description: Yup.string().max(200, "Max 200 characters").trim(),
   category: Yup.string().required("Category is required"),
   time: Yup.number().min(1, "Time must be at least 1 min"),
   area: Yup.string().required("Area is required"),
-  selectedIngredientId: Yup.string(),
-  ingredientQuantity: Yup.string(),
-  ingredients: Yup.array().of(
-    Yup.object().shape({
-      quantity: Yup.string(),
-      ingredientId: Yup.string(),
-      name: Yup.string(),
-      img: Yup.string(),
-    }),
-  ),
+  selectedIngredientId: Yup.string().required("Ingredient is required"),
+  ingredientQuantity: Yup.string()
+    .required("Quantity is required")
+    .max(30, "Max 30 characters")
+    .trim(),
+  ingredients: Yup.array()
+    .of(
+      Yup.object().shape({
+        quantity: Yup.string(),
+        ingredientId: Yup.string(),
+        name: Yup.string(),
+        img: Yup.string(),
+      }),
+    )
+    .max(30, "At most 30 ingredients are allowed"),
   instructions: Yup.string().max(1000, "Max 1000 characters").required("Instructions are required"),
 });
 
