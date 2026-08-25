@@ -13,6 +13,7 @@ import LogoutModal from "../LogoutModal/LogoutModal.jsx";
 const Home = lazy(() => import("../../pages/Home/Home.jsx"));
 const AddRecipe = lazy(() => import("../../pages/AddRecipe/AddRecipe.jsx"));
 const UserProfile = lazy(() => import("../../pages/UserProfile/UserProfile.jsx"));
+const NotFound = lazy(() => import("../../pages/NotFound/NotFound.jsx"));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -86,6 +87,7 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/recipe/add" element={<AddRecipe />} />
             <Route path="/profile" element={<UserProfile />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </main>
