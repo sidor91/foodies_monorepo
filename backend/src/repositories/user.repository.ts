@@ -18,11 +18,26 @@ const userProfileSelect = {
 
 export type UserProfile = Prisma.UserGetPayload<{ select: typeof userProfileSelect }>;
 
+const userConnectionRecipeSelect = {
+  id: true,
+  title: true,
+  image: true,
+} satisfies Prisma.RecipeSelect;
+
+export type UserConnectionRecipe = Prisma.RecipeGetPayload<{
+  select: typeof userConnectionRecipeSelect;
+}>;
+
 const userListSelect = {
   id: true,
   name: true,
   email: true,
   avatarUrl: true,
+  recipes: {
+    select: userConnectionRecipeSelect,
+    orderBy: { createdAt: "desc" },
+    take: 4,
+  },
   _count: {
     select: {
       recipes: true,

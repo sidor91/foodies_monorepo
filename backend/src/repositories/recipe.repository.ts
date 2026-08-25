@@ -9,6 +9,7 @@ export const recipeListSelect = {
   time: true,
   category: { select: { id: true, name: true } },
   area: { select: { id: true, name: true } },
+  owner: { select: { id: true, name: true, avatarUrl: true } },
 } satisfies Prisma.RecipeSelect;
 
 export type RecipeListItem = Prisma.RecipeGetPayload<{ select: typeof recipeListSelect }>;
@@ -66,7 +67,7 @@ export interface CreateRecipeData {
   categoryId: string;
   areaId: string;
   ownerId: string;
-  ingredients: { id: string; measure?: string }[];
+  ingredients: { ingredientId: string; measure?: string }[];
 }
 
 class RecipeRepository {
@@ -110,10 +111,7 @@ class RecipeRepository {
         areaId: data.areaId,
         ownerId: data.ownerId,
         ingredients: {
-          create: data.ingredients.map((ingredient) => ({
-            ingredientId: ingredient.id,
-            measure: ingredient.measure,
-          })),
+          create: data.ingredients,
         },
       },
       select: recipeCreateSelect,

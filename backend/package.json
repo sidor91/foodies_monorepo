@@ -12,7 +12,10 @@
     "prisma:migrate": "env -u DATABASE_URL prisma migrate dev",
     "migration:create": "npx prisma migrate dev --create-only --name",
     "migration:sync": "npx prisma migrate dev && npx prisma db pull",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prisma:migrate:test": "DATABASE_URL=\"$(grep '^DATABASE_URL=' .env.test | cut -d '=' -f2-)\" prisma migrate deploy",
+    "db:seed:test": "env -u DATABASE_URL tsx --env-file=.env.test prisma/seed.ts",
+    "test": "npm run prisma:migrate:test && npm run db:seed:test && DATABASE_URL=\"$(grep '^DATABASE_URL=' .env.test | cut -d '=' -f2-)\" vitest run"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -24,10 +27,12 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^5.1.0",
+    "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.2.0",
     "swagger-jsdoc": "^6.3.0",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
@@ -37,14 +42,17 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/multer": "^2.2.0",
     "@types/node": "^20.14.0",
+    "@types/supertest": "^7.2.1",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "csv-parse": "^5.5.6",
     "eslint": "^9.13.0",
     "eslint-config-prettier": "^9.1.0",
     "prisma": "^5.22.0",
+    "supertest": "^7.2.2",
     "tsx": "^4.19.0",
     "typescript": "^5.6.0",
-    "typescript-eslint": "^8.12.0"
+    "typescript-eslint": "^8.12.0",
+    "vitest": "^4.1.11"
   }
 }

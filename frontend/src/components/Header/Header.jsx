@@ -35,7 +35,7 @@ const Header = ({
           <NavLink to="/" className={buildLinkClass}>
             Home
           </NavLink>
-          <NavLink to="/add-recipe" className={buildLinkClass}>
+          <NavLink to="/recipe/add" className={buildLinkClass}>
             Add Recipe
           </NavLink>
         </nav>
@@ -51,7 +51,7 @@ const Header = ({
 
         {(isAuthLoading || isAuthenticated) && (
           <div className="flex items-center justify-between gap-[0.4rem]">
-            <UserNav user={user} onAuthToggle={onLogout}/>
+            <UserNav user={user} onAuthToggle={onLogout} />
             <button
               className={css.modal__button}
               type="button"

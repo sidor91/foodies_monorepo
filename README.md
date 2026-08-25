@@ -40,7 +40,7 @@ make clean    # stop containers, remove volumes and prune images
 
 ## Database
 
-The database is PostgreSQL, accessed through [Prisma ORM](https://www.prisma.io/). The schema (`backend/prisma/schema.prisma`) defines the following tables: `categories`, `areas`, `ingredients`, `users`, `recipes`, `recipe_ingredients`, and `testimonials`.
+The database is PostgreSQL, accessed through [Prisma ORM](https://www.prisma.io/). The schema (`backend/prisma/schema.prisma`) defines the following tables: `categories`, `areas`, `ingredients`, `users`, `follows`, `recipes`, `recipe_ingredients`, `favorites`, and `testimonials`.
 
 ### Automatic setup (recommended)
 
@@ -65,7 +65,7 @@ npx prisma migrate deploy
 npm run db:seed
 ```
 
-`npm run db:seed` runs `backend/prisma/seed.js`, which reads the CSV files in `backend/prisma/seed-data/` and populates the corresponding tables.
+`npm run db:seed` runs `backend/prisma/seed.ts`, which reads the CSV files in `backend/prisma/seed-data/` and populates the corresponding tables.
 
 ### Resetting the database
 
@@ -90,6 +90,91 @@ Database connection settings are configured via environment variables (see `.env
 | `POSTGRES_PORT`     | Host port mapped to PostgreSQL (container port `5432`)          |
 | `DATABASE_URL`      | Prisma connection string used by the backend/db-init containers |
 
+## Backend Testing
+
+Backend API integration tests use Vitest and Supertest against a separate PostgreSQL test database.
+
+Tests are configured through `backend/.env.test`, where `DATABASE_URL` must point to a test database (for example, `foodies_test`). The test suite includes a safety check and refuses to run if the database name does not contain `test`.
+
+Before the first test run, create the test env file from the example:
+
+```bash
+cp backend/.env.test.example backend/.env.test
+```
+
+Then adjust values in `backend/.env.test` if needed.
+
+### Start the test database
+
+The existing PostgreSQL Docker Compose service can be started as a separate Compose project with its own database and Docker volume.
+
+#### Windows CMD
+
+From the project root:
+
+```cmd
+set "POSTGRES_DB=foodies_test"
+set "POSTGRES_USER=postgres"
+set "POSTGRES_PASSWORD=postgres"
+set "POSTGRES_PORT=5433"
+
+docker compose -p foodies-test up -d postgres
+```
+
+Then from `backend`:
+
+```cmd
+cd backend
+npm test
+```
+
+#### macOS / Linux
+
+From the project root:
+
+```bash
+POSTGRES_DB=foodies_test \
+POSTGRES_USER=postgres \
+POSTGRES_PASSWORD=postgres \
+POSTGRES_PORT=5433 \
+docker compose -p foodies-test up -d postgres
+```
+
+Then from `backend`:
+
+```bash
+cd backend
+npm test
+```
+
+If you run the test database on a non-default port (for example `5433`), update `backend/.env.test` accordingly before `npm test`.
+
+By default, test config is read from `backend/.env.test`:
+
+```bash
+npm test
+```
+
+`npm test` runs test migrations, then seeds the test database, and finally starts Vitest.
+
+The integration suite covers system and reference endpoints, authentication, user profiles and follows, public and private recipe operations, favorites, pagination, filtering, validation, authorization, and logout behavior.
+
+Test-created users, recipes, follows, and favorites are cleaned up by the suite after execution.
+
+### Stop the test database
+
+From the project root:
+
+```bash
+docker compose -p foodies-test down
+```
+
+To also remove the isolated test database volume:
+
+```bash
+docker compose -p foodies-test down -v
+```
+
 ## API Documentation
 
 Interactive Swagger/OpenAPI documentation for the backend REST API is available at `/api/docs`.
@@ -102,16 +187,16 @@ All routes are prefixed with `/api`. Private endpoints accept the access token e
 
 ### Public endpoints
 
-| Method | Endpoint           | Description                                 |
-| ------ | ------------------ | ------------------------------------------- |
-| GET    | `/health`          | Health check                                |
-| GET    | `/recipes`         | Search/list recipes (paginated, filterable) |
-| GET    | `/recipes/popular` | Most favorited recipes                      |
-| GET    | `/recipes/:id`     | Recipe details by id                        |
-| GET    | `/categories`      | List all categories                         |
-| GET    | `/areas`           | List all areas                              |
-| GET    | `/ingredients`     | List all ingredients                        |
-| GET    | `/testimonials`    | List all testimonials                       |
+| Method | Endpoint           | Description                                                                    |
+| ------ | ------------------ | ------------------------------------------------------------------------------ |
+| GET    | `/health`          | Health check                                                                   |
+| GET    | `/recipes`         | Search/list recipes (paginated, filterable by category/ingredient/area/userId) |
+| GET    | `/recipes/popular` | Most favorited recipes                                                         |
+| GET    | `/recipes/:id`     | Recipe details by id                                                           |
+| GET    | `/categories`      | List all categories                                                            |
+| GET    | `/areas`           | List all areas                                                                 |
+| GET    | `/ingredients`     | List all ingredients                                                           |
+| GET    | `/testimonials`    | List all testimonials                                                          |
 
 ### Authentication endpoints
 
