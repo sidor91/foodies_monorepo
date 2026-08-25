@@ -36,7 +36,6 @@ const RecipeFormContent = ({ isSubmitting }) => {
 
   return (
     <Form onBlur={saveCurrentDraft}>
-      <p>{JSON.stringify(errors, null, 2)}</p>
       <div>
         <div className="max-w-[34.3rem] h-[31.8rem] rounded-[3rem] border border-dashed border-(--gray) overflow-hidden mb-[3.2rem]">
           <label className="upload-content" style={{ cursor: "pointer", display: "block" }}>
