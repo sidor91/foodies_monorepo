@@ -146,8 +146,8 @@ const Home = ({ isAuthenticated, onRequireLogin }) => {
             onIngredientChange={setSelectedIngredient}
             onAreaChange={setSelectedArea}
             onBack={handleBackFromCategory}
-            page={recipesPagination.page || page}
-            totalPages={recipesPagination.totalPages || 1}
+            page={page}
+            totalPages={recipesPagination.totalPages}
             onPageChange={setPage}
             onFavoriteToggle={handleFavoriteToggle}
             onOpenRecipe={handleOpenRecipe}

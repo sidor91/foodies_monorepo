@@ -14,7 +14,7 @@ import {
   selectFavoriteIds,
   selectFavoritesPendingIds,
 } from "../../../redux/favorites/favoritesSelectors.js";
-import { Button, RecipeCard } from "../../components/index.js";
+import { Button, ImageWithFallback, RecipeCard } from "../../components/index.js";
 import useFavoriteToggle from "../../hooks/useFavoriteToggle.js";
 import useOpenRecipe from "../../hooks/useOpenRecipe.js";
 
@@ -70,7 +70,7 @@ const Recipe = ({ isAuthenticated, onRequireLogin }) => {
       </nav>
 
       <div className={css.layout}>
-        <img className={css.image} src={recipe.image} alt={recipe.title} />
+        <ImageWithFallback className={css.image} src={recipe.image} alt={recipe.title} />
 
         <div className={css.content}>
           <h1>{recipe.title}</h1>
@@ -83,14 +83,7 @@ const Recipe = ({ isAuthenticated, onRequireLogin }) => {
           <p className={css.description}>{recipe.description}</p>
 
           <div className={css.owner}>
-            <img
-              className={css.ownerAvatar}
-              src={recipe.owner?.avatarUrl}
-              alt=""
-              onError={(event) => {
-                event.currentTarget.style.display = "none";
-              }}
-            />
+            <ImageWithFallback className={css.ownerAvatar} src={recipe.owner?.avatarUrl} alt="" />
             <div>
               <p className={css.ownerLabel}>Created by:</p>
               <p className={css.ownerName}>{recipe.owner?.name}</p>
@@ -101,13 +94,10 @@ const Recipe = ({ isAuthenticated, onRequireLogin }) => {
           <ul className={css.ingredients}>
             {(recipe.ingredients ?? []).map((item) => (
               <li className={css.ingredient} key={item.ingredientId}>
-                <img
+                <ImageWithFallback
                   className={css.ingredientImage}
                   src={item.ingredient.img}
                   alt=""
-                  onError={(event) => {
-                    event.currentTarget.style.display = "none";
-                  }}
                 />
                 <div>
                   <p className={css.ingredientName}>{item.ingredient.name}</p>

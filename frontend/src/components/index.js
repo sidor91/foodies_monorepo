@@ -12,3 +12,4 @@ export { default as CategoryCard } from "./CategoryCard/CategoryCard.jsx";
 export { default as RecipeCard } from "./RecipeCard/RecipeCard.jsx";
 export { default as Button } from "./Button/Button.jsx";
 export { default as Input } from "./Input/Input.jsx";
+export { default as ImageWithFallback } from "./ImageWithFallback/ImageWithFallback.jsx";

@@ -1,9 +1,10 @@
 import css from "./RecipeCard.module.css";
+import ImageWithFallback from "../ImageWithFallback/ImageWithFallback.jsx";
 
 const RecipeCard = ({ recipe, isFavorite = false, onFavoriteToggle, onOpenRecipe }) => {
   return (
     <article className={css.card}>
-      <img className={css.image} src={recipe.image} alt={recipe.title} />
+      <ImageWithFallback className={css.image} src={recipe.image} alt={recipe.title} />
 
       <h3 className={css.title}>{recipe.title}</h3>
       <p className={css.text}>{recipe.description || "No description yet."}</p>
