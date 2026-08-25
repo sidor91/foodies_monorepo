@@ -76,3 +76,15 @@ body.modal__open {
 
   color: var(--color-secondary);
 }
+
+@media screen and (min-width: 48rem) {
+  .modal {
+    max-width: 56rem;
+    padding: 8rem;
+    gap: 4rem;
+  }
+
+  .form__field {
+    padding: 1.6rem 1.8rem;
+  }
+}
