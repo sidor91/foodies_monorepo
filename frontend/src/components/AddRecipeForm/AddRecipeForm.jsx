@@ -18,28 +18,30 @@ import { addRecipe } from "../../../redux/recipes/recipesOps.js";
 import RecipeFormContent from "../RecipeFormContent/RecipeFormContent.jsx";
 import { toast } from "react-hot-toast";
 
-// 1. Схема валідації Yup
+// 1. schema for form validation using Yup
 const RecipeSchema = Yup.object().shape({
   photo: Yup.mixed().optional().notRequired(),
-  title: Yup.string().required("Title is required").max(100, "Max 100 characters"),
-  description: Yup.string().max(200, "Max 200 characters").required("Description is required"),
+  title: Yup.string().required("Title is required").max(100, "Max 100 characters").trim(),
+  description: Yup.string().max(200, "Max 200 characters").trim(),
   category: Yup.string().required("Category is required"),
-  time: Yup.number().min(1, "Time must be at least 1 min").required("Required"),
+  time: Yup.number().min(1, "Time must be at least 1 min"),
   area: Yup.string().required("Area is required"),
+  selectedIngredientId: Yup.string().required("Ingredient is required"),
+  ingredientQuantity: Yup.string()
+    .required("Quantity is required")
+    .max(30, "Max 30 characters")
+    .trim(),
   ingredients: Yup.array()
     .of(
       Yup.object().shape({
-        quantity: Yup.string().required(),
-        ingredientId: Yup.string().required("Ingredient is required"),
+        quantity: Yup.string(),
+        ingredientId: Yup.string(),
         name: Yup.string(),
         img: Yup.string(),
       }),
     )
-    .min(1, "Please add at least one ingredient")
-    .max(30, "You can add up to 30 ingredients only"),
-  instructions: Yup.string()
-    .max(1000, "Max 1000 characters")
-    .required("Preparation steps are required"),
+    .max(30, "At most 30 ingredients are allowed"),
+  instructions: Yup.string().max(1000, "Max 1000 characters").required("Instructions are required"),
 });
 
 const AddRecipeForm = () => {
@@ -47,16 +49,17 @@ const AddRecipeForm = () => {
   const dispatch = useDispatch();
 
   const initialValues = {
-    photo: savedDraft?.photo || null,
     title: savedDraft?.title || "",
     description: savedDraft?.description || "",
     category: savedDraft?.category || "",
     time: savedDraft?.time || 10,
     area: savedDraft?.area || "",
-    ingredients: savedDraft?.ingredients || [],
+    ingredients: structuredClone(savedDraft?.ingredients) || [],
     instructions: savedDraft?.instructions || "",
+    selectedIngredientId: savedDraft?.selectedIngredientId || "",
+    ingredientQuantity: savedDraft?.ingredientQuantity || "",
+    photo: null,
   };
-
   useEffect(() => {
     dispatch(fetchCategories());
     dispatch(fetchAreas());
@@ -66,14 +69,15 @@ const AddRecipeForm = () => {
   // heandleSubmit function to handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = prepareRecipeFormData(values);
+
     try {
       await dispatch(addRecipe(formData)).unwrap();
       toast.success("Successfully created a recipe!");
 
       dispatch(clearDraft()); // clear the draft in Redux
-      resetForm(); // clear Formik form
+      resetForm(); // reset the form fields
 
-      // redirect to another page
+      // redirect to another page    TODO
     } catch (error) {
       console.error("Error:", error);
     } finally {
