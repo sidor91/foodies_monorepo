@@ -1,13 +1,18 @@
 import { Field } from "formik";
 import { FormError } from "../RecipeFormContent/RecipeFormContent.jsx";
 
-const CustomSelect = ({ name, label, value, placeholder, options }) => {
-  const selectClasses = `focus:outline-none bg-transparent text-[1.4rem] border border-(--grey) w-full rounded-[3rem] p-[1.4rem] pr-[4rem] appearance-none ${
+const CustomSelect = ({ name, label, value, placeholder, options, className }) => {
+  const selectClasses = `focus:outline-none bg-transparent text-[1.4rem] tablet:text-[1.6rem] leading-[143%] tablet:leading-[150%]
+  border border-(--grey) w-full rounded-[3rem] p-[1.4rem] pr-[4rem] appearance-none ${
     value ? "text-(--black)" : "text-(--grey)"
-  }`;
+  } ${className || ""}`;
   return (
     <div className="flex flex-col gap-[8px] w-full">
-      {label && <label className="font-[800] uppercase leading-[150%]">{label}</label>}
+      {label && (
+        <label className="font-[800] uppercase leading-[150%] tablet:text-[2rem] tablet:leading-[120%]">
+          {label}
+        </label>
+      )}
 
       <div className="relative w-full">
         <Field as="select" name={name} className={selectClasses}>

@@ -1,20 +1,19 @@
 .header__section {
   width: 100%;
-  padding: 0.8rem 0.8rem 0 0.8rem;
 }
 
 .header__container {
-  max-width: 37.5rem;
+  max-width: 375px;
   margin: 0 auto;
 
-  padding: 1.6rem;
+  padding: 16px;
 }
 
 /* --------------------------------------- */
 /* Tablet */
 /* --------------------------------------- */
 
-@media screen and (min-width: 48rem) {
+@media screen and (min-width: 768px) {
   .header__section {
     padding: 1.6rem 1.6rem 0 1.6rem;
   }

@@ -26,11 +26,8 @@ const RecipeSchema = Yup.object().shape({
   category: Yup.string().required("Category is required"),
   time: Yup.number().min(1, "Time must be at least 1 min"),
   area: Yup.string().required("Area is required"),
-  selectedIngredientId: Yup.string().required("Ingredient is required"),
-  ingredientQuantity: Yup.string()
-    .required("Quantity is required")
-    .max(30, "Max 30 characters")
-    .trim(),
+  selectedIngredientId: Yup.string(),
+  ingredientQuantity: Yup.string().max(30, "Max 30 characters").trim(),
   ingredients: Yup.array()
     .of(
       Yup.object().shape({
@@ -69,6 +66,12 @@ const AddRecipeForm = () => {
   // heandleSubmit function to handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = prepareRecipeFormData(values);
+
+    if (values.ingredients.length === 0) {
+      toast.error("Please add at least one ingredient.");
+      setSubmitting(false);
+      return;
+    }
 
     try {
       await dispatch(addRecipe(formData)).unwrap();
