@@ -83,7 +83,12 @@ const Recipe = ({ isAuthenticated, onRequireLogin }) => {
           <p className={css.description}>{recipe.description}</p>
 
           <div className={css.owner}>
-            <ImageWithFallback className={css.ownerAvatar} src={recipe.owner?.avatarUrl} alt="" />
+            <ImageWithFallback
+              className={css.ownerAvatar}
+              src={recipe.owner?.avatarUrl}
+              alt={recipe.owner?.name || "Owner avatar"}
+              placeholder="avatar"
+            />
             <div>
               <p className={css.ownerLabel}>Created by:</p>
               <p className={css.ownerName}>{recipe.owner?.name}</p>

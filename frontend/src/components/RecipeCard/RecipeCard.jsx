@@ -2,6 +2,8 @@ import css from "./RecipeCard.module.css";
 import ImageWithFallback from "../ImageWithFallback/ImageWithFallback.jsx";
 
 const RecipeCard = ({ recipe, isFavorite = false, onFavoriteToggle, onOpenRecipe }) => {
+  const ownerName = recipe.owner?.name || "Foodies";
+
   return (
     <article className={css.card}>
       <ImageWithFallback className={css.image} src={recipe.image} alt={recipe.title} />
@@ -11,7 +13,13 @@ const RecipeCard = ({ recipe, isFavorite = false, onFavoriteToggle, onOpenRecipe
 
       <div className={css.meta}>
         <div className={css.owner}>
-          <span>{recipe.area?.name || "Foodies"}</span>
+          <ImageWithFallback
+            className={css.ownerAvatar}
+            src={recipe.owner?.avatarUrl}
+            alt={ownerName}
+            placeholder="avatar"
+          />
+          <span>{ownerName}</span>
         </div>
 
         <div className={css.actions}>
