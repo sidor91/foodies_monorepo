@@ -1,4 +1,4 @@
-import { Button } from "../index.js";
+import Button from "../Button/Button.jsx";
 
 import css from "./Hero.module.css";
 

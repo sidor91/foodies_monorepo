@@ -14,7 +14,9 @@ import {
   selectFavoriteIds,
   selectFavoritesPendingIds,
 } from "../../../redux/favorites/favoritesSelectors.js";
-import { Button, ImageWithFallback, RecipeCard } from "../../components/index.js";
+import Button from "../../components/Button/Button.jsx";
+import ImageWithFallback from "../../components/ImageWithFallback/ImageWithFallback.jsx";
+import RecipeCard from "../../components/RecipeCard/RecipeCard.jsx";
 import useFavoriteToggle from "../../hooks/useFavoriteToggle.js";
 import useOpenRecipe from "../../hooks/useOpenRecipe.js";
 

@@ -3,7 +3,12 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Toaster } from "react-hot-toast";
 
-import { Header, MobileMenu, Loader, Footer, LoginForm, RegisterForm } from "../index.js";
+import Header from "../Header/Header.jsx";
+import MobileMenu from "../MobileMenu/MobileMenu.jsx";
+import Loader from "../Loader/Loader.jsx";
+import Footer from "../Footer/Footer.jsx";
+import LoginForm from "../LoginForm/LoginForm.jsx";
+import RegisterForm from "../RegisterForm/RegisterForm.jsx";
 import { logoutUser } from "../../api/auth";
 import { getCurrentUser } from "../../api/users.js";
 import { fetchFavorites } from "../../../redux/favorites/favoritesOps.js";
