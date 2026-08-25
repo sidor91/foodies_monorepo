@@ -9,6 +9,7 @@ export const recipeListSelect = {
   time: true,
   category: { select: { id: true, name: true } },
   area: { select: { id: true, name: true } },
+  owner: { select: { id: true, name: true, avatarUrl: true } },
 } satisfies Prisma.RecipeSelect;
 
 export type RecipeListItem = Prisma.RecipeGetPayload<{ select: typeof recipeListSelect }>;
