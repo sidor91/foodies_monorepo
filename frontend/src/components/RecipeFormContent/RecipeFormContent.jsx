@@ -38,7 +38,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
     <Form onBlur={saveCurrentDraft}>
       <div>
         <div className="max-w-[34.3rem] h-[31.8rem] rounded-[3rem] border border-dashed border-(--gray) overflow-hidden mb-[3.2rem]">
-          <label className="upload-content" style={{ cursor: "pointer", display: "block" }}>
+          <label className="pointer-events-auto max-w-[34.4rem] h-full cursor-pointer flex items-center justify-center">
             {previewUrl ? (
               <img src={previewUrl} alt="Recipe preview" className="w-full h-full object-cover" />
             ) : (
@@ -61,16 +61,20 @@ const RecipeFormContent = ({ isSubmitting }) => {
       </div>
       <div>
         {/* title and description */}
-        <Field
-          name="title"
-          type="text"
-          placeholder="The name of the recipe"
-          className="font-extrabold text-[1.8rem] leading-[133%] uppercase text-(--gray) mb-[3.2rem]"
-        />
-        <FormError name="title" />
+        <label className="mb-[3.2rem] block">
+          <Field
+            name="title"
+            type="text"
+            placeholder="The name of the recipe"
+            className="font-extrabold text-[1.8rem] leading-[133%] uppercase text-(--gray)"
+          />
+          <FormError name="title" />
+        </label>
 
-        <CustomTextarea name="description" placeholder="Enter a description of the dish" />
-        <FormError name="description" />
+        <label className="mb-[3.2rem] block">
+          <CustomTextarea name="description" placeholder="Enter a description of the dish" />
+          <FormError name="description" />
+        </label>
         <div className="flex flex-col gap-[2rem] mb-[32px]">
           {/* category and time */}
           <div className="flex flex-col w-full gap-[2rem]">
@@ -158,9 +162,11 @@ const RecipeFormContent = ({ isSubmitting }) => {
         <div className="">
           <label className="uppercase font-[800] leading-[150%] mb-[3.2rem] block">
             RECIPE PREPARATION
+            <span className="block mt-[3.2rem]">
+              <CustomTextarea name="instructions" placeholder="Enter recipe" />
+            </span>
+            <FormError name="instructions" />
           </label>
-
-          <CustomTextarea name="instructions" placeholder="Enter recipe" />
         </div>
 
         <div className="flex items-center gap-[0.8rem]">
@@ -191,9 +197,7 @@ export default RecipeFormContent;
 
 // added FormError component to be used in CustomSelect and RecipeFormContent
 export const FormError = ({ name }) => {
-  return (
-    <ErrorMessage name={name} component="div" className="text-(--red) text-[1.2rem] mt-[4px]" />
-  );
+  return <ErrorMessage name={name} component="div" className="text-(--red) text-[1.2rem]" />;
 };
 
 const CustomTextarea = ({ name, placeholder, maxLength = 200, className }) => {
@@ -201,12 +205,7 @@ const CustomTextarea = ({ name, placeholder, maxLength = 200, className }) => {
   const currentLength = values[name] ? values[name].length : 0;
 
   return (
-    <div
-      className={clsx(
-        "relative w-full mb-[3.2rem] border-b border-(--grey) pb-[1.2rem]",
-        className,
-      )}
-    >
+    <div className={clsx("relative w-full border-b border-(--grey) pb-[1.2rem]", className)}>
       <Field
         as="textarea"
         name={name}
@@ -225,12 +224,6 @@ const CustomTextarea = ({ name, placeholder, maxLength = 200, className }) => {
         <span className="text-(--black)">{currentLength}</span>
         <span className="text-(--grey)">/{maxLength}</span>
       </span>
-
-      <ErrorMessage
-        name={name}
-        component="div"
-        className="absolute left-0 bottom-[2rem] text-(--red) text-[1.2rem]"
-      />
     </div>
   );
 };

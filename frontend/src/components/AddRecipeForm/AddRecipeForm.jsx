@@ -81,8 +81,8 @@ const AddRecipeForm = () => {
   };
 
   return (
-    <section className={clsx("section")}>
-      <div className={clsx("container")}>
+    <section className={css.header__section}>
+      <div className={css.header__container}>
         <Formik
           initialValues={initialValues}
           validationSchema={RecipeSchema}

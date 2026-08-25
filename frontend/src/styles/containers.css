@@ -3,7 +3,7 @@
 ======================== */
 
 /* Section layout */
-.section {
+.app-section {
   width: 100%;
   margin-bottom: 6.4rem;
 }
@@ -24,7 +24,7 @@
   pointer-events: none;
 }
 
-.container {
+.app-container {
   max-width: 37.5rem;
   margin: 0 auto;
   padding: 0 1.6rem;
@@ -34,12 +34,12 @@
 /* Tablet */
 /* --------------------------------------- */
 
-@media screen and (min-width: var(--tablet)) {
-  .section {
+@media screen and (min-width: 768px) {
+  .app-section {
     margin-bottom: 8rem;
   }
 
-  .container {
+  .app-container {
     max-width: 76.8rem;
     padding: 0 3.2rem;
   }
@@ -50,11 +50,11 @@
 /* --------------------------------------- */
 
 @media screen and (min-width: var(--desktop)) {
-  .section {
+  .app-section {
     margin-bottom: 12rem;
   }
 
-  .container {
+  .app-container {
     max-width: 144.4rem;
     padding: 0 8rem;
   }
