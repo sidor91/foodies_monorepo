@@ -29,7 +29,7 @@ const MobileMenu = ({ isMobileMenuOpen, onMobileToggle }) => {
           <NavLink to="/" className={buildLinkClass} onClick={onMobileToggle}>
             Home
           </NavLink>
-          <NavLink to="/add-recipe" className={buildLinkClass} onClick={onMobileToggle}>
+          <NavLink to="/recipe/add" className={buildLinkClass} onClick={onMobileToggle}>
             Add Recipe
           </NavLink>
         </nav>

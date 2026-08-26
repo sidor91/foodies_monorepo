@@ -81,7 +81,7 @@ body {
 
 .btn__secondary {
   color: var(--color-text);
-  border: 1px solid var(--color-text);
+  border: 1px solid var(--color-secondary);
 }
 
 .btn__active {
@@ -134,12 +134,21 @@ body {
 /* Tablet */
 /* --------------------------------------- */
 
-@media screen and (min-width: var(--tablet)) {
+@media screen and (min-width: 48rem) {
 }
 
 /* --------------------------------------- */
 /* Desktop */
 /* --------------------------------------- */
 
-@media screen and (min-width: var(--desktop)) {
+@media screen and (min-width: 90rem) {
+  .btn__primary:hover,
+  .btn__primary:focus {
+    background-color: var(--color-accent);
+  }
+
+  .btn__secondary:hover,
+  .btn__secondary:focus {
+    border-color: var(--color-text);
+  }
 }
