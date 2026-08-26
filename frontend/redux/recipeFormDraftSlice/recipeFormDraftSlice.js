@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  photo: null,
   title: "",
   description: "",
   category: "",
@@ -9,6 +8,8 @@ const initialState = {
   area: "",
   ingredients: [],
   instructions: "",
+  selectedIngredientId: "",
+  ingredientQuantity: "",
 };
 
 const recipeFormDraftSlice = createSlice({
