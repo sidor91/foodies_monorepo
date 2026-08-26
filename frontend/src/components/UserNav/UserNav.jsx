@@ -59,10 +59,14 @@ const UserNav = ({ user, onLogout, isAddRecipePage }) => {
               onLogout();
             }}
           >
-            <p className="uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold">
+            <p
+              className={`${isAddRecipePage && "text-primary"} uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold`}
+            >
               Log out
             </p>
-            <svg className="fill-none stroke-bg w-[1.8rem] h-[1.8rem]">
+            <svg
+              className={`${isAddRecipePage && "stroke-primary"} fill-none stroke-bg w-[1.8rem] h-[1.8rem]`}
+            >
               <use href="/icons.svg#icon-arrow-up-right" />
             </svg>
           </button>
