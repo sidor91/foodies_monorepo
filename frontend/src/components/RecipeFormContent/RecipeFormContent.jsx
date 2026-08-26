@@ -12,6 +12,7 @@ import {
 import CustomSelect from "../CustomSelect/CustomSelect.jsx";
 import Icon from "../Icon/Icon.jsx";
 import clsx from "clsx";
+import ImageUploader from "../ImageUploader/ImageUploader.jsx";
 
 const RecipeFormContent = ({ isSubmitting }) => {
   const categories = useSelector(selectCategories);
@@ -30,41 +31,20 @@ const RecipeFormContent = ({ isSubmitting }) => {
     values,
     setFieldValue,
     handleResetForm,
-    errors,
     saveCurrentDraft,
   } = useRecipeForm();
 
   return (
-    <Form onBlur={saveCurrentDraft}>
+    <Form
+      onBlur={saveCurrentDraft}
+      className="desktop:flex desktop:gap-[8rem] w-full justify-center tablet:w-[70.4rem] "
+    >
       <>
-        <div
-          className="w-full max-w-[34.3rem] tablet:max-w-[70.4rem] h-[31.8rem] tablet:h-[40rem] rounded-[3rem] border border-dashed
-         border-(--gray) overflow-hidden mb-[3.2rem] mx-auto"
-        >
-          <label className="pointer-events-auto w-full h-full cursor-pointer flex items-center justify-center">
-            {previewUrl ? (
-              <img src={previewUrl} alt="Recipe preview" className="w-full h-full object-cover" />
-            ) : (
-              <div className="mx-auto flex flex-col items-center justify-center gap-[0.8rem] ">
-                <Icon
-                  name="add-image"
-                  size={50}
-                  className="fill-(--black)/20 tablet:w-[6.4rem] tablet:h-[6.4rem]"
-                />
-                <span className="text-[1.4rem] tablet:text-[1.6rem] block leading-[143%] tablet:leading-[150%] underline text-(--black)">
-                  Upload a photo
-                </span>
-              </div>
-            )}
-
-            <input
-              type="file"
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={(e) => handleImageUpload(e, setFieldValue)}
-            />
-          </label>
-        </div>
+        <ImageUploader
+          previewUrl={previewUrl}
+          handleImageUpload={handleImageUpload}
+          setFieldValue={setFieldValue}
+        />
       </>
       <div>
         {/* title and description */}
@@ -96,8 +76,8 @@ const RecipeFormContent = ({ isSubmitting }) => {
               />
             </div>
 
-            <div className="flex flex-col gap-[0.8rem]">
-              <label className="uppercase font-extrabold leading-[150%] tablet:text-[2rem] tablet:leading-[120%]">
+            <div className="flex flex-col gap-[0.8rem] tablet:gap-[1.6rem]">
+              <label className="uppercase font-extrabold tablet:text-[2rem] tablet:leading-[120%]">
                 COOKING TIME
               </label>
               <div className="flex items-center gap-[1.2rem] tablet:gap-[1.6rem]">
@@ -190,14 +170,13 @@ const RecipeFormContent = ({ isSubmitting }) => {
         <div className="">
           <div className="flex flex-col mb-[3.2rem]">
             {/* Текст підпису (лейбл) */}
-            <span className="uppercase font-[800] leading-[150%] tablet:leading-[120%] tablet:text-[2rem] mb-[3.2rem] block">
+            <span className="uppercase font-[800] tablet:leading-[120%] tablet:text-[2rem] mb-[3.2rem] block">
               Recipe preparation
             </span>
 
             {/* Поле вводу */}
             <CustomTextarea name="instructions" placeholder="Enter recipe" />
 
-            {/* Повідомлення про помилку */}
             <FormError name="instructions" />
           </div>
         </div>
@@ -235,7 +214,13 @@ export default RecipeFormContent;
 
 // added FormError component to be used in CustomSelect and RecipeFormContent
 export const FormError = ({ name }) => {
-  return <ErrorMessage name={name} component="div" className="text-(--red) text-[1.2rem]" />;
+  return (
+    <ErrorMessage
+      name={name}
+      component="div"
+      className="text-(--red) text-[1.4rem] tablet:text-[1.6rem] font-[500]"
+    />
+  );
 };
 
 const CustomTextarea = ({ name, placeholder, maxLength = 200, className }) => {

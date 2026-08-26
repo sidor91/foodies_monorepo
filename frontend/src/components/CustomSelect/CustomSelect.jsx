@@ -7,7 +7,7 @@ const CustomSelect = ({ name, label, value, placeholder, options, className }) =
     value ? "text-(--black)" : "text-(--grey)"
   } ${className || ""}`;
   return (
-    <div className="flex flex-col gap-[8px] w-full">
+    <div className="flex flex-col gap-[0.8rem] tablet:gap-[1.6rem] w-full">
       {label && (
         <label className="font-[800] uppercase leading-[150%] tablet:text-[2rem] tablet:leading-[120%]">
           {label}

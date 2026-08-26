@@ -34,7 +34,7 @@
 /* Tablet */
 /* --------------------------------------- */
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: var(--tablet)) {
   .section {
     margin-bottom: 8rem;
   }
