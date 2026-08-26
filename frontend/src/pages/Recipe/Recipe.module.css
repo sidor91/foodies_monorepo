@@ -181,7 +181,12 @@
   margin-top: 2.4rem;
 }
 
-@media screen and (min-width: 480px) {
+.popularGrid > li {
+  display: flex;
+  min-width: 0;
+}
+
+@media screen and (min-width: 30rem) {
   .recipe {
     padding: 3.2rem 3.2rem 8rem;
   }
@@ -204,13 +209,13 @@
   }
 }
 
-@media screen and (min-width: 768px) and (max-width: 899.98px) {
+@media screen and (min-width: 48rem) and (max-width: 56.24875rem) {
   .image {
     max-height: 400px;
   }
 }
 
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 56.25rem) {
   .recipe {
     padding: 3.2rem 6rem 8rem;
   }

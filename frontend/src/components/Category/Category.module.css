@@ -101,6 +101,11 @@
   gap: 2.4rem 1.2rem;
 }
 
+.grid > li {
+  display: flex;
+  min-width: 0;
+}
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -140,7 +145,7 @@
   clip: rect(0, 0, 0, 0);
 }
 
-@media screen and (min-width: 768px) and (max-width: 899.98px) {
+@media screen and (min-width: 48rem) and (max-width: 56.24875rem) {
   .category {
     padding-top: 3.2rem;
   }
@@ -158,7 +163,7 @@
   }
 }
 
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 56.25rem) {
   .category {
     padding-top: 4rem;
     padding-bottom: 8rem;

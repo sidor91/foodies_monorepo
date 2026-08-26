@@ -91,7 +91,7 @@
   box-shadow: 0 2rem 4rem rgb(0 0 0 / 0.25);
 }
 
-@media screen and (min-width: 480px) {
+@media screen and (min-width: 30rem) {
   .hero {
     min-height: 60rem;
     margin-bottom: 9.6rem;
@@ -120,7 +120,7 @@
   }
 }
 
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 56.25rem) {
   .hero {
     min-height: 68rem;
     margin-bottom: 12rem;

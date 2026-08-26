@@ -24,21 +24,12 @@ import {
   selectRecipesPagination,
 } from "../../../redux/recipes/recipesSelectors.js";
 import { selectFavoriteIds } from "../../../redux/favorites/favoritesSelectors.js";
-import Category from "../../components/Category/Category.jsx";
-import Categories from "../../components/Categories/Categories.jsx";
-import Hero from "../../components/Hero/Hero.jsx";
-import Testimonials from "../../components/Testimonials/Testimonials.jsx";
+import { Category, Categories, Hero, Testimonials } from "../../components/index.js";
 import useFavoriteToggle from "../../hooks/useFavoriteToggle.js";
 import useOpenRecipe from "../../hooks/useOpenRecipe.js";
+import slugify from "../../utils/slugify.js";
 
 import css from "./Home.module.css";
-
-const slugify = (value) =>
-  value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
 
 const Home = ({ isAuthenticated, onRequireLogin }) => {
   const dispatch = useDispatch();

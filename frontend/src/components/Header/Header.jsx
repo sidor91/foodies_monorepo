@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import clsx from "clsx";
 
 import css from "./Header.module.css";
@@ -16,8 +16,10 @@ const Header = ({
   user,
   isAuthLoading,
   onLogout,
-  isLight = false,
 }) => {
+  const { pathname } = useLocation();
+  const isLight = pathname.startsWith("/recipes/");
+
   const brandClassName = clsx(
     "text-[2rem] leading-[120%] tracking-[-0.02em] font-extrabold tablet:text-[2.4rem] tablet:leading-[160%]",
     isLight ? "text-accent" : "text-bg",

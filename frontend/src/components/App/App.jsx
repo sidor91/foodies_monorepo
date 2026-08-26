@@ -1,17 +1,12 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Toaster } from "react-hot-toast";
 
-import Header from "../Header/Header.jsx";
-import MobileMenu from "../MobileMenu/MobileMenu.jsx";
-import Loader from "../Loader/Loader.jsx";
-import Footer from "../Footer/Footer.jsx";
-import LoginForm from "../LoginForm/LoginForm.jsx";
-import RegisterForm from "../RegisterForm/RegisterForm.jsx";
-import { logoutUser } from "../../api/auth";
+import { Header, MobileMenu, Loader, Footer, LoginForm, RegisterForm } from "../index.js";
 import { getCurrentUser } from "../../api/users.js";
 import { fetchFavorites } from "../../../redux/favorites/favoritesOps.js";
+import { logOut } from "../../../redux/auth/authOps.js";
 
 import css from "./App.module.css";
 
@@ -22,7 +17,6 @@ const UserProfile = lazy(() => import("../../pages/UserProfile/UserProfile.jsx")
 
 const App = () => {
   const dispatch = useDispatch();
-  const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -39,7 +33,7 @@ const App = () => {
 
   const handleLogout = async () => {
     try {
-      await logoutUser();
+      await dispatch(logOut()).unwrap();
       setUser(null);
       setIsAuthenticated(false);
     } catch (error) {
@@ -89,8 +83,6 @@ const App = () => {
     setIsLogin(false);
   };
 
-  const isRecipePage = location.pathname.startsWith("/recipes/");
-
   return (
     <div className={`main__container ${isMobileMenuOpen && "modal__open"}`}>
       <Toaster />
@@ -106,7 +98,6 @@ const App = () => {
         user={user}
         isAuthLoading={isAuthLoading}
         onLogout={handleLogout}
-        isLight={isRecipePage}
       />
 
       <MobileMenu isMobileMenuOpen={isMobileMenuOpen} onMobileToggle={handleMobileToggle} />
@@ -139,7 +130,7 @@ const App = () => {
               }
             />
             <Route
-              path="/recipes/:recipeId"
+              path="/recipes/:recipeSlugId"
               element={
                 <Recipe isAuthenticated={isAuthenticated} onRequireLogin={handleLoginToggle} />
               }

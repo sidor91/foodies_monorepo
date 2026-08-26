@@ -75,7 +75,7 @@
   color: var(--color-secondary);
 }
 
-@media screen and (min-width: 480px) {
+@media screen and (min-width: 30rem) {
   .testimonials {
     margin-bottom: 12rem;
   }
