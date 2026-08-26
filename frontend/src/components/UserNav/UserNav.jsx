@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-const UserNav = ({ user, onLogout }) => {
+const UserNav = ({ user, onLogout, isAddRecipePage }) => {
   const [isExtra, setIsExtra] = useState(false);
 
   const handleExtraToggle = () => {
@@ -41,10 +41,12 @@ const UserNav = ({ user, onLogout }) => {
       </button>
 
       {isExtra && (
-        <div className="absolute w-[12.2rem] bg-accent flex flex-col gap-[0.4rem] p-[1.6rem] mt-53 border border-secondary rounded-3xl tablet:w-[14.8rem]">
+        <div
+          className={`${isAddRecipePage && "bg-transparent"} absolute w-[12.2rem] bg-accent flex flex-col gap-[0.4rem] p-[1.6rem] mt-53 border border-secondary rounded-3xl tablet:w-[14.8rem]`}
+        >
           <NavLink
             to="/profile"
-            className="uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold"
+            className={`${isAddRecipePage && "text-primary"} uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold`}
             onClick={handleExtraToggle}
           >
             Profile

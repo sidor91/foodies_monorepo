@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import clsx from "clsx";
 
@@ -12,10 +12,6 @@ import {
   selectIsRefreshing,
 } from "../../../redux/auth/authSelectors";
 
-const buildLinkClass = ({ isActive }) => {
-  return clsx(css.nav__link, isActive && css.active);
-};
-
 const Header = ({
   isMobileMenuOpen,
   onMobileToggle,
@@ -25,16 +21,24 @@ const Header = ({
   onRegister,
   onLogout,
 }) => {
+  const { pathname } = useLocation();
+
+  const isAddRecipePage = pathname === "/recipe/add";
+
   const user = useSelector(selectUser);
   const isAuthenticated = useSelector(selectIsLoggedIn);
   const isAuthLoading = useSelector(selectIsRefreshing);
 
+  const buildLinkClass = ({ isActive }) => {
+    return clsx(css.nav__link, isActive && css.active, isAddRecipePage && css.add__recipe);
+  };
+
   return (
     <header className={css.header__section}>
-      <div className={css.header__container}>
+      <div className={clsx(css.header__container, isAddRecipePage && css.add__recipe)}>
         <NavLink
           to="/"
-          className="text-bg text-[2rem] leading-[120%] tracking-[-0.02em] font-extrabold tablet:text-[2.4rem] tablet:leading-[160%]"
+          className={`${isAddRecipePage && "text-primary"} text-bg text-[2rem] leading-[120%] tracking-[-0.02em] font-extrabold tablet:text-[2.4rem] tablet:leading-[160%]`}
         >
           foodies
         </NavLink>
@@ -59,7 +63,7 @@ const Header = ({
 
         {(isAuthLoading || isAuthenticated) && (
           <div className="flex items-center justify-between gap-[0.4rem]">
-            <UserNav user={user} onLogout={onLogout} />
+            <UserNav user={user} onLogout={onLogout} isAddRecipePage={isAddRecipePage} />
             <button
               className={css.modal__button}
               type="button"
