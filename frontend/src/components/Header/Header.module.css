@@ -15,6 +15,10 @@
   border-top-right-radius: 3rem;
 }
 
+.header__container.add__recipe {
+  background-color: transparent;
+}
+
 .nav__link {
   display: none;
   padding: 1.4rem;
@@ -30,6 +34,14 @@
 .nav__link.active {
   border: 1px solid var(--color-border-transparent);
   border-radius: 3rem;
+}
+
+.nav__link.add__recipe {
+  color: var(--color-primary);
+}
+
+.nav__link.add__recipe.active {
+  border-color: var(--color-secondary);
 }
 
 .modal__button {
@@ -64,7 +76,7 @@
 /* --------------------------------------- */
 
 @media screen and (min-width: 90rem) {
-   .header__section {
+  .header__section {
     padding: 2rem 2rem 0 2rem;
   }
 

@@ -29,12 +29,11 @@
   position: relative;
 
   width: 100%;
-  max-width: 34.3rem;
-  padding: 6rem 3rem;
+  height: 100%;
+  padding: 2.4rem;
   gap: 3.2rem;
 
-  background-color: var(--color-bg);
-  border-radius: 3rem;
+  background-color: var(--color-accent);
 
   opacity: 0;
   transition: opacity 0.25s ease-in-out;
@@ -51,40 +50,19 @@ body.modal__open {
   pointer-events: none;
 }
 
-.field__box {
+.nav__link {
+  font-size: 1.4rem;
+  line-height: 140%;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+
+  padding: 1.4rem 3.4rem;
+
+  text-transform: uppercase;
+  color: var(--color-bg);
+}
+
+.nav__link.active {
   border: 1px solid var(--color-secondary);
   border-radius: 3rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.field__box:focus-within,
-.has__value {
-  border-color: var(--color-accent);
-}
-
-.form__field {
-  width: 100%;
-  padding: 1.4rem;
-}
-
-.form__field::placeholder {
-  font-size: 1.4rem;
-  line-height: 145%;
-  letter-spacing: -0.02em;
-  font-weight: 600;
-
-  color: var(--color-secondary);
-}
-
-@media screen and (min-width: 48rem) {
-  .modal {
-    max-width: 56rem;
-    padding: 8rem;
-    gap: 4rem;
-  }
-
-  .form__field {
-    padding: 1.6rem 1.8rem;
-  }
 }

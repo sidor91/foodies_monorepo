@@ -1,18 +1,19 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-const UserNav = ({ user, onAuthToggle }) => {
+const UserNav = ({ user, onLogout, isAddRecipePage }) => {
   const [isExtra, setIsExtra] = useState(false);
 
   const handleExtraToggle = () => {
     setIsExtra((prev) => !prev);
   };
+
   return (
     <div className="bg-primary rounded-[3rem] flex items-center relative">
       {user?.avatarUrl ? (
         <img
           src={user.avatarUrl}
-          alt={user.name}
+          alt={`${user.name} profile photo`}
           className="w-[3.2rem] h-[3.2rem] rounded-[3rem] object-cover tablet:w-20 tablet:h-20"
         />
       ) : (
@@ -40,10 +41,12 @@ const UserNav = ({ user, onAuthToggle }) => {
       </button>
 
       {isExtra && (
-        <div className="absolute w-[12.2rem] bg-accent flex flex-col gap-[0.4rem] p-[1.6rem] mt-53 border border-secondary rounded-3xl tablet:w-[14.8rem]">
+        <div
+          className={`${isAddRecipePage && "bg-transparent"} absolute w-[12.2rem] bg-accent flex flex-col gap-[0.4rem] p-[1.6rem] mt-53 border border-secondary rounded-3xl tablet:w-[14.8rem]`}
+        >
           <NavLink
             to="/profile"
-            className="uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold"
+            className={`${isAddRecipePage && "text-primary"} uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold`}
             onClick={handleExtraToggle}
           >
             Profile
@@ -53,13 +56,17 @@ const UserNav = ({ user, onAuthToggle }) => {
             className="flex content-center"
             onClick={() => {
               handleExtraToggle();
-              onAuthToggle();
+              onLogout();
             }}
           >
-            <p className="uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold">
+            <p
+              className={`${isAddRecipePage && "text-primary"} uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold`}
+            >
               Log out
             </p>
-            <svg className="fill-none stroke-bg w-[1.8rem] h-[1.8rem]">
+            <svg
+              className={`${isAddRecipePage && "stroke-primary"} fill-none stroke-bg w-[1.8rem] h-[1.8rem]`}
+            >
               <use href="/icons.svg#icon-arrow-up-right" />
             </svg>
           </button>

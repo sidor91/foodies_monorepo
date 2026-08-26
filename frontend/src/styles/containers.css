@@ -34,7 +34,7 @@
 /* Tablet */
 /* --------------------------------------- */
 
-@media screen and (min-width: var(--tablet)) {
+@media screen and (min-width: 48rem) {
   .section {
     margin-bottom: 8rem;
   }
@@ -49,7 +49,7 @@
 /* Desktop */
 /* --------------------------------------- */
 
-@media screen and (min-width: var(--desktop)) {
+@media screen and (min-width: 90rem) {
   .section {
     margin-bottom: 12rem;
   }
