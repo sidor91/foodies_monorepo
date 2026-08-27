@@ -15,7 +15,7 @@
   border-top-right-radius: 3rem;
 }
 
-.header__container.add__recipe {
+.header__container.not__home {
   background-color: transparent;
 }
 
@@ -36,11 +36,11 @@
   border-radius: 3rem;
 }
 
-.nav__link.add__recipe {
+.nav__link.not__home {
   color: var(--color-primary);
 }
 
-.nav__link.add__recipe.active {
+.nav__link.not__home.active {
   border-color: var(--color-secondary);
 }
 
