@@ -45,7 +45,7 @@ const UserNav = ({ user, onLogout, isHomePage }) => {
           className={`${!isHomePage && "bg-bg"} absolute w-[12.2rem] bg-accent flex flex-col gap-[0.4rem] p-[1.6rem] mt-53 border border-secondary rounded-3xl tablet:w-[14.8rem]`}
         >
           <NavLink
-            to="/profile"
+            to={`/user/${user?.id}`}
             className={`${!isHomePage && "text-primary"} uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold`}
             onClick={handleExtraToggle}
           >
