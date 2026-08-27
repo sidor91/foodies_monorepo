@@ -95,10 +95,7 @@ const App = () => {
         <Suspense fallback={<Loader />}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route
-              path="/recipe/add"
-              element={<PrivateRoute component={<AddRecipe />} openModal={setIsLogin} />}
-            />
+            <Route path="/recipe/add" element={<AddRecipe onRequireLogin={handleLoginToggle} />} />
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/" element={<Home onRequireLogin={handleLoginToggle} />} />
             <Route

@@ -76,16 +76,17 @@ const useRecipeForm = () => {
     setFieldValue("ingredientQuantity", "");
 
     // save the updated draft to Redux
+    const { photo, ...valuesWithoutPhoto } = values;
+
     dispatch(
       updateDraft({
-        ...values,
+        ...valuesWithoutPhoto,
         ingredients: updatedIngredients,
         selectedIngredientId: "",
         ingredientQuantity: "",
       }),
     );
   };
-
   return {
     values,
     errors,

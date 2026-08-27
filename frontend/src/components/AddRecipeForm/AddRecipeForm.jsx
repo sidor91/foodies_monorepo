@@ -47,7 +47,7 @@ const AddRecipeForm = () => {
   const navigate = useNavigate();
 
   const initialValues = {
-    photo: savedDraft?.photo || null,
+    photo: null,
     title: savedDraft?.title || "",
     description: savedDraft?.description || "",
     category: savedDraft?.category || "",
