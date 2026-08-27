@@ -22,11 +22,11 @@ const ImageUploader = ({ previewUrl, handleImageUpload, setFieldValue }) => {
               <Icon
                 name="add-image"
                 size={50}
-                className="fill-(--black)/20 tablet:w-[6.4rem] tablet:h-[6.4rem]"
+                className="fill-secondary tablet:w-[6.4rem] tablet:h-[6.4rem]"
               />
               <span
                 className="text-[1.4rem] tablet:text-[1.6rem] block leading-[143%] tablet:leading-[150%] underline
-                     text-(--black)"
+                     text-accent"
               >
                 Upload a photo
               </span>
@@ -44,7 +44,7 @@ const ImageUploader = ({ previewUrl, handleImageUpload, setFieldValue }) => {
         <label className="cursor-pointer mb-[3.2rem]">
           <span
             className="text-[1.4rem] tablet:text-[1.6rem] block leading-[143%] 
-            tablet:leading-[150%] underline text-(--black)"
+            tablet:leading-[150%] underline text-accent"
           >
             Upload another photo
           </span>
