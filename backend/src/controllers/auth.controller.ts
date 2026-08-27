@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { CookieOptions, Request, Response } from "express";
 import { authService, type IAuthService, type RegisterInput } from "../services/auth.service.js";
 import { jwtService } from "../services/jwt.service.js";
 
@@ -65,11 +65,11 @@ class AuthController implements IAuthController {
     res.clearCookie("refreshToken", this.getCookieOptions());
   }
 
-  private getCookieOptions() {
+  private getCookieOptions(): CookieOptions {
     return {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? ("none" as const) : ("lax" as const),
+      sameSite: isProduction ? "none" : "lax",
     };
   }
 }
