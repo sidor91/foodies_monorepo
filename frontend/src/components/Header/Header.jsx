@@ -22,22 +22,22 @@ const Header = ({
 }) => {
   const { pathname } = useLocation();
 
-  const isHomePage = pathname === "/";
+  const isHomePageOrCategories = pathname === "/" || pathname.startsWith("/categories");
 
   const user = useSelector(selectUser);
   const isAuthenticated = useSelector(selectIsLoggedIn);
   const isAuthLoading = useSelector(selectIsRefreshing);
 
   const buildLinkClass = ({ isActive }) => {
-    return clsx(css.nav__link, isActive && css.active, !isHomePage && css.not__home);
+    return clsx(css.nav__link, isActive && css.active, !isHomePageOrCategories && css.not__home);
   };
 
   return (
     <header className={css.header__section}>
-      <div className={clsx(css.header__container, !isHomePage && css.not__home)}>
+      <div className={clsx(css.header__container, !isHomePageOrCategories && css.not__home)}>
         <NavLink
           to="/"
-          className={`${!isHomePage && "text-primary"} text-bg text-[2rem] leading-[120%] tracking-[-0.02em] font-extrabold tablet:text-[2.4rem] tablet:leading-[160%]`}
+          className={`${!isHomePageOrCategories && "text-primary"} text-bg text-[2rem] leading-[120%] tracking-[-0.02em] font-extrabold tablet:text-[2.4rem] tablet:leading-[160%]`}
         >
           foodies
         </NavLink>
