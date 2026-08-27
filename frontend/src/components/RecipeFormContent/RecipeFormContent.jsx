@@ -92,7 +92,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
                     className="stroke-(--black) tablet:w-[2.4rem] tablet:h-[2.4rem]"
                   />
                 </button>
-                <span className="font-medium text-[1.4rem] leading-[143%] text-(--grey)">
+                <span className="font-medium text-[1.4rem] tablet:text-[1.6rem] leading-[143%] text-(--grey)">
                   {values.time} min
                 </span>
                 <button
@@ -123,8 +123,8 @@ const RecipeFormContent = ({ isSubmitting }) => {
           </div>
 
           {/* ingredients */}
-          <div className="">
-            <div className="flex flex-col tablet:flex-row tablet:items-end gap-[2rem] ">
+          <div>
+            <div className="flex flex-col tablet:flex-row tablet:items-end gap-[2rem] tablet:w-[31.6rem] ">
               <CustomSelect
                 name="selectedIngredientId"
                 placeholder="Add the ingredient"

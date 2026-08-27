@@ -9,6 +9,7 @@ import { logOut, refreshUser } from "../../../redux/auth/authOps.js";
 
 import css from "./App.module.css";
 import LogoutModal from "../LogoutModal/LogoutModal.jsx";
+import PrivateRoute from "../../components/PrivateRoute.jsx";
 
 const Home = lazy(() => import("../../pages/Home/Home.jsx"));
 const AddRecipe = lazy(() => import("../../pages/AddRecipe/AddRecipe.jsx"));
@@ -85,7 +86,10 @@ const App = () => {
         <Suspense fallback={<Loader />}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/recipe/add" element={<AddRecipe />} />
+            <Route
+              path="/recipe/add"
+              element={<PrivateRoute component={<AddRecipe />} openModal={setIsLogin} />}
+            />
             <Route path="/profile" element={<UserProfile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

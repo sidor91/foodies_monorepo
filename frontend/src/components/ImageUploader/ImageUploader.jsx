@@ -1,18 +1,24 @@
 import Icon from "../Icon/Icon";
+import { clsx } from "clsx";
 
 const ImageUploader = ({ previewUrl, handleImageUpload, setFieldValue }) => {
   return (
     <div className="flex flex-col items-center shrink-0">
       <div
-        className=" w-full max-w-[34.3rem] tablet:max-w-[70.4rem] desktop:w-[55.1rem] h-[31.8rem] 
-          tablet:h-[40rem] desktop:h-[40rem] rounded-[3rem] border border-dashed
-         border-(--gray) overflow-hidden mb-[3.2rem] shrink-0"
+        className={clsx(`
+          w-full max-w-[34.3rem] tablet:max-w-[70.4rem] desktop:w-[55.1rem] h-[31.8rem]
+          tablet:h-[40rem] desktop:h-[40rem] rounded-[3rem]
+          border-(--gray) overflow-hidden shrink-0 ${
+            previewUrl
+              ? "mb-[1.6rem] tablet:mb-[2rem]"
+              : "mb-[3.2rem] tablet:mb-[8rem] border border-dashed"
+          }`)}
       >
-        <label className="pointer-events-auto w-full h-full cursor-pointer flex items-center justify-center">
+        <label className="pointer-events-auto h-full cursor-pointer flex items-center justify-center">
           {previewUrl ? (
             <img src={previewUrl} alt="Recipe preview" className="w-full h-full object-cover" />
           ) : (
-            <div className="mx-auto flex flex-col items-center justify-center gap-[0.8rem] ">
+            <div className="flex flex-col items-center justify-center gap-[0.8rem]">
               <Icon
                 name="add-image"
                 size={50}
