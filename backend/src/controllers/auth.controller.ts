@@ -49,7 +49,7 @@ class AuthController implements IAuthController {
   }
 
   private setAuthCookies(res: Response, accessToken: string, refreshToken: string): void {
-    const cookieOptions = { httpOnly: true, secure: isProduction, sameSite: "lax" as const };
+    const cookieOptions = this.getCookieOptions();
     res.cookie("accessToken", accessToken, {
       ...cookieOptions,
       maxAge: jwtService.getExpiresInMs("access"),
@@ -61,8 +61,16 @@ class AuthController implements IAuthController {
   }
 
   private clearAuthCookies(res: Response): void {
-    res.clearCookie("accessToken");
-    res.clearCookie("refreshToken");
+    res.clearCookie("accessToken", this.getCookieOptions());
+    res.clearCookie("refreshToken", this.getCookieOptions());
+  }
+
+  private getCookieOptions() {
+    return {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? ("none" as const) : ("lax" as const),
+    };
   }
 }
 
