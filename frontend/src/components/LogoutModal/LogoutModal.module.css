@@ -23,9 +23,8 @@
 .modal {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: center;
   justify-content: start;
-  overflow-y: auto;
   position: relative;
 
   width: 100%;
@@ -51,31 +50,37 @@ body.modal__open {
   pointer-events: none;
 }
 
-.field__box {
-  border: 1px solid var(--color-secondary);
-  border-radius: 3rem;
-  position: relative;
-  overflow: hidden;
+/* Typography */
+
+.title__mobile,
+.title__tablet {
+  letter-spacing: -0.02em;
+  font-weight: 800;
+
+  text-transform: uppercase;
+  color: var(--color-accent);
 }
 
-.field__box:focus-within,
-.has__value {
-  border-color: var(--color-accent);
+.title__mobile {
+  font-size: 2.8rem;
+  line-height: 115%;
 }
 
-.form__field {
-  width: 100%;
-  padding: 1.4rem;
+.title__tablet {
+  display: none;
+  font-size: 3.2rem;
 }
 
-.form__field::placeholder {
+.sub__title {
   font-size: 1.4rem;
   line-height: 145%;
   letter-spacing: -0.02em;
-  font-weight: 600;
+  font-weight: 500;
 
   color: var(--color-secondary);
 }
+
+/* Tablet */
 
 @media screen and (min-width: 48rem) {
   .modal {
@@ -84,7 +89,11 @@ body.modal__open {
     gap: 4rem;
   }
 
-  .form__field {
-    padding: 1.6rem 1.8rem;
+  .title__mobile {
+    display: none;
+  }
+
+  .title__tablet {
+    display: block;
   }
 }

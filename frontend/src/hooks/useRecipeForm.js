@@ -3,19 +3,13 @@ import { useFormikContext } from "formik";
 import { useSelector } from "react-redux";
 import { selectIngredients } from "../../redux/references/referencesSelectors.js";
 import { useDispatch } from "react-redux";
-import {
-  clearDraft,
-  updateDraft,
-  selectRecipeDraft,
-} from "../../redux/recipeFormDraftSlice/recipeFormDraftSlice.js";
+import { clearDraft, updateDraft } from "../../redux/recipeFormDraftSlice/recipeFormDraftSlice.js";
+import { toast } from "react-hot-toast";
+
 const useRecipeForm = () => {
   const { values, setFieldValue, errors } = useFormikContext();
   const ingredientsList = useSelector(selectIngredients);
   const dispatch = useDispatch();
-
-  const [currentIngredientId, setCurrentIngredientId] = useState("");
-  const [currentIngredientName, setCurrentIngredientName] = useState("");
-  const [currentQuantity, setCurrentQuantity] = useState("");
   const [previewUrl, setPreviewUrl] = useState(null);
 
   const saveCurrentDraft = () => {
@@ -54,41 +48,48 @@ const useRecipeForm = () => {
   };
 
   const handleAddIngredient = () => {
-    if (!currentIngredientId || !currentQuantity) return;
-    if (values.ingredients.length >= 30) return;
+    const { selectedIngredientId, ingredientQuantity, ingredients } = values;
 
-    // Find the selected ingredient from the ingredientsList using the currentIngredientId
-    const selectedItem = ingredientsList.find((item) => item.id === currentIngredientId);
+    if (!selectedIngredientId || !ingredientQuantity) return;
+    if (ingredients.length >= 30) {
+      toast.error("You can add up to 30 ingredients only.");
+      return;
+    }
 
+    // find the selected ingredient in the ingredientsList
+    const selectedItem = ingredientsList.find((item) => item.id === selectedIngredientId);
     if (!selectedItem) return;
 
     const newIngredient = {
       ingredientId: selectedItem.id,
       name: selectedItem.name,
-      quantity: currentQuantity,
+      quantity: ingredientQuantity,
       img: selectedItem.img,
     };
 
-    // Set the new ingredient in Formik's state
-    setFieldValue("ingredients", [...values.ingredients, newIngredient]);
+    // Check if the ingredient already exists in the list
+    const updatedIngredients = [...ingredients, newIngredient];
 
-    dispatch(updateDraft({ ...values, ingredients: [...values.ingredients, newIngredient] }));
+    // update Formik's state with the new ingredients list and reset the selected ingredient and quantity
+    setFieldValue("ingredients", updatedIngredients);
+    setFieldValue("selectedIngredientId", "");
+    setFieldValue("ingredientQuantity", "");
 
-    // Clear the fields
-    setCurrentIngredientId("");
-    setCurrentQuantity("");
+    // save the updated draft to Redux
+    dispatch(
+      updateDraft({
+        ...values,
+        ingredients: updatedIngredients,
+        selectedIngredientId: "",
+        ingredientQuantity: "",
+      }),
+    );
   };
 
   return {
     values,
     errors,
     setFieldValue,
-    currentIngredientId,
-    setCurrentIngredientId,
-    currentIngredientName,
-    setCurrentIngredientName,
-    currentQuantity,
-    setCurrentQuantity,
     handleAddIngredient,
     handleRemoveIngredient,
     handleImageUpload,
