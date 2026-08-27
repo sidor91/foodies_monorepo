@@ -26,7 +26,7 @@ const Hero = () => {
           Amazing recipes for beginners in the world of cooking, enveloping you in the aromas and
           tastes of various cuisines.
         </p>
-        <Button className={css.hero__button} variant="secondary" to="/recipe/add">
+        <Button className={css.hero__button} variant="secondary" to="/add-recipe">
           Add recipe
         </Button>
       </div>
