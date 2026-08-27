@@ -1,0 +1,25 @@
+.home {
+  width: 100%;
+  max-width: 144rem;
+  margin: 0 auto;
+  padding: 0 0.8rem;
+}
+
+.categoriesSwitcher {
+  width: 100%;
+}
+
+@media screen and (min-width: 30rem) {
+  .home {
+    padding: 0 1.6rem;
+  }
+}
+
+@media screen and (min-width: 56.25rem) {
+  .home {
+    /* compensates for the 2rem padding so the capped width matches
+       header's section-padding + container-max-width (144rem + 2*2rem) */
+    max-width: 148rem;
+    padding: 0 2rem;
+  }
+}

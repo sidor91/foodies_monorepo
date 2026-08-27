@@ -5,7 +5,6 @@ import clsx from "clsx";
 import css from "./Header.module.css";
 import SignInUpButton from "../SignInUpButton/SignInUpButton";
 import UserNav from "../UserNav/UserNav";
-
 import {
   selectUser,
   selectIsLoggedIn,
@@ -22,16 +21,13 @@ const Header = ({
   onLogout,
 }) => {
   const { pathname } = useLocation();
-
   const isAddRecipePage = pathname === "/recipe/add";
-
   const user = useSelector(selectUser);
   const isAuthenticated = useSelector(selectIsLoggedIn);
   const isAuthLoading = useSelector(selectIsRefreshing);
 
-  const buildLinkClass = ({ isActive }) => {
-    return clsx(css.nav__link, isActive && css.active, isAddRecipePage && css.add__recipe);
-  };
+  const buildLinkClass = ({ isActive }) =>
+    clsx(css.nav__link, isActive && css.active, isAddRecipePage && css.add__recipe);
 
   return (
     <header className={css.header__section}>
