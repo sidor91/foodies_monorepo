@@ -37,6 +37,78 @@ const EMPTY_PAGINATION = {
   totalPages: 0,
 };
 
+const getActiveItems = ({
+  activeTab,
+  isOwnProfile,
+  ownRecipes,
+  recipes,
+  favorites,
+  followers,
+  following,
+}) => {
+  if (activeTab === "recipes") {
+    return isOwnProfile ? ownRecipes : recipes;
+  }
+
+  if (activeTab === "favorites") {
+    return favorites;
+  }
+
+  if (activeTab === "followers") {
+    return followers;
+  }
+
+  if (activeTab === "following") {
+    return following;
+  }
+
+  return [];
+};
+
+const getActivePagination = ({
+  activeTab,
+  isOwnProfile,
+  ownRecipesPagination,
+  recipesPagination,
+  favoritesPagination,
+  followersPagination,
+  followingPagination,
+}) => {
+  if (activeTab === "recipes") {
+    return isOwnProfile ? ownRecipesPagination : recipesPagination;
+  }
+
+  if (activeTab === "favorites") {
+    return favoritesPagination;
+  }
+
+  if (activeTab === "followers") {
+    return followersPagination;
+  }
+
+  if (activeTab === "following") {
+    return followingPagination;
+  }
+
+  return EMPTY_PAGINATION;
+};
+
+const getActiveError = ({ activeTab, recipesError, favoritesError, usersError }) => {
+  if (activeTab === "recipes") {
+    return recipesError;
+  }
+
+  if (activeTab === "favorites") {
+    return favoritesError;
+  }
+
+  if (activeTab === "followers" || activeTab === "following") {
+    return usersError;
+  }
+
+  return null;
+};
+
 const useUserProfileContent = ({
   activeTab,
   page,
@@ -67,31 +139,25 @@ const useUserProfileContent = ({
   const isFavoritesLoading = useSelector(selectFavoritesIsLoading);
   const favoritesError = useSelector(selectFavoritesError);
 
-  const items =
-    activeTab === "recipes"
-      ? isOwnProfile
-        ? ownRecipes
-        : recipes
-      : activeTab === "favorites"
-        ? favorites
-        : activeTab === "followers"
-          ? followers
-          : activeTab === "following"
-            ? following
-            : [];
+  const items = getActiveItems({
+    activeTab,
+    isOwnProfile,
+    ownRecipes,
+    recipes,
+    favorites,
+    followers,
+    following,
+  });
 
-  const pagination =
-    activeTab === "recipes"
-      ? isOwnProfile
-        ? ownRecipesPagination
-        : recipesPagination
-      : activeTab === "favorites"
-        ? favoritesPagination
-        : activeTab === "followers"
-          ? followersPagination
-          : activeTab === "following"
-            ? followingPagination
-            : EMPTY_PAGINATION;
+  const pagination = getActivePagination({
+    activeTab,
+    isOwnProfile,
+    ownRecipesPagination,
+    recipesPagination,
+    favoritesPagination,
+    followersPagination,
+    followingPagination,
+  });
 
   const isDataLoading =
     (activeTab === "recipes" && isRecipesLoading) ||
@@ -99,14 +165,12 @@ const useUserProfileContent = ({
     (activeTab === "followers" && isUsersLoading) ||
     (activeTab === "following" && isUsersLoading);
 
-  const listError =
-    activeTab === "recipes"
-      ? recipesError
-      : activeTab === "favorites"
-        ? favoritesError
-        : activeTab === "followers" || activeTab === "following"
-          ? usersError
-          : null;
+  const listError = getActiveError({
+    activeTab,
+    recipesError,
+    favoritesError,
+    usersError,
+  });
 
   const isListLoading = isPageTransitioning || isDataLoading;
 
