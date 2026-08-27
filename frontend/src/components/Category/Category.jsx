@@ -11,6 +11,7 @@ import {
   selectRecipesPagination,
 } from "../../../redux/recipes/recipesSelectors.js";
 import { selectFavoriteIds } from "../../../redux/favorites/favoritesSelectors.js";
+import { selectIsLoggedIn } from "../../../redux/auth/authSelectors.js";
 import useFavoriteToggle from "../../hooks/useFavoriteToggle.js";
 import useOpenRecipe from "../../hooks/useOpenRecipe.js";
 import css from "./Category.module.css";
@@ -19,7 +20,7 @@ import RecipeCard from "../RecipeCard/RecipeCard.jsx";
 const DEFAULT_DESCRIPTION =
   "Go on a taste journey, where every sip is a sophisticated creative chord, and every dessert is an expression of the most refined gastronomic desires.";
 
-const Category = ({ category, onBack, isAuthenticated, onRequireLogin }) => {
+const Category = ({ category, onBack, onRequireLogin }) => {
   const dispatch = useDispatch();
 
   const areas = useSelector(selectAreas);
@@ -29,6 +30,7 @@ const Category = ({ category, onBack, isAuthenticated, onRequireLogin }) => {
   const error = useSelector(selectRecipesError);
   const { totalPages } = useSelector(selectRecipesPagination);
   const favoriteIds = useSelector(selectFavoriteIds);
+  const isAuthenticated = useSelector(selectIsLoggedIn);
 
   const [selectedIngredient, setSelectedIngredient] = useState("");
   const [selectedArea, setSelectedArea] = useState("");

@@ -8,7 +8,6 @@ import {
   selectReferencesError,
   selectReferencesIsLoading,
 } from "../../../redux/references/referencesSelectors.js";
-import { selectIsLoggedIn } from "../../../redux/auth/authSelectors.js";
 import { Category, Categories, Hero, Testimonials } from "../../components/index.js";
 import slugify from "../../utils/slugify.js";
 
@@ -19,7 +18,6 @@ const Home = ({ onRequireLogin }) => {
   const navigate = useNavigate();
   const { categorySlug } = useParams();
 
-  const isAuthenticated = useSelector(selectIsLoggedIn);
   const categories = useSelector(selectCategories);
   const referencesLoading = useSelector(selectReferencesIsLoading);
   const referencesError = useSelector(selectReferencesError);
@@ -65,7 +63,6 @@ const Home = ({ onRequireLogin }) => {
           <Category
             category={selectedCategory}
             onBack={handleBackFromCategory}
-            isAuthenticated={isAuthenticated}
             onRequireLogin={onRequireLogin}
           />
         ) : (
