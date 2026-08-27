@@ -87,12 +87,22 @@ const options = {
                 type: "object",
                 required: ["name", "email", "password"],
                 properties: {
-                  name: { type: "string", example: "Jane Doe" },
-                  email: { type: "string", format: "email", example: "jane@example.com" },
+                  name: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 64,
+                    example: "Jane Doe",
+                  },
+                  email: {
+                    type: "string",
+                    format: "email",
+                    example: "jane@example.com",
+                  },
                   password: {
                     type: "string",
                     format: "password",
                     minLength: 6,
+                    maxLength: 128,
                     example: "secret123",
                   },
                 },
@@ -108,8 +118,18 @@ const options = {
                 type: "object",
                 required: ["email", "password"],
                 properties: {
-                  email: { type: "string", format: "email", example: "jane@example.com" },
-                  password: { type: "string", format: "password", example: "secret123" },
+                  email: {
+                    type: "string",
+                    format: "email",
+                    example: "jane@example.com",
+                  },
+                  password: {
+                    type: "string",
+                    format: "password",
+                    minLength: 1,
+                    maxLength: 128,
+                    example: "secret123",
+                  },
                 },
               },
             },
@@ -148,6 +168,23 @@ const options = {
           required: ["message"],
           properties: {
             message: { type: "string", example: "Not found" },
+            errors: {
+              type: "array",
+              description: "Validation issues returned for invalid request data.",
+              items: {
+                type: "object",
+                required: ["path", "message"],
+                properties: {
+                  path: {
+                    type: "array",
+                    items: {
+                      oneOf: [{ type: "string" }, { type: "integer" }],
+                    },
+                  },
+                  message: { type: "string" },
+                },
+              },
+            },
           },
         },
         HealthResponse: {
@@ -211,7 +248,11 @@ const options = {
                     properties: {
                       id: { type: "string" },
                       title: { type: "string" },
-                      image: { type: "string", format: "uri", nullable: true },
+                      image: {
+                        type: "string",
+                        format: "uri",
+                        nullable: true,
+                      },
                     },
                   },
                 },
@@ -323,8 +364,15 @@ const options = {
           type: "object",
           required: ["ingredientId"],
           properties: {
-            ingredientId: { type: "string", description: "Ingredient id." },
-            measure: { type: "string", nullable: true, example: "2 tbsp" },
+            ingredientId: {
+              type: "string",
+              minLength: 1,
+              description: "Ingredient id.",
+            },
+            measure: {
+              type: "string",
+              example: "2 tbsp",
+            },
           },
         },
         RecipeIngredient: {
@@ -386,17 +434,37 @@ const options = {
           type: "object",
           required: ["title", "instructions", "categoryId", "areaId"],
           properties: {
-            title: { type: "string" },
-            instructions: { type: "string" },
-            description: { type: "string" },
+            title: {
+              type: "string",
+              minLength: 1,
+              maxLength: 128,
+            },
+            instructions: {
+              type: "string",
+              minLength: 1,
+              maxLength: 1000,
+            },
+            description: {
+              type: "string",
+              maxLength: 1000,
+            },
             image: {
               type: "string",
               format: "binary",
               description: "Optional JPEG, PNG, or WebP cover image, maximum 2 MB.",
             },
-            time: { type: "integer", minimum: 0 },
-            categoryId: { type: "string" },
-            areaId: { type: "string" },
+            time: {
+              type: "integer",
+              minimum: 0,
+            },
+            categoryId: {
+              type: "string",
+              minLength: 1,
+            },
+            areaId: {
+              type: "string",
+              minLength: 1,
+            },
             ingredients: {
               type: "string",
               description: "JSON-encoded array of RecipeIngredientInput items.",
@@ -430,7 +498,9 @@ const options = {
             ownerId: { type: "string" },
             ingredients: {
               type: "array",
-              items: { $ref: "#/components/schemas/CreatedRecipeIngredient" },
+              items: {
+                $ref: "#/components/schemas/CreatedRecipeIngredient",
+              },
             },
           },
         },
