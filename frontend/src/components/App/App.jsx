@@ -91,6 +91,8 @@ const App = () => {
               element={<PrivateRoute component={<AddRecipe />} openModal={setIsLogin} />}
             />
             <Route path="/profile" element={<UserProfile />} />
+            <Route path="/recipe/add" element={<AddRecipe />} />
+            <Route path="/user/:id" element={<UserProfile onLogout={handleLogoutToggle} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
