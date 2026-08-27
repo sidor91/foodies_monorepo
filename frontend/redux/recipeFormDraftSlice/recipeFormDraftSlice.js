@@ -18,7 +18,13 @@ const recipeFormDraftSlice = createSlice({
   reducers: {
     // updating the draft with the new values from the form
     updateDraft(state, action) {
-      return { ...state, ...action.payload };
+      return {
+        ...state,
+        ...action.payload,
+        ...(action.payload.ingredients && {
+          ingredients: action.payload.ingredients.map((obj) => ({ ...obj })),
+        }),
+      };
     },
     // clearing the draft when the user submits the form or cancels
     clearDraft() {
