@@ -94,70 +94,119 @@ Database connection settings are configured via environment variables (see `.env
 
 Backend API integration tests use Vitest and Supertest against a separate PostgreSQL test database.
 
-Tests are configured through `backend/.env.test`, where `DATABASE_URL` must point to a test database (for example, `foodies_test`). The test suite includes a safety check and refuses to run if the database name does not contain `test`.
+Tests are configured through `backend/.env.test`, where `DATABASE_URL` must point to a test database. The test suite includes a safety check and refuses to run if the database name does not contain `test`.
 
-Before the first test run, create the test env file from the example:
+Before the first test run, create the test environment file from the example.
+
+### Windows CMD
+
+From the project root:
+
+```cmd
+copy backend\.env.test.example backend\.env.test
+```
+
+### macOS / Linux
+
+From the project root:
 
 ```bash
 cp backend/.env.test.example backend/.env.test
 ```
 
-Then adjust values in `backend/.env.test` if needed.
+Update `backend/.env.test` if needed so that it matches the PostgreSQL credentials and port used by the test database.
+
+Example:
+
+```env
+NODE_ENV=test
+
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/foodies_test
+
+ACCESS_TOKEN_SECRET=foodies-test-access-secret
+REFRESH_TOKEN_SECRET=foodies-test-refresh-secret
+ACCESS_TOKEN_EXPIRES_IN=15m
+REFRESH_TOKEN_EXPIRES_IN=30d
+
+BCRYPT_ROUNDS=4
+```
 
 ### Start the test database
 
-The existing PostgreSQL Docker Compose service can be started as a separate Compose project with its own database and Docker volume.
-
-#### Windows CMD
-
-From the project root:
-
-```cmd
-set "POSTGRES_DB=foodies_test"
-set "POSTGRES_USER=postgres"
-set "POSTGRES_PASSWORD=postgres"
-set "POSTGRES_PORT=5433"
-
-docker compose -p foodies-test up -d postgres
-```
-
-Then from `backend`:
-
-```cmd
-cd backend
-npm test
-```
-
-#### macOS / Linux
+The PostgreSQL Docker Compose service can be started as a separate Compose project with its own container and volume.
 
 From the project root:
 
 ```bash
-POSTGRES_DB=foodies_test \
-POSTGRES_USER=postgres \
-POSTGRES_PASSWORD=postgres \
-POSTGRES_PORT=5433 \
 docker compose -p foodies-test up -d postgres
 ```
 
-Then from `backend`:
+Check that the database container is healthy:
+
+```bash
+docker compose -p foodies-test ps
+```
+
+If the container was created with the regular development database name, create the dedicated test database inside it:
+
+```bash
+docker exec foodies-test-postgres-1 createdb -U postgres foodies_test
+```
+
+Make sure `backend/.env.test` points to that database.
+
+For example:
+
+```env
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/foodies_test
+```
+
+### Run the tests
+
+From the `backend` directory:
 
 ```bash
 cd backend
 npm test
 ```
 
-If you run the test database on a non-default port (for example `5433`), update `backend/.env.test` accordingly before `npm test`.
+`npm test`:
 
-By default, test config is read from `backend/.env.test`:
+1. Applies pending Prisma migrations to the test database.
+2. Seeds the test database.
+3. Runs the Vitest integration test suite.
+
+If the Prisma schema has changed, regenerate the Prisma client before running the tests:
 
 ```bash
-npm test
+npx prisma generate
 ```
 
-`npm test` runs test migrations, then seeds the test database, and finally starts Vitest.
+The current integration suite contains **54 tests** covering:
 
-The integration suite covers system and reference endpoints, authentication, user profiles and follows, public and private recipe operations, favorites, pagination, filtering, validation, authorization, and logout behavior.
+- system and health endpoints
+- Swagger/OpenAPI specification availability
+- categories, areas, ingredients, and testimonials
+- registration, login, refresh, and logout
+- cookie and Bearer token authentication
+- current and public user profiles
+- follow and unfollow behavior
+- followers and following lists
+- avatar upload validation
+- public and private recipe endpoints
+- pagination and filtering
+- recipe creation and deletion
+- authorization and ownership checks
+- favorites
+- validation and error responses
+- unknown resources and unauthorized requests
+
+A successful run should finish with output similar to:
+
+```text
+Test Files  1 passed (1)
+Tests       54 passed (54)
+```
 
 Test-created users, recipes, follows, and favorites are cleaned up by the suite after execution.
 
