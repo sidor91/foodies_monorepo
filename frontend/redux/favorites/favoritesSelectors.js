@@ -2,6 +2,7 @@ import { createSelector } from "@reduxjs/toolkit";
 
 export const selectFavorites = (state) => state.favorites.items;
 export const selectFavoriteIds = (state) => state.favorites.ids;
+export const selectFavoritesPendingIds = (state) => state.favorites.pendingIds;
 export const selectFavoritesIsLoading = (state) => state.favorites.isLoading;
 export const selectFavoritesError = (state) => state.favorites.error;
 

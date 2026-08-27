@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
@@ -43,6 +44,7 @@ const RecipeSchema = Yup.object().shape({
 const AddRecipeForm = () => {
   const savedDraft = useSelector(selectRecipeDraft);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const initialValues = {
     photo: savedDraft?.photo || null,
@@ -65,13 +67,14 @@ const AddRecipeForm = () => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = prepareRecipeFormData(values);
     try {
-      await dispatch(addRecipe(formData)).unwrap();
+      const newRecipe = await dispatch(addRecipe(formData)).unwrap();
       toast.success("Successfully created a recipe!");
 
       dispatch(clearDraft()); // clear the draft in Redux
       resetForm(); // clear Formik form
 
-      // redirect to another page
+      // TODO;
+      navigate(`/recipes/${newRecipe.id}`);
     } catch (error) {
       console.error("Error:", error);
     } finally {
