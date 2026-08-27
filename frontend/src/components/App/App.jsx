@@ -93,23 +93,14 @@ const App = () => {
       <main className={css.content} inert={isMobileMenuOpen ? "" : undefined}>
         <Suspense fallback={<Loader />}>
           <Routes>
-            <Route
-              path="/"
-              element={
-                <Home isAuthenticated={isAuthenticated} onRequireLogin={handleLoginToggle} />
-              }
-            />
+            <Route path="/" element={<Home onRequireLogin={handleLoginToggle} />} />
             <Route
               path="/categories/:categorySlug"
-              element={
-                <Home isAuthenticated={isAuthenticated} onRequireLogin={handleLoginToggle} />
-              }
+              element={<Home onRequireLogin={handleLoginToggle} />}
             />
             <Route
               path="/recipes/:recipeSlugId"
-              element={
-                <Recipe isAuthenticated={isAuthenticated} onRequireLogin={handleLoginToggle} />
-              }
+              element={<Recipe onRequireLogin={handleLoginToggle} />}
             />
             <Route path="/recipe/add" element={<AddRecipe />} />
             <Route path="/profile" element={<UserProfile />} />

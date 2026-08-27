@@ -80,10 +80,6 @@
   align-items: center;
 }
 
-.hero__images_loading {
-  opacity: 0.7;
-}
-
 .hero__images img {
   object-fit: cover;
   /* position: absolute; */

@@ -1,6 +1,28 @@
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { fetchTestimonials } from "../../../redux/references/referencesOps.js";
+import {
+  selectReferencesIsLoading,
+  selectTestimonials,
+} from "../../../redux/references/referencesSelectors.js";
+
 import css from "./Testimonials.module.css";
 
-const Testimonials = ({ testimonials, activeIndex, onIndexChange, isLoading }) => {
+const Testimonials = () => {
+  const dispatch = useDispatch();
+  const testimonials = useSelector(selectTestimonials);
+  const isLoading = useSelector(selectReferencesIsLoading);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    dispatch(fetchTestimonials());
+  }, [dispatch]);
+
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [testimonials.length]);
+
   if (isLoading && testimonials.length === 0) {
     return <section className={css.state}>Loading testimonials...</section>;
   }
@@ -30,7 +52,7 @@ const Testimonials = ({ testimonials, activeIndex, onIndexChange, isLoading }) =
             type="button"
             aria-label={`Show testimonial ${index + 1}`}
             aria-current={index === activeIndex ? "true" : undefined}
-            onClick={() => onIndexChange(index)}
+            onClick={() => setActiveIndex(index)}
           />
         ))}
       </div>

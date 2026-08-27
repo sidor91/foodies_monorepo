@@ -17,7 +17,7 @@ const heroImages = [
   },
 ];
 
-const Hero = ({ isLoading }) => {
+const Hero = () => {
   return (
     <section className={css.hero}>
       <div className={css.hero__content}>
@@ -31,7 +31,7 @@ const Hero = ({ isLoading }) => {
         </Button>
       </div>
 
-      <div className={`${css.hero__images} ${isLoading ? css.hero__images_loading : ""}`}>
+      <div className={css.hero__images}>
         {heroImages.map((image) => (
           <img
             key={image.src}

@@ -14,18 +14,20 @@ import {
   selectFavoriteIds,
   selectFavoritesPendingIds,
 } from "../../../redux/favorites/favoritesSelectors.js";
+import { selectIsLoggedIn } from "../../../redux/auth/authSelectors.js";
 import { Button, ImageWithFallback, RecipeCard } from "../../components/index.js";
 import useFavoriteToggle from "../../hooks/useFavoriteToggle.js";
 import useOpenRecipe from "../../hooks/useOpenRecipe.js";
 
 import css from "./Recipe.module.css";
 
-const Recipe = ({ isAuthenticated, onRequireLogin }) => {
+const Recipe = ({ onRequireLogin }) => {
   const { recipeSlugId } = useParams();
   // the real id is the trailing hex segment after the last hyphen, e.g. "title-slug-<id>"
   const recipeId = recipeSlugId?.split("-").pop() ?? "";
   const dispatch = useDispatch();
 
+  const isAuthenticated = useSelector(selectIsLoggedIn);
   const recipe = useSelector(selectCurrentRecipe);
   const popularRecipes = useSelector(selectPopularRecipes);
   const isLoading = useSelector(selectCurrentRecipeIsLoading);
