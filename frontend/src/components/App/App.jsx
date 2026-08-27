@@ -86,7 +86,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/recipe/add" element={<AddRecipe />} />
-            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/user/:id" element={<UserProfile onLogout={handleLogoutToggle} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
