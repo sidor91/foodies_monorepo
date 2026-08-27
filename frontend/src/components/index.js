@@ -4,6 +4,15 @@ export { default as Loader } from "./Loader/Loader.jsx";
 export { default as MobileMenu } from "./MobileMenu/MobileMenu.jsx";
 export { default as LoginForm } from "./LoginForm/LoginForm.jsx";
 export { default as RegisterForm } from "./RegisterForm/RegisterForm.jsx";
+export { default as Hero } from "./Hero/Hero.jsx";
+export { default as Categories } from "./Categories/Categories.jsx";
+export { default as Testimonials } from "./Testimonials/Testimonials.jsx";
+export { default as Category } from "./Category/Category.jsx";
+export { default as CategoryCard } from "./CategoryCard/CategoryCard.jsx";
+export { default as RecipeCard } from "./RecipeCard/RecipeCard.jsx";
+export { default as Button } from "./Button/Button.jsx";
+export { default as Input } from "./Input/Input.jsx";
+export { default as ImageWithFallback } from "./ImageWithFallback/ImageWithFallback.jsx";
 export { default as SectionContainer } from "./SectionContainer/SectionContainer.jsx";
 
 export { default as PathInfo } from "./PathInfo/PathInfo.jsx";

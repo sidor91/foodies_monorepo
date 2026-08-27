@@ -5,7 +5,6 @@ import clsx from "clsx";
 import css from "./Header.module.css";
 import SignInUpButton from "../SignInUpButton/SignInUpButton";
 import UserNav from "../UserNav/UserNav";
-
 import {
   selectUser,
   selectIsLoggedIn,
@@ -63,7 +62,7 @@ const Header = ({
 
         {(isAuthLoading || isAuthenticated) && (
           <div className="flex items-center justify-between gap-[0.4rem]">
-            <UserNav user={user} onLogout={onLogout} isHomePage={isHomePage} />
+            <UserNav user={user} onLogout={onLogout} />
             <button
               className={css.modal__button}
               type="button"
