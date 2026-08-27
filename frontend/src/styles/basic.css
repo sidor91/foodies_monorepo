@@ -43,6 +43,7 @@ body {
   color: var(--color-text);
 
   font-family: var(--font-main);
+  text-transform: uppercase;
 }
 
 /* --------------------------------------- */
@@ -50,10 +51,16 @@ body {
 /* --------------------------------------- */
 
 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1.6rem;
   line-height: 150%;
   letter-spacing: -0.02em;
   font-weight: 700;
+  border: 1px solid transparent;
+  cursor: pointer;
+  background-color: transparent;
 
   border-radius: 3rem;
 
@@ -75,6 +82,52 @@ body {
 .btn__secondary {
   color: var(--color-text);
   border: 1px solid var(--color-secondary);
+}
+
+.btn__active {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+  border-color: var(--color-secondary);
+}
+
+.input {
+  width: 100%;
+  padding: 1.6rem 1.8rem;
+  border: 1px solid #bfbebe;
+  border-radius: 3rem;
+  font-size: 1.6rem;
+  line-height: 150%;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.input::placeholder {
+  color: #bfbebe;
+}
+
+.input__primary {
+  border-color: #bfbebe;
+}
+
+.input__secondary {
+  border-color: #bfbebe;
+}
+
+.input:focus,
+.input__active {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.input:disabled {
+  color: var(--color-secondary);
+  background-color: #f3f3f3;
+  cursor: not-allowed;
 }
 
 /* --------------------------------------- */

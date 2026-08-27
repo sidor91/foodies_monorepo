@@ -1,0 +1,26 @@
+.placeholder {
+  display: block;
+  background-color: #e4e4e4;
+}
+
+.avatarPlaceholder {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background-color: #d4d9e0;
+}
+
+.avatarIcon {
+  width: 72%;
+  height: 72%;
+  fill: #7a808a;
+}
+
+.probe {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
