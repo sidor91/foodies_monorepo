@@ -1,7 +1,7 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import clsx from "clsx";
 import css from "./AddRecipeForm.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -26,11 +26,8 @@ const RecipeSchema = Yup.object().shape({
   category: Yup.string().required("Category is required"),
   time: Yup.number().min(1, "Time must be at least 1 min"),
   area: Yup.string().required("Area is required"),
-  selectedIngredientId: Yup.string().required("Ingredient is required"),
-  ingredientQuantity: Yup.string()
-    .required("Quantity is required")
-    .max(30, "Max 30 characters")
-    .trim(),
+  selectedIngredientId: Yup.string(),
+  ingredientQuantity: Yup.string().max(30, "Max 30 characters").trim(),
   ingredients: Yup.array()
     .of(
       Yup.object().shape({
@@ -47,6 +44,7 @@ const RecipeSchema = Yup.object().shape({
 const AddRecipeForm = () => {
   const savedDraft = useSelector(selectRecipeDraft);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const initialValues = {
     title: savedDraft?.title || "",
@@ -70,14 +68,21 @@ const AddRecipeForm = () => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = prepareRecipeFormData(values);
 
+    if (values.ingredients.length === 0) {
+      toast.error("Please add at least one ingredient.");
+      setSubmitting(false);
+      return;
+    }
+
     try {
-      await dispatch(addRecipe(formData)).unwrap();
+      const newRecipe = await dispatch(addRecipe(formData)).unwrap();
       toast.success("Successfully created a recipe!");
 
       dispatch(clearDraft()); // clear the draft in Redux
       resetForm(); // reset the form fields
 
-      // redirect to another page    TODO
+      // TODO;
+      navigate(`/recipes/${newRecipe.id}`);
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -86,13 +91,12 @@ const AddRecipeForm = () => {
   };
 
   return (
-    <section className={clsx("section")}>
-      <div className={clsx("container")}>
+    <section className={css.section}>
+      <div className={css.container}>
         <Formik
           initialValues={initialValues}
           validationSchema={RecipeSchema}
           onSubmit={handleSubmit}
-          // enableReinitialize={true}
         >
           {({ isSubmitting }) => <RecipeFormContent isSubmitting={isSubmitting} />}
         </Formik>
