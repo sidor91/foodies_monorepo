@@ -59,25 +59,30 @@ const usersSlice = createSlice({
         state.followingIds = action.payload.items.map((user) => user.id);
       })
       .addCase(followUser.fulfilled, (state, action) => {
-        if (!state.followingIds.includes(action.payload)) {
-          state.followingIds.push(action.payload);
-        }
+        const isNewFollow = !state.followingIds.includes(action.payload);
 
-        if (state.profile?.id === action.payload) {
-          state.profile.followersCount += 1;
+        if (isNewFollow) {
+          state.followingIds.push(action.payload);
+
+          if (state.profile?.id === action.payload) {
+            state.profile.followersCount += 1;
+          }
         }
       })
       .addCase(unfollowUser.fulfilled, (state, action) => {
+        let wasFollowing = state.followingIds.includes(action.payload);
+
         state.followingIds = state.followingIds.filter((id) => id !== action.payload);
 
         const index = state.following.items.findIndex((user) => user.id === action.payload);
         if (index !== -1) {
+          wasFollowing = true;
           state.following.items.splice(index, 1);
           state.following.total = Math.max(state.following.total - 1, 0);
           state.following.totalPages = Math.ceil(state.following.total / state.following.limit);
         }
 
-        if (state.profile?.id === action.payload) {
+        if (wasFollowing && state.profile?.id === action.payload) {
           state.profile.followersCount = Math.max(state.profile.followersCount - 1, 0);
         }
       })
