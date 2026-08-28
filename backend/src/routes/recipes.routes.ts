@@ -277,16 +277,11 @@ router.delete("/:id", authMiddleware.authenticate, (req, res) =>
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- *       404:
- *         description: Recipe not found.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
  */
 router.post("/:id/favorite", authMiddleware.authenticate, (req, res) =>
   recipesController.addFavorite(req, res),
 );
+
 router.delete("/:id/favorite", authMiddleware.authenticate, (req, res) =>
   recipesController.removeFavorite(req, res),
 );

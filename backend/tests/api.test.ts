@@ -124,6 +124,18 @@ describe("System", () => {
     expect(response.body).toEqual({ status: "ok" });
   });
 
+  it("GET /api/docs.json returns the OpenAPI specification", async () => {
+    const response = await request(app).get("/api/docs.json");
+
+    expect(response.status).toBe(200);
+    expect(response.body.openapi).toBe("3.0.3");
+    expect(response.body.info).toHaveProperty("title", "Foodies API");
+    expect(response.body.paths).toHaveProperty("/health");
+    expect(response.body.paths).toHaveProperty("/auth/login");
+    expect(response.body.paths).toHaveProperty("/users/me");
+    expect(response.body.paths).toHaveProperty("/recipes");
+  });
+
   it("returns 404 for an unknown route", async () => {
     const response = await request(app).get("/api/does-not-exist");
 
@@ -240,6 +252,30 @@ describe("Authentication", () => {
     expect(response.body.email).toBe(TEST_EMAIL);
   });
 
+  it("accepts an access token through the Authorization Bearer header", async () => {
+    const loginResponse = await request(app).post("/api/auth/login").send({
+      email: TEST_EMAIL,
+      password: TEST_PASSWORD,
+    });
+
+    expect(loginResponse.status).toBe(200);
+
+    const cookies = loginResponse.headers["set-cookie"] as unknown as string[];
+    const accessTokenCookie = cookies.find((cookie) => cookie.startsWith("accessToken="));
+
+    expect(accessTokenCookie).toBeDefined();
+
+    const accessToken = accessTokenCookie!.split(";")[0].slice("accessToken=".length);
+
+    const response = await request(app)
+      .get("/api/users/me")
+      .set("Authorization", `Bearer ${accessToken}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.id).toBe(testUserId);
+    expect(response.body.email).toBe(TEST_EMAIL);
+  });
+
   it("POST /api/auth/refresh refreshes authentication cookies", async () => {
     const response = await agent.post("/api/auth/refresh");
 
@@ -314,6 +350,7 @@ describe("Users", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.items.some((user: { id: string }) => user.id === seedUserId)).toBe(true);
+
     for (const user of response.body.items) {
       expect(Array.isArray(user.recipes)).toBe(true);
       expect(user.recipes.length).toBeLessThanOrEqual(4);
@@ -324,6 +361,7 @@ describe("Users", () => {
         expect(recipe).toHaveProperty("image");
       }
     }
+
     expect(response.body.page).toBe(1);
     expect(response.body).toHaveProperty("total");
     expect(response.body).toHaveProperty("totalPages");
@@ -334,6 +372,7 @@ describe("Users", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.items.some((user: { id: string }) => user.id === testUserId)).toBe(true);
+
     for (const user of response.body.items) {
       expect(Array.isArray(user.recipes)).toBe(true);
       expect(user.recipes.length).toBeLessThanOrEqual(4);
@@ -594,6 +633,12 @@ describe("Private recipes", () => {
     expect(
       favoritesResponse.body.items.some((recipe: { id: string }) => recipe.id === seedRecipeId),
     ).toBe(false);
+  });
+
+  it("DELETE /api/recipes/:id/favorite is idempotent for an unknown recipe", async () => {
+    const response = await agent.delete("/api/recipes/recipe-that-does-not-exist/favorite");
+
+    expect(response.status).toBe(204);
   });
 
   it("DELETE /api/recipes/:id returns 404 for unknown recipe", async () => {
