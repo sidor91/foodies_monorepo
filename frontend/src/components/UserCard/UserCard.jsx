@@ -153,7 +153,7 @@ const UserCard = ({ user }) => {
               <Link
                 key={recipe.id}
                 className="h-[10rem] w-[10rem] shrink-0 overflow-hidden rounded-[1.5rem] [&:nth-child(4)]:hidden desktop:[&:nth-child(4)]:block"
-                to={`/recipe/${recipe.id}`}
+                to={`/recipes/${recipe.id}`}
                 aria-label={`Open ${recipeTitle} by ${user.name}`}
               >
                 {previewImage}

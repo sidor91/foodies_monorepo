@@ -73,7 +73,7 @@ describe("UserCard", () => {
     expect(screen.getByRole("img", { name: "Mark avatar" })).toHaveAttribute("src", "mark.jpg");
     expect(screen.getByRole("link", { name: "Open Soup by Mark" })).toHaveAttribute(
       "href",
-      "/recipe/recipe-1",
+      "/recipes/recipe-1",
     );
     expect(screen.getByRole("link", { name: "Open Mark profile" })).toHaveAttribute(
       "href",
