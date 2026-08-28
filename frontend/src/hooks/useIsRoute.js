@@ -1,11 +1,11 @@
 import { useLocation } from "react-router-dom";
 
-const useIsRoute = (paths) => {
+const useIsRoute = (path) => {
   const { pathname } = useLocation();
 
-  const pathsArray = Array.isArray(paths) ? paths : [paths];
+  const rootPath = `/${pathname.split("/")[1]}`;
 
-  return pathsArray.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+  return rootPath === path;
 };
 
 export default useIsRoute;

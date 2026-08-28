@@ -21,7 +21,9 @@ const Header = ({
   onRegister,
   onLogout,
 }) => {
-  const isHomePageOrCategories = useIsRoute(["/", "/categories"]);
+  const isHomePage = useIsRoute("/");
+  const isCategoriesPage = useIsRoute("/categories");
+  const isHomePageOrCategories = isHomePage || isCategoriesPage;
 
   const user = useSelector(selectUser);
   const isAuthenticated = useSelector(selectIsLoggedIn);

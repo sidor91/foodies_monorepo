@@ -5,7 +5,9 @@ import useIsRoute from "../../hooks/useIsRoute.js";
 const UserNav = ({ user, onLogout }) => {
   const [isExtra, setIsExtra] = useState(false);
 
-  const isHomePageOrCategories = useIsRoute(["/", "/categories"]);
+  const isHomePage = useIsRoute("/");
+  const isCategoriesPage = useIsRoute("/categories");
+  const isHomePageOrCategories = isHomePage || isCategoriesPage;
 
   const handleExtraToggle = () => {
     setIsExtra((prev) => !prev);
