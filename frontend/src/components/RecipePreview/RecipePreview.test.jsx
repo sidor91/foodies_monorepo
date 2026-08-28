@@ -35,7 +35,7 @@ describe("RecipePreview", () => {
     expect(screen.getByRole("img", { name: "Tomato soup" })).toHaveAttribute("src", "soup.jpg");
     expect(screen.getByRole("link", { name: "Open Tomato soup" })).toHaveAttribute(
       "href",
-      "/recipe/recipe-1",
+      "/recipes/recipe-1",
     );
   });
 

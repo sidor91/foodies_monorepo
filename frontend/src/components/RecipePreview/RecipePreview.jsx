@@ -80,7 +80,7 @@ const RecipePreview = ({
         <div className="flex shrink-0 items-start gap-[0.4rem]">
           <Link
             className="flex h-[3.6rem] w-[3.6rem] shrink-0 items-center justify-center rounded-[3rem] border border-secondary p-[1rem] text-accent transition-colors duration-100 hover:border-accent tablet:h-[4.2rem] tablet:w-[4.2rem] tablet:p-[1.2rem]"
-            to={`/recipe/${recipe.id}`}
+            to={`/recipes/${recipe.id}`}
             aria-label={`Open ${recipeTitle}`}
           >
             {arrowIcon}
