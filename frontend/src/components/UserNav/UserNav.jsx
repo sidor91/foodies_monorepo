@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 import useIsRoute from "../../hooks/useIsRoute.js";
+import { selectUser } from "../../../redux/auth/authSelectors.js";
 
-const UserNav = ({ user, onLogout }) => {
+const UserNav = ({ onLogout }) => {
   const [isExtra, setIsExtra] = useState(false);
+
+  const user = useSelector(selectUser);
 
   const isHomePage = useIsRoute("/");
   const isCategoriesPage = useIsRoute("/categories");
