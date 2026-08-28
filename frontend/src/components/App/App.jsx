@@ -58,6 +58,11 @@ const App = () => {
     setIsRegister(false);
   };
 
+  const openLoginModal = () => {
+    setIsLogin(true);
+    setIsRegister(false);
+  };
+
   const handleRegisterToggle = () => {
     setIsRegister((prev) => !prev);
     setIsLogin(false);
@@ -97,10 +102,12 @@ const App = () => {
       <main className={css.content} inert={isMobileMenuOpen ? "" : undefined}>
         <Suspense fallback={<Loader />}>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/recipe/add" element={<AddRecipe onRequireLogin={handleLoginToggle} />} />
-            <Route path="/profile" element={<UserProfile />} />
             <Route path="/" element={<Home onRequireLogin={handleLoginToggle} />} />
+            <Route
+              path="/recipe/add"
+              element={<PrivateRoute component={<AddRecipe />} openModal={openLoginModal} />}
+            />
+            <Route path="/profile" element={<UserProfile onLogout={handleLogoutToggle} />} />
             <Route
               path="/categories/:categorySlug"
               element={<Home onRequireLogin={handleLoginToggle} />}
@@ -109,7 +116,6 @@ const App = () => {
               path="/recipes/:recipeSlugId"
               element={<Recipe onRequireLogin={handleLoginToggle} />}
             />
-            <Route path="/recipe/add" element={<AddRecipe />} />
             <Route path="/user/:id" element={<UserProfile onLogout={handleLogoutToggle} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

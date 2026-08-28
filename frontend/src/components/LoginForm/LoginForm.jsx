@@ -5,7 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-hot-toast";
 
-import { logIn } from "../../../redux/auth/authOps";
+import { logIn, refreshUser } from "../../../redux/auth/authOps";
 
 import css from "./LoginForm.module.css";
 
@@ -48,6 +48,7 @@ const LoginForm = ({ isLogin, onLogin, onRegister }) => {
   const handleSubmit = async (values, actions) => {
     try {
       await dispatch(logIn(values)).unwrap();
+      await dispatch(refreshUser());
 
       actions.resetForm();
       onLogin();

@@ -33,7 +33,7 @@ const useUserProfileData = () => {
   const isUsersLoading = useSelector(selectUsersIsLoading);
   const usersError = useSelector(selectUsersError);
 
-  const isOwnProfile = currentUser?.id === id;
+  const isOwnProfile = !id || currentUser?.id === id;
 
   const matchedOtherUserProfile = otherUserProfile?.id === id ? otherUserProfile : null;
 

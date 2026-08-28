@@ -5,7 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-hot-toast";
 
-import { register } from "../../../redux/auth/authOps";
+import { register, refreshUser } from "../../../redux/auth/authOps";
 
 import css from "./RegisterForm.module.css";
 
@@ -51,6 +51,7 @@ const RegisterForm = ({ isRegister, onRegister, onLogin }) => {
   const handleSubmit = async (values, actions) => {
     try {
       await dispatch(register(values)).unwrap();
+      await dispatch(refreshUser());
 
       actions.resetForm();
       onRegister();

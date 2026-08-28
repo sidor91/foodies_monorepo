@@ -8,7 +8,7 @@ const PrivateRoute = ({ component: Component, openModal }) => {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      openModal(true);
+      openModal();
     }
   }, [isLoggedIn, openModal]);
 
