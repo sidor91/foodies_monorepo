@@ -11,6 +11,8 @@
   color: var(--color-bg);
   background: var(--color-accent);
   border-radius: 0 0 2.4rem 2.4rem;
+
+  z-index: -2;
 }
 
 .hero::before {

@@ -53,7 +53,7 @@ const RegisterForm = ({ isRegister, onRegister, onLogin }) => {
       await dispatch(register(values)).unwrap();
 
       actions.resetForm();
-      onRegister;
+      onRegister();
     } catch (error) {
       toast.error(error.response?.data?.message || "Registration failed");
     } finally {

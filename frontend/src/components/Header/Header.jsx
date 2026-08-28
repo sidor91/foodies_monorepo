@@ -70,7 +70,9 @@ const Header = ({
               aria-label="open menu"
               onClick={onMobileToggle}
             >
-              <svg className="w-[2.8rem] h-[2.8rem] stroke-bg">
+              <svg
+                className={`${!isHomePageOrCategories && "stroke-primary"} w-[2.8rem] h-[2.8rem] stroke-bg`}
+              >
                 <use href="/icons.svg#icon-mobile-menu" />
               </svg>
             </button>
