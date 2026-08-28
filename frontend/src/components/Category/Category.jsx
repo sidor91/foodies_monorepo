@@ -44,6 +44,16 @@ const Category = ({ category, onBack, onRequireLogin }) => {
     dispatch(fetchIngredients());
   }, [dispatch]);
 
+  const handleAreaSelection = (area) => {
+    setPage(1);
+    setSelectedArea(area);
+  };
+
+  const handleIngredientSelection = (ingredient) => {
+    setPage(1);
+    setSelectedIngredient(ingredient);
+  };
+
   useEffect(() => {
     setSelectedArea("");
     setSelectedIngredient("");
@@ -84,7 +94,7 @@ const Category = ({ category, onBack, onRequireLogin }) => {
             <span className={css.srOnly}>Filter by ingredient</span>
             <select
               value={selectedIngredient}
-              onChange={(event) => setSelectedIngredient(event.target.value)}
+              onChange={(event) => handleIngredientSelection(event.target.value)}
             >
               <option value="">Ingredients</option>
               {ingredients.map((ingredient) => (
@@ -97,7 +107,10 @@ const Category = ({ category, onBack, onRequireLogin }) => {
 
           <label className={css.filter}>
             <span className={css.srOnly}>Filter by area</span>
-            <select value={selectedArea} onChange={(event) => setSelectedArea(event.target.value)}>
+            <select
+              value={selectedArea}
+              onChange={(event) => handleAreaSelection(event.target.value)}
+            >
               <option value="">Area</option>
               {areas.map((area) => (
                 <option key={area.id || area.name} value={area.id || ""}>
