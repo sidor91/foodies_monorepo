@@ -6,6 +6,7 @@ import {
   fetchPopularRecipes,
   fetchRecipeById,
   fetchRecipes,
+  addRecipe,
 } from "./recipesOps.js";
 import { logOut } from "../auth/authOps.js";
 
@@ -100,6 +101,17 @@ const recipesSlice = createSlice({
         state.current.data = action.payload;
       })
       .addCase(fetchRecipeById.rejected, (state, action) => {
+        state.current.isLoading = false;
+        state.current.error = action.payload;
+      })
+      .addCase(addRecipe.pending, (state) => {
+        state.current.error = null;
+        state.current.isLoading = true;
+      })
+      .addCase(addRecipe.fulfilled, (state) => {
+        state.current.isLoading = false;
+      })
+      .addCase(addRecipe.rejected, (state, action) => {
         state.current.isLoading = false;
         state.current.error = action.payload;
       })

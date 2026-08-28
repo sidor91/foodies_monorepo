@@ -11,6 +11,7 @@ import { fetchFavorites } from "../../../redux/favorites/favoritesOps.js";
 
 import css from "./App.module.css";
 import LogoutModal from "../LogoutModal/LogoutModal.jsx";
+import PrivateRoute from "../../components/PrivateRoute.jsx";
 
 const Home = lazy(() => import("../../pages/Home/Home.jsx"));
 const Recipe = lazy(() => import("../../pages/Recipe/Recipe.jsx"));
@@ -93,6 +94,9 @@ const App = () => {
       <main className={css.content} inert={isMobileMenuOpen ? "" : undefined}>
         <Suspense fallback={<Loader />}>
           <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/recipe/add" element={<AddRecipe onRequireLogin={handleLoginToggle} />} />
+            <Route path="/profile" element={<UserProfile />} />
             <Route path="/" element={<Home onRequireLogin={handleLoginToggle} />} />
             <Route
               path="/categories/:categorySlug"
