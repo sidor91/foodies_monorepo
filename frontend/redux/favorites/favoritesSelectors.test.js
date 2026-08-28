@@ -36,7 +36,12 @@ describe("favoritesSelectors", () => {
   });
 
   it("selects favorites pagination", () => {
-    expect(selectFavoritesPagination(state)).toEqual({ page: 2, limit: 6, total: 7, totalPages: 2 });
+    expect(selectFavoritesPagination(state)).toEqual({
+      page: 2,
+      limit: 6,
+      total: 7,
+      totalPages: 2,
+    });
   });
 
   it("checks whether a recipe is a favorite", () => {

@@ -60,8 +60,7 @@ vi.mock("../index.js", () => ({
         </button>
       </section>
     ) : null,
-  RegisterForm: ({ isRegister }) =>
-    isRegister ? <p>Register modal open</p> : null,
+  RegisterForm: ({ isRegister }) => (isRegister ? <p>Register modal open</p> : null),
   Loader: () => <div role="status">Loading page</div>,
   Footer: () => <footer>Footer</footer>,
 }));

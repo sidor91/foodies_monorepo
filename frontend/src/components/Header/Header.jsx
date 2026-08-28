@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import clsx from "clsx";
 
@@ -10,6 +10,7 @@ import {
   selectIsLoggedIn,
   selectIsRefreshing,
 } from "../../../redux/auth/authSelectors";
+import useIsRoute from "../../hooks/useIsRoute";
 
 const Header = ({
   isMobileMenuOpen,
@@ -20,21 +21,24 @@ const Header = ({
   onRegister,
   onLogout,
 }) => {
-  const { pathname } = useLocation();
-  const isAddRecipePage = pathname === "/recipe/add";
+  const isHomePage = useIsRoute("/");
+  const isCategoriesPage = useIsRoute("/categories");
+  const isHomePageOrCategories = isHomePage || isCategoriesPage;
+
   const user = useSelector(selectUser);
   const isAuthenticated = useSelector(selectIsLoggedIn);
   const isAuthLoading = useSelector(selectIsRefreshing);
 
-  const buildLinkClass = ({ isActive }) =>
-    clsx(css.nav__link, isActive && css.active, isAddRecipePage && css.add__recipe);
+  const buildLinkClass = ({ isActive }) => {
+    return clsx(css.nav__link, isActive && css.active, !isHomePageOrCategories && css.not__home);
+  };
 
   return (
     <header className={css.header__section}>
-      <div className={clsx(css.header__container, isAddRecipePage && css.add__recipe)}>
+      <div className={clsx(css.header__container, !isHomePageOrCategories && css.not__home)}>
         <NavLink
           to="/"
-          className={`${isAddRecipePage && "text-primary"} text-bg text-[2rem] leading-[120%] tracking-[-0.02em] font-extrabold tablet:text-[2.4rem] tablet:leading-[160%]`}
+          className={`${!isHomePageOrCategories && "text-primary"} text-bg text-[2rem] leading-[120%] tracking-[-0.02em] font-extrabold tablet:text-[2.4rem] tablet:leading-[160%]`}
         >
           foodies
         </NavLink>
@@ -59,7 +63,7 @@ const Header = ({
 
         {(isAuthLoading || isAuthenticated) && (
           <div className="flex items-center justify-between gap-[0.4rem]">
-            <UserNav user={user} onLogout={onLogout} isAddRecipePage={isAddRecipePage} />
+            <UserNav user={user} onLogout={onLogout} />
             <button
               className={css.modal__button}
               type="button"
@@ -68,7 +72,9 @@ const Header = ({
               aria-label="open menu"
               onClick={onMobileToggle}
             >
-              <svg className="w-[2.8rem] h-[2.8rem] stroke-bg">
+              <svg
+                className={`${!isHomePageOrCategories && "stroke-primary"} w-[2.8rem] h-[2.8rem] stroke-bg`}
+              >
                 <use href="/icons.svg#icon-mobile-menu" />
               </svg>
             </button>

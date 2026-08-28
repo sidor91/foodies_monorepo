@@ -8,13 +8,7 @@ const renderLogoutModal = (isLogout = true) => {
   const onLogoutToggle = vi.fn();
   const onLogout = vi.fn();
 
-  render(
-    <LogoutModal
-      isLogout={isLogout}
-      onLogoutToggle={onLogoutToggle}
-      onLogout={onLogout}
-    />,
-  );
+  render(<LogoutModal isLogout={isLogout} onLogoutToggle={onLogoutToggle} onLogout={onLogout} />);
 
   return { onLogoutToggle, onLogout };
 };

@@ -9,7 +9,7 @@ const userInfo = { id: "user-1", name: "Anna", avatarUrl: "anna.jpg" };
 
 describe("UserNav", () => {
   it("renders the user's avatar and name", () => {
-    renderWithRouter(<UserNav user={userInfo} onLogout={() => {}} isAddRecipePage={false} />);
+    renderWithRouter(<UserNav user={userInfo} onLogout={() => {}} />);
 
     expect(screen.getByRole("img", { name: "Anna profile photo" })).toHaveAttribute(
       "src",
@@ -20,11 +20,7 @@ describe("UserNav", () => {
 
   it("renders the first letter when an avatar is missing", () => {
     renderWithRouter(
-      <UserNav
-        user={{ id: "user-1", name: "Anna", avatarUrl: "" }}
-        onLogout={() => {}}
-        isAddRecipePage={false}
-      />,
+      <UserNav user={{ id: "user-1", name: "Anna", avatarUrl: "" }} onLogout={() => {}} />,
     );
 
     expect(screen.getByText("A")).toBeInTheDocument();
@@ -33,14 +29,11 @@ describe("UserNav", () => {
   it("opens the menu and shows the profile link", async () => {
     const user = userEvent.setup();
 
-    renderWithRouter(<UserNav user={userInfo} onLogout={() => {}} isAddRecipePage={false} />);
+    renderWithRouter(<UserNav user={userInfo} onLogout={() => {}} />);
 
     await user.click(screen.getByRole("button", { name: "Anna" }));
 
-    expect(screen.getByRole("link", { name: "Profile" })).toHaveAttribute(
-      "href",
-      "/user/user-1",
-    );
+    expect(screen.getByRole("link", { name: "Profile" })).toHaveAttribute("href", "/user/user-1");
     expect(screen.getByRole("button", { name: "Log out" })).toBeInTheDocument();
   });
 
@@ -48,7 +41,7 @@ describe("UserNav", () => {
     const user = userEvent.setup();
     const onLogout = vi.fn();
 
-    renderWithRouter(<UserNav user={userInfo} onLogout={onLogout} isAddRecipePage={false} />);
+    renderWithRouter(<UserNav user={userInfo} onLogout={onLogout} />);
 
     await user.click(screen.getByRole("button", { name: "Anna" }));
     await user.click(screen.getByRole("button", { name: "Log out" }));

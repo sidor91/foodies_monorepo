@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +21,8 @@ const NotFound = lazy(() => import("../../pages/NotFound/NotFound.jsx"));
 
 const App = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const isAuthenticated = useSelector(selectIsLoggedIn);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
@@ -35,6 +37,7 @@ const App = () => {
     try {
       await dispatch(logOut()).unwrap();
       setIsLogout(false);
+      navigate("/");
     } catch (error) {
       toast.error(error.response?.data?.message || "Logout failed");
     }

@@ -27,10 +27,7 @@ describe("Header", () => {
 
     expect(screen.getByRole("link", { name: "foodies" })).toHaveAttribute("href", "/");
     expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/");
-    expect(screen.getByRole("link", { name: "Add Recipe" })).toHaveAttribute(
-      "href",
-      "/recipe/add",
-    );
+    expect(screen.getByRole("link", { name: "Add Recipe" })).toHaveAttribute("href", "/recipe/add");
     expect(screen.getByRole("button", { name: "Sign In" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Sign Up" })).toBeInTheDocument();
   });

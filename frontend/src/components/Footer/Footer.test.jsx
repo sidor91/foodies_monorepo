@@ -19,8 +19,6 @@ describe("Footer", () => {
 
     const currentYear = new Date().getFullYear();
 
-    expect(
-      screen.getByText(`©${currentYear}, Foodies. All rights reserved`),
-    ).toBeInTheDocument();
+    expect(screen.getByText(`©${currentYear}, Foodies. All rights reserved`)).toBeInTheDocument();
   });
 });

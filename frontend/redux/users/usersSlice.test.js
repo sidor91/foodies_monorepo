@@ -84,10 +84,7 @@ describe("usersSlice", () => {
       followingIds: ["user-1"],
     };
 
-    const nextState = usersReducer(
-      state,
-      followUser.fulfilled("user-1", "request-1", "user-1"),
-    );
+    const nextState = usersReducer(state, followUser.fulfilled("user-1", "request-1", "user-1"));
 
     expect(nextState.followingIds).toEqual(["user-1"]);
     expect(nextState.profile.followersCount).toBe(2);
@@ -99,10 +96,7 @@ describe("usersSlice", () => {
       profile: { id: "user-1", followersCount: 2 },
     };
 
-    const nextState = usersReducer(
-      state,
-      followUser.fulfilled("user-1", "request-1", "user-1"),
-    );
+    const nextState = usersReducer(state, followUser.fulfilled("user-1", "request-1", "user-1"));
 
     expect(nextState.followingIds).toEqual(["user-1"]);
     expect(nextState.profile.followersCount).toBe(3);
@@ -116,10 +110,7 @@ describe("usersSlice", () => {
       followingIds: ["user-1", "user-2", "user-3"],
     };
 
-    const nextState = usersReducer(
-      state,
-      unfollowUser.fulfilled("user-1", "request-1", "user-1"),
-    );
+    const nextState = usersReducer(state, unfollowUser.fulfilled("user-1", "request-1", "user-1"));
 
     expect(nextState.followingIds).toEqual(["user-2", "user-3"]);
     expect(nextState.following.items).toEqual([{ id: "user-2" }, { id: "user-3" }]);
@@ -131,10 +122,7 @@ describe("usersSlice", () => {
   it("does not reduce a profile followers count below zero", () => {
     const state = { ...createInitialState(), profile: { id: "user-1", followersCount: 0 } };
 
-    const nextState = usersReducer(
-      state,
-      unfollowUser.fulfilled("user-1", "request-1", "user-1"),
-    );
+    const nextState = usersReducer(state, unfollowUser.fulfilled("user-1", "request-1", "user-1"));
 
     expect(nextState.profile.followersCount).toBe(0);
   });
@@ -145,20 +133,14 @@ describe("usersSlice", () => {
       profile: { id: "user-1", followersCount: 2 },
     };
 
-    const nextState = usersReducer(
-      state,
-      unfollowUser.fulfilled("user-1", "request-1", "user-1"),
-    );
+    const nextState = usersReducer(state, unfollowUser.fulfilled("user-1", "request-1", "user-1"));
 
     expect(nextState.followingIds).toEqual([]);
     expect(nextState.profile.followersCount).toBe(2);
   });
 
   it("tracks follow requests while they are pending", () => {
-    const nextState = usersReducer(
-      createInitialState(),
-      followUser.pending("request-1", "user-1"),
-    );
+    const nextState = usersReducer(createInitialState(), followUser.pending("request-1", "user-1"));
 
     expect(nextState.pendingIds).toEqual(["user-1"]);
   });

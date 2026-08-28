@@ -6,9 +6,7 @@ import ImageUploader from "./ImageUploader.jsx";
 
 describe("ImageUploader", () => {
   it("shows the initial upload prompt", () => {
-    render(
-      <ImageUploader previewUrl="" handleImageUpload={() => {}} setFieldValue={() => {}} />,
-    );
+    render(<ImageUploader previewUrl="" handleImageUpload={() => {}} setFieldValue={() => {}} />);
 
     expect(screen.getByText("Upload a photo")).toBeInTheDocument();
     expect(screen.queryByRole("img", { name: "Recipe preview" })).not.toBeInTheDocument();

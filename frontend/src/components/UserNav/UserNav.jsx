@@ -1,8 +1,17 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import useIsRoute from "../../hooks/useIsRoute.js";
+import { selectUser } from "../../../redux/auth/authSelectors.js";
 
-const UserNav = ({ user, onLogout, isAddRecipePage }) => {
+const UserNav = ({ onLogout }) => {
   const [isExtra, setIsExtra] = useState(false);
+
+  const user = useSelector(selectUser);
+
+  const isHomePage = useIsRoute("/");
+  const isCategoriesPage = useIsRoute("/categories");
+  const isHomePageOrCategories = isHomePage || isCategoriesPage;
 
   const handleExtraToggle = () => {
     setIsExtra((prev) => !prev);
@@ -42,11 +51,11 @@ const UserNav = ({ user, onLogout, isAddRecipePage }) => {
 
       {isExtra && (
         <div
-          className={`${isAddRecipePage && "bg-transparent"} absolute w-[12.2rem] bg-accent flex flex-col gap-[0.4rem] p-[1.6rem] mt-53 border border-secondary rounded-3xl tablet:w-[14.8rem]`}
+          className={`${!isHomePageOrCategories && "bg-bg"} absolute w-[12.2rem] bg-accent flex flex-col gap-[0.4rem] p-[1.6rem] mt-53 border border-secondary rounded-3xl tablet:w-[14.8rem]`}
         >
           <NavLink
             to={`/user/${user?.id}`}
-            className={`${isAddRecipePage && "text-primary"} uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold`}
+            className={`${!isHomePageOrCategories && "text-primary"} uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold`}
             onClick={handleExtraToggle}
           >
             Profile
@@ -60,12 +69,12 @@ const UserNav = ({ user, onLogout, isAddRecipePage }) => {
             }}
           >
             <p
-              className={`${isAddRecipePage && "text-primary"} uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold`}
+              className={`${!isHomePageOrCategories && "text-primary"} uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold`}
             >
               Log out
             </p>
             <svg
-              className={`${isAddRecipePage && "stroke-primary"} fill-none stroke-bg w-[1.8rem] h-[1.8rem]`}
+              className={`${!isHomePageOrCategories && "stroke-primary"} fill-none stroke-bg w-[1.8rem] h-[1.8rem]`}
             >
               <use href="/icons.svg#icon-arrow-up-right" />
             </svg>

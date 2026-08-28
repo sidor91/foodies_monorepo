@@ -24,8 +24,7 @@ const createReferencesState = () => ({
   },
 });
 
-const runThunk = (thunk, state = createReferencesState()) =>
-  thunk(vi.fn(), () => state, undefined);
+const runThunk = (thunk, state = createReferencesState()) => thunk(vi.fn(), () => state, undefined);
 
 const apiError = { response: { data: { message: "Request failed" } } };
 

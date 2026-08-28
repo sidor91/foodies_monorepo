@@ -39,7 +39,12 @@ describe("usersSelectors", () => {
   });
 
   it("selects followers pagination", () => {
-    expect(selectFollowersPagination(state)).toEqual({ page: 2, limit: 6, total: 7, totalPages: 2 });
+    expect(selectFollowersPagination(state)).toEqual({
+      page: 2,
+      limit: 6,
+      total: 7,
+      totalPages: 2,
+    });
   });
 
   it("selects following pagination", () => {

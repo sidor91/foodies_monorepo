@@ -10,10 +10,7 @@ describe("MobileMenu", () => {
     renderWithRouter(<MobileMenu isMobileMenuOpen onMobileToggle={() => {}} />);
 
     expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/");
-    expect(screen.getByRole("link", { name: "Add Recipe" })).toHaveAttribute(
-      "href",
-      "/recipe/add",
-    );
+    expect(screen.getByRole("link", { name: "Add Recipe" })).toHaveAttribute("href", "/recipe/add");
     expect(screen.getByRole("img", { name: "Tiramisu dish" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Dish with meat roll" })).toBeInTheDocument();
   });

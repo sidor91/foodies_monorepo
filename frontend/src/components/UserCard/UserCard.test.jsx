@@ -40,7 +40,12 @@ const profileUser = {
   recipes: [{ id: "recipe-1", title: "Soup", image: "soup.jpg" }],
 };
 
-const renderUserCard = ({ currentUserId = "user-1", followingIds = [], pendingIds = [], user } = {}) => {
+const renderUserCard = ({
+  currentUserId = "user-1",
+  followingIds = [],
+  pendingIds = [],
+  user,
+} = {}) => {
   return renderWithProviders(<UserCard user={user || profileUser} />, {
     preloadedState: {
       auth: { user: currentUserId ? { id: currentUserId } : null },

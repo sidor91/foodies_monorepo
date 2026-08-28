@@ -14,9 +14,7 @@ describe("PathInfo", () => {
   });
 
   it("uses a custom home label and path", () => {
-    renderWithRouter(
-      <PathInfo currentPage="Recipe" homeLabel="Recipes" homePath="/recipes" />,
-    );
+    renderWithRouter(<PathInfo currentPage="Recipe" homeLabel="Recipes" homePath="/recipes" />);
 
     expect(screen.getByRole("link", { name: "Recipes" })).toHaveAttribute("href", "/recipes");
     expect(screen.getByText("Recipe")).toBeInTheDocument();
