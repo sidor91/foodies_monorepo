@@ -33,7 +33,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
   return (
     <Form
       onBlur={saveCurrentDraft}
-      className="desktop:flex desktop:gap-[8rem] w-full justify-center tablet:w-[70.4rem] "
+      className="flex flex-col desktop:flex-row desktop:gap-[8rem] w-full"
     >
       <>
         <ImageUploader
@@ -42,15 +42,16 @@ const RecipeFormContent = ({ isSubmitting }) => {
           setFieldValue={setFieldValue}
         />
       </>
-      <div>
+      <div className="flex flex-col w-full desktop:w-[65rem] tablet:w-[74rem]">
         {/* title and description */}
-        <label className="mb-[3.2rem] tablet:mb-[4rem] block">
+
+        <label className="mb-[3.2rem] tablet:mb-[4rem] block w-full">
           <Field
             name="title"
             type="text"
             placeholder="The name of the recipe"
-            className="font-extrabold text-[1.8rem] tablet:text-[2.4rem] leading-[133%] tablet:font-[800] 
-            uppercase text-secondary"
+            className="w-full bg-transparent pb-[1.4rem] font-extrabold text-[1.8rem] tablet:text-[2.4rem] 
+            leading-[133%] tablet:font-[800] uppercase placeholder:text-secondary text-accent focus:outline-none"
           />
           <FormError name="title" />
         </label>
@@ -174,7 +175,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
             </span>
 
             {/* Поле вводу */}
-            <CustomTextarea name="instructions" placeholder="Enter recipe" />
+            <CustomTextarea name="instructions" maxLength={1000} placeholder="Enter recipe" />
 
             <FormError name="instructions" />
           </div>

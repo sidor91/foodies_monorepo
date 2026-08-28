@@ -2,17 +2,23 @@ import AddRecipeForm from "../../components/AddRecipeForm/AddRecipeForm";
 import PathInfo from "../../components/PathInfo/PathInfo";
 import MainTitle from "../../components/MainTitle/MainTitle";
 import Subtitle from "../../components/Subtitle/Subtitle";
-import { selectRecipesError } from "../../../redux/recipes/recipesSelectors.js";
+import {
+  selectCurrentRecipeError,
+  selectCurrentRecipeIsLoading,
+} from "../../../redux/recipes/recipesSelectors.js";
 import { useSelector } from "react-redux";
 import NotFound from "../NotFound/NotFound.jsx";
+import css from "./AddRecipe.module.css";
+import ThreeDots from "../../components/Loader/Loader.jsx";
 
 const AddRecipe = () => {
-  const error = useSelector(selectRecipesError);
+  const error = useSelector(selectCurrentRecipeError);
+  const isLoading = useSelector(selectCurrentRecipeIsLoading);
 
   return (
-    <div className="section">
-      <div className="container">
-        <div className="desktop:w-[128rem] desktop:ml-[7.8rem]">
+    <div className={css.section}>
+      <div className={css.container}>
+        <div className="flex w-full flex-col items-start">
           <PathInfo
             currentPage="Add Recipe"
             className="flex justify-start mb-[3.2rem] tablet:mb-[4rem] mt-[4.8rem]"
@@ -21,10 +27,12 @@ const AddRecipe = () => {
           <Subtitle className="mb-[3.2rem]  tablet:mb-[4rem]" />
         </div>
 
-        <div className="flex justify-center w-full">
+        <div className="flex w-full justify-center">
           <AddRecipeForm />
         </div>
+
         {error && <NotFound />}
+        {isLoading && <ThreeDots />}
       </div>
     </div>
   );

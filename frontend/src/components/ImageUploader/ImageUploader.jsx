@@ -3,12 +3,12 @@ import { clsx } from "clsx";
 
 const ImageUploader = ({ previewUrl, handleImageUpload, setFieldValue }) => {
   return (
-    <div className="flex flex-col items-center shrink-0">
+    <div className="flex flex-col items-center">
       <div
         className={clsx(`
           w-full max-w-[34.3rem] tablet:max-w-[70.4rem] desktop:w-[55.1rem] h-[31.8rem]
           tablet:h-[40rem] desktop:h-[40rem] rounded-[3rem]
-          border-(--gray) overflow-hidden shrink-0 ${
+          border-(--gray) overflow-hidden ${
             previewUrl
               ? "mb-[1.6rem] tablet:mb-[2rem]"
               : "mb-[3.2rem] tablet:mb-[8rem] border border-dashed"
