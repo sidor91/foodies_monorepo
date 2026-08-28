@@ -51,7 +51,7 @@ const UserNav = ({ onLogout }) => {
 
       {isExtra && (
         <div
-          className={`${!isHomePageOrCategories && "bg-bg"} absolute w-[12.2rem] bg-accent flex flex-col gap-[0.4rem] p-[1.6rem] mt-53 border border-secondary rounded-3xl tablet:w-[14.8rem]`}
+          className={`${!isHomePageOrCategories && "bg-bg"} absolute top-full right-0 z-20 mt-[0.53rem] w-[12.2rem] bg-accent flex flex-col gap-[0.4rem] p-[1.6rem] border border-secondary rounded-3xl tablet:w-[14.8rem]`}
         >
           <NavLink
             to={`/user/${user?.id}`}
