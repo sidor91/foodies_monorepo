@@ -1,23 +1,29 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Header, MobileMenu, Loader, Footer, LoginForm, RegisterForm } from "../index.js";
 
 import { logOut, refreshUser } from "../../../redux/auth/authOps.js";
+import { selectIsLoggedIn } from "../../../redux/auth/authSelectors.js";
+import { fetchFavorites } from "../../../redux/favorites/favoritesOps.js";
 
 import css from "./App.module.css";
 import LogoutModal from "../LogoutModal/LogoutModal.jsx";
+import PrivateRoute from "../../components/PrivateRoute.jsx";
 
 const Home = lazy(() => import("../../pages/Home/Home.jsx"));
+const Recipe = lazy(() => import("../../pages/Recipe/Recipe.jsx"));
 const AddRecipe = lazy(() => import("../../pages/AddRecipe/AddRecipe.jsx"));
 const UserProfile = lazy(() => import("../../pages/UserProfile/UserProfile.jsx"));
 const NotFound = lazy(() => import("../../pages/NotFound/NotFound.jsx"));
 
 const App = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  const isAuthenticated = useSelector(selectIsLoggedIn);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
@@ -31,10 +37,17 @@ const App = () => {
     try {
       await dispatch(logOut()).unwrap();
       setIsLogout(false);
+      navigate("/");
     } catch (error) {
       toast.error(error.response?.data?.message || "Logout failed");
     }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchFavorites());
+    }
+  }, [dispatch, isAuthenticated]);
 
   const handleMobileToggle = () => {
     setIsMobileMenuOpen((prev) => !prev);
@@ -85,8 +98,19 @@ const App = () => {
         <Suspense fallback={<Loader />}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/recipe/add" element={<AddRecipe />} />
+            <Route path="/recipe/add" element={<AddRecipe onRequireLogin={handleLoginToggle} />} />
             <Route path="/profile" element={<UserProfile />} />
+            <Route path="/" element={<Home onRequireLogin={handleLoginToggle} />} />
+            <Route
+              path="/categories/:categorySlug"
+              element={<Home onRequireLogin={handleLoginToggle} />}
+            />
+            <Route
+              path="/recipes/:recipeSlugId"
+              element={<Recipe onRequireLogin={handleLoginToggle} />}
+            />
+            <Route path="/recipe/add" element={<AddRecipe />} />
+            <Route path="/user/:id" element={<UserProfile onLogout={handleLogoutToggle} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

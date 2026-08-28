@@ -53,7 +53,7 @@ const RegisterForm = ({ isRegister, onRegister, onLogin }) => {
       await dispatch(register(values)).unwrap();
 
       actions.resetForm();
-      onRegister;
+      onRegister();
     } catch (error) {
       toast.error(error.response?.data?.message || "Registration failed");
     } finally {
@@ -76,7 +76,8 @@ const RegisterForm = ({ isRegister, onRegister, onLogin }) => {
 
             <button
               type="button"
-              className="absolute top-[1.6rem] right-[1.6rem] text-accent text-[1.2rem] leading-[150%] tracking-[-0.02em] tablet:top-8 tablet:right-8"
+              className="absolute top-[1.6rem] right-[1.6rem] text-accent text-[1.2rem] leading-[150%] 
+              tracking-[-0.02em] tablet:top-8 tablet:right-8"
               onClick={onRegister}
               aria-label="Close Modal"
             >

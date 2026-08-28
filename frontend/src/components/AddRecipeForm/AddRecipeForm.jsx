@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import css from "./AddRecipeForm.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectRecipeDraft,
@@ -18,27 +17,28 @@ import { addRecipe } from "../../../redux/recipes/recipesOps.js";
 import RecipeFormContent from "../RecipeFormContent/RecipeFormContent.jsx";
 import { toast } from "react-hot-toast";
 
-// 1. schema for form validation using Yup
+// 1. Схема валідації Yup
 const RecipeSchema = Yup.object().shape({
   photo: Yup.mixed().optional().notRequired(),
-  title: Yup.string().required("Title is required").max(100, "Max 100 characters").trim(),
-  description: Yup.string().max(200, "Max 200 characters").trim(),
+  title: Yup.string().required("Title is required").max(100, "Max 100 characters"),
+  description: Yup.string().max(200, "Max 200 characters").required("Description is required"),
   category: Yup.string().required("Category is required"),
-  time: Yup.number().min(1, "Time must be at least 1 min"),
+  time: Yup.number().min(1, "Time must be at least 1 min").required("Required"),
   area: Yup.string().required("Area is required"),
-  selectedIngredientId: Yup.string(),
-  ingredientQuantity: Yup.string().max(30, "Max 30 characters").trim(),
   ingredients: Yup.array()
     .of(
       Yup.object().shape({
-        quantity: Yup.string(),
-        ingredientId: Yup.string(),
+        quantity: Yup.string().required(),
+        ingredientId: Yup.string().required("Ingredient is required"),
         name: Yup.string(),
         img: Yup.string(),
       }),
     )
-    .max(30, "At most 30 ingredients are allowed"),
-  instructions: Yup.string().max(1000, "Max 1000 characters").required("Instructions are required"),
+    .min(1, "Please add at least one ingredient")
+    .max(30, "You can add up to 30 ingredients only"),
+  instructions: Yup.string()
+    .max(1000, "Max 1000 characters")
+    .required("Preparation steps are required"),
 });
 
 const AddRecipeForm = () => {
@@ -47,17 +47,16 @@ const AddRecipeForm = () => {
   const navigate = useNavigate();
 
   const initialValues = {
+    photo: null,
     title: savedDraft?.title || "",
     description: savedDraft?.description || "",
     category: savedDraft?.category || "",
     time: savedDraft?.time || 10,
     area: savedDraft?.area || "",
-    ingredients: structuredClone(savedDraft?.ingredients) || [],
+    ingredients: savedDraft?.ingredients || [],
     instructions: savedDraft?.instructions || "",
-    selectedIngredientId: savedDraft?.selectedIngredientId || "",
-    ingredientQuantity: savedDraft?.ingredientQuantity || "",
-    photo: null,
   };
+
   useEffect(() => {
     dispatch(fetchCategories());
     dispatch(fetchAreas());
@@ -67,19 +66,12 @@ const AddRecipeForm = () => {
   // heandleSubmit function to handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = prepareRecipeFormData(values);
-
-    if (values.ingredients.length === 0) {
-      toast.error("Please add at least one ingredient.");
-      setSubmitting(false);
-      return;
-    }
-
     try {
       const newRecipe = await dispatch(addRecipe(formData)).unwrap();
       toast.success("Successfully created a recipe!");
 
       dispatch(clearDraft()); // clear the draft in Redux
-      resetForm(); // reset the form fields
+      resetForm(); // clear Formik form
 
       // TODO;
       navigate(`/recipes/${newRecipe.id}`);
@@ -91,16 +83,10 @@ const AddRecipeForm = () => {
   };
 
   return (
-    <section className={css.section}>
-      <div className={css.container}>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={RecipeSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ isSubmitting }) => <RecipeFormContent isSubmitting={isSubmitting} />}
-        </Formik>
-      </div>
+    <section>
+      <Formik initialValues={initialValues} validationSchema={RecipeSchema} onSubmit={handleSubmit}>
+        {({ isSubmitting }) => <RecipeFormContent isSubmitting={isSubmitting} />}
+      </Formik>
     </section>
   );
 };

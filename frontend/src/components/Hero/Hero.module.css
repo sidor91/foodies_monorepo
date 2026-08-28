@@ -1,0 +1,151 @@
+.hero {
+  min-height: 48rem;
+  margin: 0 0 6.4rem;
+  padding: 8rem 2.4rem 3.2rem;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--color-bg);
+  background: var(--color-accent);
+  border-radius: 0 0 2.4rem 2.4rem;
+
+  z-index: -2;
+}
+
+.hero::before {
+  left: 20%;
+}
+
+.hero::after {
+  right: 20%;
+}
+
+.hero__content {
+  z-index: 1;
+  max-width: 90rem;
+  text-align: center;
+}
+
+.eyebrow {
+  margin-bottom: 1.6rem;
+  color: var(--color-secondary);
+  font-size: 1.2rem;
+  line-height: 150%;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.hero h1 {
+  width: 100%;
+  margin: 0 auto;
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 4rem;
+  letter-spacing: -2%;
+  text-transform: uppercase;
+}
+
+.hero__description {
+  max-width: 46rem;
+  margin: 2.4rem auto 0;
+  color: var(--color-secondary);
+  font-size: 1.4rem;
+  line-height: 145%;
+}
+
+.hero__button {
+  margin-top: 2.4rem;
+  padding: 1.2rem 1.8rem;
+  color: var(--color-bg);
+  border-color: var(--color-secondary);
+}
+
+.hero__button:hover,
+.hero__button:focus-visible {
+  color: var(--color-accent);
+  background: var(--color-bg);
+}
+
+.hero__images {
+  z-index: 1;
+  width: min(100%, 48rem);
+  min-height: 17rem;
+  position: relative;
+  margin-top: 4rem;
+
+  display: flex;
+  gap: 1.6rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero__images img {
+  object-fit: cover;
+  /* position: absolute; */
+  border-radius: 1.6rem;
+  box-shadow: 0 2rem 4rem rgb(0 0 0 / 0.25);
+}
+
+@media screen and (min-width: 30rem) {
+  .hero {
+    min-height: 60rem;
+    margin-bottom: 9.6rem;
+    padding: 2rem 3.2rem;
+    border-radius: 0 0 3.2rem 3.2rem;
+  }
+
+  .hero__images {
+    min-height: 23rem;
+    margin-top: 5.6rem;
+  }
+
+  .hero h1 {
+    font-size: 7rem;
+    line-height: 7rem;
+
+    padding-top: 10rem;
+  }
+
+  .hero__description {
+    max-width: 46rem;
+    margin: 2.4rem auto 0;
+    color: var(--color-secondary);
+    font-size: 1.6rem;
+    line-height: 145%;
+  }
+}
+
+@media screen and (min-width: 56.25rem) {
+  .hero {
+    min-height: 68rem;
+    margin-bottom: 12rem;
+    padding: 2rem 6rem;
+    padding-top: 10rem;
+  }
+
+  .hero__images {
+    width: 56rem;
+    min-height: 27rem;
+  }
+
+  .hero h1 {
+    width: 100%;
+    margin: 0 auto;
+    font-size: 9rem;
+    font-weight: 800;
+    line-height: 9rem;
+    letter-spacing: -2%;
+    text-transform: uppercase;
+  }
+
+  .hero__description {
+    max-width: 46rem;
+    margin: 2.4rem auto 0;
+    color: var(--color-secondary);
+    font-size: 1.4rem;
+    line-height: 145%;
+  }
+}
