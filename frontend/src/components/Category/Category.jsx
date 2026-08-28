@@ -13,7 +13,6 @@ import {
 import { selectFavoriteIds } from "../../../redux/favorites/favoritesSelectors.js";
 import { selectIsLoggedIn } from "../../../redux/auth/authSelectors.js";
 import useFavoriteToggle from "../../hooks/useFavoriteToggle.js";
-import useOpenRecipe from "../../hooks/useOpenRecipe.js";
 import css from "./Category.module.css";
 import RecipeCard from "../RecipeCard/RecipeCard.jsx";
 
@@ -37,7 +36,6 @@ const Category = ({ category, onBack, onRequireLogin }) => {
   const [page, setPage] = useState(1);
 
   const handleFavoriteToggle = useFavoriteToggle({ favoriteIds, isAuthenticated, onRequireLogin });
-  const handleOpenRecipe = useOpenRecipe();
 
   useEffect(() => {
     dispatch(fetchAreas());
@@ -134,7 +132,6 @@ const Category = ({ category, onBack, onRequireLogin }) => {
                       recipe={recipe}
                       isFavorite={favoriteIds.includes(recipe.id)}
                       onFavoriteToggle={handleFavoriteToggle}
-                      onOpenRecipe={handleOpenRecipe}
                     />
                   </li>
                 ))}

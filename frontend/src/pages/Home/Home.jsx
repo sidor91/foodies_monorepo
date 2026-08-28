@@ -9,7 +9,6 @@ import {
   selectReferencesIsLoading,
 } from "../../../redux/references/referencesSelectors.js";
 import { Category, Categories, Hero, Testimonials } from "../../components/index.js";
-import slugify from "../../utils/slugify.js";
 
 import css from "./Home.module.css";
 
@@ -29,7 +28,7 @@ const Home = ({ onRequireLogin }) => {
       return null;
     }
 
-    return categories.find((category) => slugify(category.name) === categorySlug) || null;
+    return categories.find((category) => category.name === categorySlug) || null;
   }, [categories, categorySlug]);
 
   useEffect(() => {
@@ -42,7 +41,7 @@ const Home = ({ onRequireLogin }) => {
     }
 
     setIsAllExpanded(false);
-    navigate(`/categories/${slugify(category.name)}`);
+    navigate(`/categories/${category.name}`);
   };
 
   const handleShowAllCategories = () => {

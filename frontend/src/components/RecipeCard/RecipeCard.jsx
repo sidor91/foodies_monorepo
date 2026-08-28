@@ -1,8 +1,10 @@
 import css from "./RecipeCard.module.css";
 import ImageWithFallback from "../ImageWithFallback/ImageWithFallback.jsx";
+import { useNavigate } from "react-router-dom";
 
-const RecipeCard = ({ recipe, isFavorite = false, onFavoriteToggle, onOpenRecipe }) => {
+const RecipeCard = ({ recipe, isFavorite = false, onFavoriteToggle }) => {
   const ownerName = recipe.owner?.name || "Foodies";
+  const navigate = useNavigate();
 
   return (
     <article className={css.card}>
@@ -36,7 +38,7 @@ const RecipeCard = ({ recipe, isFavorite = false, onFavoriteToggle, onOpenRecipe
           </button>
           <button
             type="button"
-            onClick={() => onOpenRecipe?.(recipe.id, recipe.title)}
+            onClick={() => navigate(`/recipes/${recipe.id}`)}
             aria-label="Open recipe"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
