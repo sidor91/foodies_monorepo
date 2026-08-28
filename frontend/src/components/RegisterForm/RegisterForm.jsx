@@ -5,7 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-hot-toast";
 
-import { register } from "../../../redux/auth/authOps";
+import { register, refreshUser } from "../../../redux/auth/authOps";
 
 import css from "./RegisterForm.module.css";
 
@@ -21,7 +21,7 @@ const FeedbackSchema = Yup.object().shape({
   password: Yup.string().min(6, "must be at least 6 characters").required(),
 });
 
-const RegisterForm = ({ isRegister, onRegister, onLogin }) => {
+const RegisterForm = ({ isRegister, onRegister, onLogin, onRegisterSuccess }) => {
   const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -51,8 +51,10 @@ const RegisterForm = ({ isRegister, onRegister, onLogin }) => {
   const handleSubmit = async (values, actions) => {
     try {
       await dispatch(register(values)).unwrap();
+      await dispatch(refreshUser());
 
       actions.resetForm();
+      onRegisterSuccess?.();
       onRegister();
     } catch (error) {
       toast.error(error.response?.data?.message || "Registration failed");

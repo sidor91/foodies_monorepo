@@ -5,7 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-hot-toast";
 
-import { logIn } from "../../../redux/auth/authOps";
+import { logIn, refreshUser } from "../../../redux/auth/authOps";
 
 import css from "./LoginForm.module.css";
 
@@ -19,7 +19,7 @@ const FeedbackSchema = Yup.object().shape({
   password: Yup.string().required(),
 });
 
-const LoginForm = ({ isLogin, onLogin, onRegister }) => {
+const LoginForm = ({ isLogin, onLogin, onRegister, onLoginSuccess }) => {
   const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -48,8 +48,10 @@ const LoginForm = ({ isLogin, onLogin, onRegister }) => {
   const handleSubmit = async (values, actions) => {
     try {
       await dispatch(logIn(values)).unwrap();
+      await dispatch(refreshUser());
 
       actions.resetForm();
+      onLoginSuccess?.();
       onLogin();
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed");

@@ -28,6 +28,7 @@ const App = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
   const [isLogout, setIsLogout] = useState(false);
+  const [pendingRoute, setPendingRoute] = useState(null);
 
   useEffect(() => {
     dispatch(refreshUser());
@@ -58,6 +59,12 @@ const App = () => {
     setIsRegister(false);
   };
 
+  const openLoginModal = (targetRoute) => {
+    setPendingRoute(targetRoute);
+    setIsLogin(true);
+    setIsRegister(false);
+  };
+
   const handleRegisterToggle = () => {
     setIsRegister((prev) => !prev);
     setIsLogin(false);
@@ -66,6 +73,19 @@ const App = () => {
   const handleLogoutToggle = () => {
     setIsLogout((prev) => !prev);
   };
+
+  const handleAuthSuccess = () => {
+    if (pendingRoute) {
+      navigate(pendingRoute);
+      setPendingRoute(null);
+    }
+  };
+
+  useEffect(() => {
+    if (!isLogin && !isRegister && !isAuthenticated) {
+      setPendingRoute(null);
+    }
+  }, [isLogin, isRegister, isAuthenticated]);
 
   return (
     <div className={`main__container ${isMobileMenuOpen && "modal__open"}`}>
@@ -82,11 +102,17 @@ const App = () => {
       />
 
       <MobileMenu isMobileMenuOpen={isMobileMenuOpen} onMobileToggle={handleMobileToggle} />
-      <LoginForm isLogin={isLogin} onLogin={handleLoginToggle} onRegister={handleRegisterToggle} />
+      <LoginForm
+        isLogin={isLogin}
+        onLogin={handleLoginToggle}
+        onRegister={handleRegisterToggle}
+        onLoginSuccess={handleAuthSuccess}
+      />
       <RegisterForm
         isRegister={isRegister}
         onRegister={handleRegisterToggle}
         onLogin={handleLoginToggle}
+        onRegisterSuccess={handleAuthSuccess}
       />
       <LogoutModal
         isLogout={isLogout}
@@ -97,10 +123,12 @@ const App = () => {
       <main className={css.content} inert={isMobileMenuOpen ? "" : undefined}>
         <Suspense fallback={<Loader />}>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/recipe/add" element={<AddRecipe onRequireLogin={handleLoginToggle} />} />
-            <Route path="/profile" element={<UserProfile />} />
             <Route path="/" element={<Home onRequireLogin={handleLoginToggle} />} />
+            <Route
+              path="/recipe/add"
+              element={<PrivateRoute component={<AddRecipe />} openModal={openLoginModal} />}
+            />
+            <Route path="/profile" element={<UserProfile onLogout={handleLogoutToggle} />} />
             <Route
               path="/categories/:categorySlug"
               element={<Home onRequireLogin={handleLoginToggle} />}
@@ -109,7 +137,6 @@ const App = () => {
               path="/recipes/:recipeSlugId"
               element={<Recipe onRequireLogin={handleLoginToggle} />}
             />
-            <Route path="/recipe/add" element={<AddRecipe />} />
             <Route path="/user/:id" element={<UserProfile onLogout={handleLogoutToggle} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
