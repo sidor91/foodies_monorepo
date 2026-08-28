@@ -17,14 +17,11 @@ import {
 import { selectIsLoggedIn } from "../../../redux/auth/authSelectors.js";
 import { Button, ImageWithFallback, RecipeCard } from "../../components/index.js";
 import useFavoriteToggle from "../../hooks/useFavoriteToggle.js";
-import useOpenRecipe from "../../hooks/useOpenRecipe.js";
-
 import css from "./Recipe.module.css";
 
 const Recipe = ({ onRequireLogin }) => {
   const { recipeSlugId } = useParams();
-  // the real id is the trailing hex segment after the last hyphen, e.g. "title-slug-<id>"
-  const recipeId = recipeSlugId?.split("-").pop() ?? "";
+
   const dispatch = useDispatch();
 
   const isAuthenticated = useSelector(selectIsLoggedIn);
@@ -35,21 +32,20 @@ const Recipe = ({ onRequireLogin }) => {
   const favoriteIds = useSelector(selectFavoriteIds);
   const pendingIds = useSelector(selectFavoritesPendingIds);
 
-  const isReady = recipe?.id === recipeId;
-  const isFavorite = favoriteIds.includes(recipeId);
-  const isFavoritePending = pendingIds.includes(recipeId);
+  const isReady = recipe?.id === recipeSlugId;
+  const isFavorite = favoriteIds.includes(recipeSlugId);
+  const isFavoritePending = pendingIds.includes(recipeSlugId);
 
   useEffect(() => {
-    dispatch(fetchRecipeById(recipeId));
+    dispatch(fetchRecipeById(recipeSlugId));
     dispatch(fetchPopularRecipes(4));
 
     return () => {
       dispatch(clearCurrentRecipe());
     };
-  }, [dispatch, recipeId]);
+  }, [dispatch, recipeSlugId]);
 
   const handleFavoriteToggle = useFavoriteToggle({ favoriteIds, isAuthenticated, onRequireLogin });
-  const handleOpenRecipe = useOpenRecipe();
 
   if (!isReady) {
     if (isLoading) {
@@ -141,7 +137,6 @@ const Recipe = ({ onRequireLogin }) => {
                   recipe={item}
                   isFavorite={favoriteIds.includes(item.id)}
                   onFavoriteToggle={handleFavoriteToggle}
-                  onOpenRecipe={handleOpenRecipe}
                 />
               </li>
             ))}

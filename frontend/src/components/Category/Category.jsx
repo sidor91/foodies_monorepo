@@ -13,7 +13,6 @@ import {
 import { selectFavoriteIds } from "../../../redux/favorites/favoritesSelectors.js";
 import { selectIsLoggedIn } from "../../../redux/auth/authSelectors.js";
 import useFavoriteToggle from "../../hooks/useFavoriteToggle.js";
-import useOpenRecipe from "../../hooks/useOpenRecipe.js";
 import css from "./Category.module.css";
 import RecipeCard from "../RecipeCard/RecipeCard.jsx";
 
@@ -37,12 +36,21 @@ const Category = ({ category, onBack, onRequireLogin }) => {
   const [page, setPage] = useState(1);
 
   const handleFavoriteToggle = useFavoriteToggle({ favoriteIds, isAuthenticated, onRequireLogin });
-  const handleOpenRecipe = useOpenRecipe();
 
   useEffect(() => {
     dispatch(fetchAreas());
     dispatch(fetchIngredients());
   }, [dispatch]);
+
+  const handleAreaSelection = (area) => {
+    setPage(1);
+    setSelectedArea(area);
+  };
+
+  const handleIngredientSelection = (ingredient) => {
+    setPage(1);
+    setSelectedIngredient(ingredient);
+  };
 
   useEffect(() => {
     setSelectedArea("");
@@ -84,7 +92,7 @@ const Category = ({ category, onBack, onRequireLogin }) => {
             <span className={css.srOnly}>Filter by ingredient</span>
             <select
               value={selectedIngredient}
-              onChange={(event) => setSelectedIngredient(event.target.value)}
+              onChange={(event) => handleIngredientSelection(event.target.value)}
             >
               <option value="">Ingredients</option>
               {ingredients.map((ingredient) => (
@@ -97,7 +105,10 @@ const Category = ({ category, onBack, onRequireLogin }) => {
 
           <label className={css.filter}>
             <span className={css.srOnly}>Filter by area</span>
-            <select value={selectedArea} onChange={(event) => setSelectedArea(event.target.value)}>
+            <select
+              value={selectedArea}
+              onChange={(event) => handleAreaSelection(event.target.value)}
+            >
               <option value="">Area</option>
               {areas.map((area) => (
                 <option key={area.id || area.name} value={area.id || ""}>
@@ -121,7 +132,6 @@ const Category = ({ category, onBack, onRequireLogin }) => {
                       recipe={recipe}
                       isFavorite={favoriteIds.includes(recipe.id)}
                       onFavoriteToggle={handleFavoriteToggle}
-                      onOpenRecipe={handleOpenRecipe}
                     />
                   </li>
                 ))}
