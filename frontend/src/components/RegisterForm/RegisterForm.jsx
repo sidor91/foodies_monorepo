@@ -21,7 +21,7 @@ const FeedbackSchema = Yup.object().shape({
   password: Yup.string().min(6, "must be at least 6 characters").required(),
 });
 
-const RegisterForm = ({ isRegister, onRegister, onLogin }) => {
+const RegisterForm = ({ isRegister, onRegister, onLogin, onRegisterSuccess }) => {
   const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -54,6 +54,7 @@ const RegisterForm = ({ isRegister, onRegister, onLogin }) => {
       await dispatch(refreshUser());
 
       actions.resetForm();
+      onRegisterSuccess?.();
       onRegister();
     } catch (error) {
       toast.error(error.response?.data?.message || "Registration failed");

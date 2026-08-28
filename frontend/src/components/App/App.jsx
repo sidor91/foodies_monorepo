@@ -28,6 +28,7 @@ const App = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
   const [isLogout, setIsLogout] = useState(false);
+  const [pendingRoute, setPendingRoute] = useState(null);
 
   useEffect(() => {
     dispatch(refreshUser());
@@ -58,7 +59,8 @@ const App = () => {
     setIsRegister(false);
   };
 
-  const openLoginModal = () => {
+  const openLoginModal = (targetRoute) => {
+    setPendingRoute(targetRoute);
     setIsLogin(true);
     setIsRegister(false);
   };
@@ -71,6 +73,19 @@ const App = () => {
   const handleLogoutToggle = () => {
     setIsLogout((prev) => !prev);
   };
+
+  const handleAuthSuccess = () => {
+    if (pendingRoute) {
+      navigate(pendingRoute);
+      setPendingRoute(null);
+    }
+  };
+
+  useEffect(() => {
+    if (!isLogin && !isRegister && !isAuthenticated) {
+      setPendingRoute(null);
+    }
+  }, [isLogin, isRegister, isAuthenticated]);
 
   return (
     <div className={`main__container ${isMobileMenuOpen && "modal__open"}`}>
@@ -87,11 +102,17 @@ const App = () => {
       />
 
       <MobileMenu isMobileMenuOpen={isMobileMenuOpen} onMobileToggle={handleMobileToggle} />
-      <LoginForm isLogin={isLogin} onLogin={handleLoginToggle} onRegister={handleRegisterToggle} />
+      <LoginForm
+        isLogin={isLogin}
+        onLogin={handleLoginToggle}
+        onRegister={handleRegisterToggle}
+        onLoginSuccess={handleAuthSuccess}
+      />
       <RegisterForm
         isRegister={isRegister}
         onRegister={handleRegisterToggle}
         onLogin={handleLoginToggle}
+        onRegisterSuccess={handleAuthSuccess}
       />
       <LogoutModal
         isLogout={isLogout}

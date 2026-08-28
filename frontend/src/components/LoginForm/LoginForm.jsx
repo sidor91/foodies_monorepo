@@ -19,7 +19,7 @@ const FeedbackSchema = Yup.object().shape({
   password: Yup.string().required(),
 });
 
-const LoginForm = ({ isLogin, onLogin, onRegister }) => {
+const LoginForm = ({ isLogin, onLogin, onRegister, onLoginSuccess }) => {
   const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -51,6 +51,7 @@ const LoginForm = ({ isLogin, onLogin, onRegister }) => {
       await dispatch(refreshUser());
 
       actions.resetForm();
+      onLoginSuccess?.();
       onLogin();
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed");
