@@ -446,7 +446,7 @@ const options = {
             },
             description: {
               type: "string",
-              maxLength: 1000,
+              maxLength: 200,
             },
             image: {
               type: "string",
