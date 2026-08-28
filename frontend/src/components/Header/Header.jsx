@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import clsx from "clsx";
 
@@ -10,6 +10,7 @@ import {
   selectIsLoggedIn,
   selectIsRefreshing,
 } from "../../../redux/auth/authSelectors";
+import useIsRoute from "../../hooks/useIsRoute";
 
 const Header = ({
   isMobileMenuOpen,
@@ -20,9 +21,7 @@ const Header = ({
   onRegister,
   onLogout,
 }) => {
-  const { pathname } = useLocation();
-
-  const isHomePageOrCategories = pathname === "/" || pathname.startsWith("/categories");
+  const isHomePageOrCategories = useIsRoute(["/", "/categories"]);
 
   const user = useSelector(selectUser);
   const isAuthenticated = useSelector(selectIsLoggedIn);

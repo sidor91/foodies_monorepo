@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import useIsRoute from "../../hooks/useIsRoute.js";
 
 const UserNav = ({ user, onLogout }) => {
   const [isExtra, setIsExtra] = useState(false);
-  const { pathname } = useLocation();
 
-  const isHomePageOrCategories = pathname === "/" || pathname.startsWith("/categories");
+  const isHomePageOrCategories = useIsRoute(["/", "/categories"]);
 
   const handleExtraToggle = () => {
     setIsExtra((prev) => !prev);
