@@ -1,8 +1,7 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import clsx from "clsx";
-import css from "./AddRecipeForm.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectRecipeDraft,
@@ -45,9 +44,10 @@ const RecipeSchema = Yup.object().shape({
 const AddRecipeForm = () => {
   const savedDraft = useSelector(selectRecipeDraft);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const initialValues = {
-    photo: savedDraft?.photo || null,
+    photo: null,
     title: savedDraft?.title || "",
     description: savedDraft?.description || "",
     category: savedDraft?.category || "",
@@ -67,13 +67,14 @@ const AddRecipeForm = () => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = prepareRecipeFormData(values);
     try {
-      await dispatch(addRecipe(formData)).unwrap();
+      const newRecipe = await dispatch(addRecipe(formData)).unwrap();
       toast.success("Successfully created a recipe!");
 
       dispatch(clearDraft()); // clear the draft in Redux
       resetForm(); // clear Formik form
 
-      // redirect to another page
+      // TODO;
+      navigate(`/recipes/${newRecipe.id}`);
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -82,17 +83,10 @@ const AddRecipeForm = () => {
   };
 
   return (
-    <section className={clsx("section")}>
-      <div className={clsx("container")}>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={RecipeSchema}
-          onSubmit={handleSubmit}
-          // enableReinitialize={true}
-        >
-          {({ isSubmitting }) => <RecipeFormContent isSubmitting={isSubmitting} />}
-        </Formik>
-      </div>
+    <section>
+      <Formik initialValues={initialValues} validationSchema={RecipeSchema} onSubmit={handleSubmit}>
+        {({ isSubmitting }) => <RecipeFormContent isSubmitting={isSubmitting} />}
+      </Formik>
     </section>
   );
 };

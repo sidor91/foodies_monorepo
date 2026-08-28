@@ -1,63 +1,53 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Header, MobileMenu, Loader, Footer, LoginForm, RegisterForm } from "../index.js";
-import { logoutUser } from "../../api/auth";
-import { getCurrentUser } from "../../api/users.js";
+
+import { logOut, refreshUser } from "../../../redux/auth/authOps.js";
+import { selectIsLoggedIn } from "../../../redux/auth/authSelectors.js";
+import { fetchFavorites } from "../../../redux/favorites/favoritesOps.js";
 
 import css from "./App.module.css";
+import LogoutModal from "../LogoutModal/LogoutModal.jsx";
+import PrivateRoute from "../../components/PrivateRoute.jsx";
 
 const Home = lazy(() => import("../../pages/Home/Home.jsx"));
+const Recipe = lazy(() => import("../../pages/Recipe/Recipe.jsx"));
 const AddRecipe = lazy(() => import("../../pages/AddRecipe/AddRecipe.jsx"));
 const UserProfile = lazy(() => import("../../pages/UserProfile/UserProfile.jsx"));
+const NotFound = lazy(() => import("../../pages/NotFound/NotFound.jsx"));
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAuthLoading, setIsAuthLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const isAuthenticated = useSelector(selectIsLoggedIn);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
+  const [isLogout, setIsLogout] = useState(false);
 
-  const handleAuthSuccess = (user) => {
-    setUser(user);
-    setIsAuthenticated(true);
-    setIsLogin(false);
-    setIsRegister(false);
-  };
+  useEffect(() => {
+    dispatch(refreshUser());
+  }, [dispatch]);
 
   const handleLogout = async () => {
     try {
-      await logoutUser();
-      setUser(null);
-      setIsAuthenticated(false);
+      await dispatch(logOut()).unwrap();
+      setIsLogout(false);
+      navigate("/");
     } catch (error) {
-      console.error("Logout failed:", error);
+      toast.error(error.response?.data?.message || "Logout failed");
     }
   };
 
   useEffect(() => {
-    const restoreSession = async () => {
-      try {
-        if (user) {
-          setIsAuthenticated(true);
-          return;
-        }
-
-        const currentUser = await getCurrentUser();
-
-        setUser(currentUser);
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.log(error.message);
-      } finally {
-        setIsAuthLoading(false);
-      }
-    };
-
-    restoreSession();
-  }, [user]);
+    if (isAuthenticated) {
+      dispatch(fetchFavorites());
+    }
+  }, [dispatch, isAuthenticated]);
 
   const handleMobileToggle = () => {
     setIsMobileMenuOpen((prev) => !prev);
@@ -72,6 +62,11 @@ const App = () => {
     setIsRegister((prev) => !prev);
     setIsLogin(false);
   };
+
+  const handleLogoutToggle = () => {
+    setIsLogout((prev) => !prev);
+  };
+
   return (
     <div className={`main__container ${isMobileMenuOpen && "modal__open"}`}>
       <Toaster />
@@ -83,32 +78,40 @@ const App = () => {
         isRegister={isRegister}
         onLogin={handleLoginToggle}
         onRegister={handleRegisterToggle}
-        isAuthenticated={isAuthenticated}
-        user={user}
-        isAuthLoading={isAuthLoading}
-        onLogout={handleLogout}
+        onLogout={handleLogoutToggle}
       />
 
       <MobileMenu isMobileMenuOpen={isMobileMenuOpen} onMobileToggle={handleMobileToggle} />
-      <LoginForm
-        isLogin={isLogin}
-        onLogin={handleLoginToggle}
-        onRegister={handleRegisterToggle}
-        onAuthSuccess={handleAuthSuccess}
-      />
+      <LoginForm isLogin={isLogin} onLogin={handleLoginToggle} onRegister={handleRegisterToggle} />
       <RegisterForm
         isRegister={isRegister}
         onRegister={handleRegisterToggle}
         onLogin={handleLoginToggle}
-        onAuthSuccess={handleAuthSuccess}
+      />
+      <LogoutModal
+        isLogout={isLogout}
+        onLogoutToggle={handleLogoutToggle}
+        onLogout={handleLogout}
       />
 
       <main className={css.content} inert={isMobileMenuOpen ? "" : undefined}>
         <Suspense fallback={<Loader />}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/recipe/add" element={<AddRecipe />} />
+            <Route path="/recipe/add" element={<AddRecipe onRequireLogin={handleLoginToggle} />} />
             <Route path="/profile" element={<UserProfile />} />
+            <Route path="/" element={<Home onRequireLogin={handleLoginToggle} />} />
+            <Route
+              path="/categories/:categorySlug"
+              element={<Home onRequireLogin={handleLoginToggle} />}
+            />
+            <Route
+              path="/recipes/:recipeSlugId"
+              element={<Recipe onRequireLogin={handleLoginToggle} />}
+            />
+            <Route path="/recipe/add" element={<AddRecipe />} />
+            <Route path="/user/:id" element={<UserProfile onLogout={handleLogoutToggle} />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </main>

@@ -13,9 +13,9 @@
     "migration:create": "npx prisma migrate dev --create-only --name",
     "migration:sync": "npx prisma migrate dev && npx prisma db pull",
     "lint": "eslint .",
-    "prisma:migrate:test": "DATABASE_URL=\"$(grep '^DATABASE_URL=' .env.test | cut -d '=' -f2-)\" prisma migrate deploy",
-    "db:seed:test": "env -u DATABASE_URL tsx --env-file=.env.test prisma/seed.ts",
-    "test": "npm run prisma:migrate:test && npm run db:seed:test && DATABASE_URL=\"$(grep '^DATABASE_URL=' .env.test | cut -d '=' -f2-)\" vitest run"
+    "prisma:migrate:test": "node --env-file=.env.test node_modules/prisma/build/index.js migrate deploy",
+    "db:seed:test": "tsx --env-file=.env.test prisma/seed.ts",
+    "test": "npm run prisma:migrate:test && npm run db:seed:test && node --env-file=.env.test node_modules/vitest/vitest.mjs run"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

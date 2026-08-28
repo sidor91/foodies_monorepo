@@ -1,4 +1,4 @@
-import { createSlice, isAnyOf } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 import {
   deleteRecipe,
@@ -16,18 +16,15 @@ const createList = () => ({
   limit: 12,
   total: 0,
   totalPages: 0,
+  isLoading: false,
+  error: null,
 });
 
 const initialState = {
   list: createList(),
   own: createList(),
-  popular: [],
-  current: null,
-  categories: [],
-  areas: [],
-  ingredientsList: [],
-  isLoading: false,
-  error: null,
+  popular: { items: [], isLoading: false, error: null },
+  current: { data: null, isLoading: false, error: null },
 };
 
 const fillList = (list, payload) => {
@@ -53,70 +50,82 @@ const recipesSlice = createSlice({
   initialState,
   reducers: {
     clearCurrentRecipe: (state) => {
-      state.current = null;
+      state.current.data = null;
+      state.current.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchRecipes.pending, (state) => {
+        state.list.isLoading = true;
+        state.list.error = null;
+      })
       .addCase(fetchRecipes.fulfilled, (state, action) => {
-        state.isLoading = false;
+        state.list.isLoading = false;
         fillList(state.list, action.payload);
       })
+      .addCase(fetchRecipes.rejected, (state, action) => {
+        state.list.isLoading = false;
+        state.list.error = action.payload;
+      })
+      .addCase(fetchOwnRecipes.pending, (state) => {
+        state.own.isLoading = true;
+        state.own.error = null;
+      })
       .addCase(fetchOwnRecipes.fulfilled, (state, action) => {
-        state.isLoading = false;
+        state.own.isLoading = false;
         fillList(state.own, action.payload);
       })
+      .addCase(fetchOwnRecipes.rejected, (state, action) => {
+        state.own.isLoading = false;
+        state.own.error = action.payload;
+      })
+      .addCase(fetchPopularRecipes.pending, (state) => {
+        state.popular.isLoading = true;
+        state.popular.error = null;
+      })
       .addCase(fetchPopularRecipes.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.popular = action.payload;
+        state.popular.isLoading = false;
+        state.popular.items = action.payload;
+      })
+      .addCase(fetchPopularRecipes.rejected, (state, action) => {
+        state.popular.isLoading = false;
+        state.popular.error = action.payload;
+      })
+      .addCase(fetchRecipeById.pending, (state) => {
+        state.current.isLoading = true;
+        state.current.error = null;
       })
       .addCase(fetchRecipeById.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.current = action.payload;
+        state.current.isLoading = false;
+        state.current.data = action.payload;
+      })
+      .addCase(fetchRecipeById.rejected, (state, action) => {
+        state.current.isLoading = false;
+        state.current.error = action.payload;
+      })
+      .addCase(addRecipe.pending, (state) => {
+        state.current.error = null;
+        state.current.isLoading = true;
+      })
+      .addCase(addRecipe.fulfilled, (state) => {
+        state.current.isLoading = false;
+      })
+      .addCase(addRecipe.rejected, (state, action) => {
+        state.current.isLoading = false;
+        state.current.error = action.payload;
       })
       .addCase(deleteRecipe.fulfilled, (state, action) => {
-        state.isLoading = false;
         removeFromList(state.own, action.payload);
         removeFromList(state.list, action.payload);
 
-        if (state.current?.id === action.payload) {
-          state.current = null;
+        if (state.current.data?.id === action.payload) {
+          state.current.data = null;
         }
       })
       .addCase(logOut.fulfilled, (state) => {
         state.own = createList();
-      })
-      .addCase(addRecipe.fulfilled, (state) => {
-        state.isLoading = false;
-      })
-      .addMatcher(
-        isAnyOf(
-          fetchRecipes.pending,
-          fetchOwnRecipes.pending,
-          fetchPopularRecipes.pending,
-          fetchRecipeById.pending,
-          addRecipe.pending,
-          deleteRecipe.pending,
-        ),
-        (state) => {
-          state.isLoading = true;
-          state.error = null;
-        },
-      )
-      .addMatcher(
-        isAnyOf(
-          fetchRecipes.rejected,
-          fetchOwnRecipes.rejected,
-          fetchPopularRecipes.rejected,
-          fetchRecipeById.rejected,
-          addRecipe.rejected,
-          deleteRecipe.rejected,
-        ),
-        (state, action) => {
-          state.isLoading = false;
-          state.error = action.payload;
-        },
-      );
+      });
   },
 });
 

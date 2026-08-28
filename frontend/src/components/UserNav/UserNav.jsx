@@ -1,18 +1,28 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import useIsRoute from "../../hooks/useIsRoute.js";
+import { selectUser } from "../../../redux/auth/authSelectors.js";
 
-const UserNav = ({ user, onAuthToggle }) => {
+const UserNav = ({ onLogout }) => {
   const [isExtra, setIsExtra] = useState(false);
+
+  const user = useSelector(selectUser);
+
+  const isHomePage = useIsRoute("/");
+  const isCategoriesPage = useIsRoute("/categories");
+  const isHomePageOrCategories = isHomePage || isCategoriesPage;
 
   const handleExtraToggle = () => {
     setIsExtra((prev) => !prev);
   };
+
   return (
     <div className="bg-primary rounded-[3rem] flex items-center relative">
       {user?.avatarUrl ? (
         <img
           src={user.avatarUrl}
-          alt={user.name}
+          alt={`${user.name} profile photo`}
           className="w-[3.2rem] h-[3.2rem] rounded-[3rem] object-cover tablet:w-20 tablet:h-20"
         />
       ) : (
@@ -40,10 +50,12 @@ const UserNav = ({ user, onAuthToggle }) => {
       </button>
 
       {isExtra && (
-        <div className="absolute w-[12.2rem] bg-accent flex flex-col gap-[0.4rem] p-[1.6rem] mt-53 border border-secondary rounded-3xl tablet:w-[14.8rem]">
+        <div
+          className={`${!isHomePageOrCategories && "bg-bg"} absolute w-[12.2rem] bg-accent flex flex-col gap-[0.4rem] p-[1.6rem] mt-53 border border-secondary rounded-3xl tablet:w-[14.8rem]`}
+        >
           <NavLink
-            to="/profile"
-            className="uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold"
+            to={`/user/${user?.id}`}
+            className={`${!isHomePageOrCategories && "text-primary"} uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold`}
             onClick={handleExtraToggle}
           >
             Profile
@@ -53,13 +65,17 @@ const UserNav = ({ user, onAuthToggle }) => {
             className="flex content-center"
             onClick={() => {
               handleExtraToggle();
-              onAuthToggle();
+              onLogout();
             }}
           >
-            <p className="uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold">
+            <p
+              className={`${!isHomePageOrCategories && "text-primary"} uppercase text-bg text-[1.2rem] leading-[150%] tracking-[-0.02em] font-bold`}
+            >
               Log out
             </p>
-            <svg className="fill-none stroke-bg w-[1.8rem] h-[1.8rem]">
+            <svg
+              className={`${!isHomePageOrCategories && "stroke-primary"} fill-none stroke-bg w-[1.8rem] h-[1.8rem]`}
+            >
               <use href="/icons.svg#icon-arrow-up-right" />
             </svg>
           </button>
