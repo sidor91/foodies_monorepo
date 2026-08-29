@@ -4,7 +4,7 @@
 }
 
 .header__container {
-  /* max-width: 37.5rem; */
+  max-width: 37.5rem;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -56,13 +56,13 @@
 /* Tablet */
 /* --------------------------------------- */
 
-@media screen and (min-width: 30rem) {
+@media screen and (min-width: 48rem) {
   .header__section {
     padding: 1.6rem 1.6rem 0 1.6rem;
   }
 
   .header__container {
-    /* max-width: 76.8rem; */
+    max-width: 76.8rem;
     padding: 2rem 3.2rem;
   }
 
@@ -79,7 +79,7 @@
 /* Desktop */
 /* --------------------------------------- */
 
-@media screen and (min-width: 56.25rem) {
+@media screen and (min-width: 90rem) {
   .header__section {
     padding: 2rem 2rem 0 2rem;
   }
