@@ -1,39 +1,25 @@
-import { Field } from "formik";
+import { useFormikContext } from "formik";
+
+import Dropdown from "../Dropdown/Dropdown.jsx";
 import { FormError } from "../RecipeFormContent/RecipeFormContent.jsx";
 
 const CustomSelect = ({ name, label, value, placeholder, options, className }) => {
-  const selectClasses = `focus:outline-none bg-transparent text-[1.4rem] tablet:text-[1.6rem] leading-[143%] 
-  tablet:leading-[150%] border border-secondary w-full rounded-[3rem] p-[1.4rem] pr-[4rem] appearance-none ${
-    value ? "text-accent" : "text-secondary"
-  } ${className || ""}`;
+  const { setFieldValue, setFieldTouched, touched, errors } = useFormikContext();
+  const hasError = Boolean(touched[name] && errors[name]);
+
   return (
     <div className="flex flex-col gap-[0.8rem] tablet:gap-[1.6rem] w-full">
-      {label && (
-        <label className="font-[800] uppercase leading-[150%] tablet:text-[2rem] tablet:leading-[120%]">
-          {label}
-        </label>
-      )}
-
-      <div className="relative w-full">
-        <Field as="select" name={name} className={selectClasses}>
-          <option value="" disabled className="text-secondary">
-            {placeholder}
-          </option>
-          {options.map((item) => (
-            <option key={item.id} value={item.id} className="text-accent">
-              {item.name}
-            </option>
-          ))}
-        </Field>
-
-        {/* Arrow */}
-        <svg
-          className="absolute right-[1.6rem] top-1/2 -translate-y-1/2 pointer-events-none w-[2rem] h-[2rem] 
-        stroke-current fill-none"
-        >
-          <use href="/icons.svg#icon-arrow-down" />
-        </svg>
-      </div>
+      <Dropdown
+        id={name}
+        label={label}
+        value={value}
+        onChange={(nextValue) => setFieldValue(name, nextValue)}
+        onBlur={() => setFieldTouched(name, true)}
+        options={options}
+        placeholder={placeholder}
+        className={className}
+        error={hasError}
+      />
 
       {name && <FormError name={name} />}
     </div>
