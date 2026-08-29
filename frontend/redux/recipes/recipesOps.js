@@ -65,13 +65,10 @@ export const deleteRecipe = createAsyncThunk("recipes/delete", async (id, thunkA
 
 export const addRecipe = createAsyncThunk("recipes/addRecipe", async (formData, thunkAPI) => {
   try {
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
     const response = await api.post("/recipes", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    console.log("Response from addRecipe API:", response.data);
+
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(getErrorMessage(error));
