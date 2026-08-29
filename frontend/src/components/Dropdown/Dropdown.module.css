@@ -132,7 +132,7 @@
   font-size: 1.4rem;
 }
 
-@media screen and (min-width: 30rem) {
+@media screen and (min-width: 48rem) {
   .wrapper {
     gap: 1.6rem;
   }
