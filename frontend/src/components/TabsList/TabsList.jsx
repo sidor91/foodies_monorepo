@@ -15,7 +15,7 @@ const TabsList = ({ activeTab, isOwnProfile, onTabChange }) => {
 
   return (
     <div className="w-full overflow-hidden border-b border-secondary">
-      <div className="w-full overflow-x-auto overflow-y-hidden">
+      <div className="w-full overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden tablet:overflow-x-visible">
         <ul className="flex min-w-max items-start gap-[3rem] tablet:gap-[4rem]">
           {tabs.map(({ id, label }) => {
             const isActive = activeTab === id;
