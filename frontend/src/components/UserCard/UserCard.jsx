@@ -99,14 +99,18 @@ const UserCard = ({ user }) => {
   return (
     <article className="flex h-[9rem] w-full items-start justify-between tablet:h-[10rem] tablet:w-[70.4rem] tablet:justify-start tablet:gap-[6rem] desktop:w-[84.6rem] desktop:gap-[7.5rem]">
       <div className="flex h-[9rem] min-w-0 items-start gap-[1.6rem] tablet:h-[10rem] tablet:w-[21.7rem] tablet:shrink-0">
-        <div className="h-[6rem] w-[6rem] shrink-0 overflow-hidden rounded-full tablet:h-[8.5rem] tablet:w-[8.5rem]">
+        <Link
+          className="h-[6rem] w-[6rem] shrink-0 overflow-hidden rounded-full tablet:h-[8.5rem] tablet:w-[8.5rem]"
+          to={`/user/${user.id}`}
+          aria-label={`Open ${user.name} profile`}
+        >
           {avatar}
-        </div>
+        </Link>
 
         <div className="flex h-[9rem] min-w-0 flex-col items-start gap-[0.8rem] tablet:h-[10rem] tablet:w-[11.6rem]">
           <div className="flex min-w-0 flex-col items-start gap-[0.4rem]">
             <h3 className="max-w-[9.4rem] truncate text-[1.6rem] leading-[2.4rem] font-extrabold tracking-[-0.02em] uppercase text-accent tablet:max-w-[11.6rem] tablet:text-[2rem]">
-              {user.name}
+              <Link to={`/user/${user.id}`}>{user.name}</Link>
             </h3>
 
             <p className="whitespace-nowrap text-[1.2rem] leading-[1.8rem] font-medium text-secondary tablet:text-[1.4rem] tablet:leading-[2rem]">
