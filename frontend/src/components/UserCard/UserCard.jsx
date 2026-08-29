@@ -7,6 +7,7 @@ import { refreshUser } from "../../../redux/auth/authOps.js";
 import { selectUser } from "../../../redux/auth/authSelectors.js";
 import { followUser, unfollowUser } from "../../../redux/users/usersOps.js";
 import { selectIsFollowing, selectIsFollowPending } from "../../../redux/users/usersSelectors.js";
+import Tooltip from "../Tooltip/Tooltip.jsx";
 
 const PREVIEW_LIMIT = 4;
 
@@ -154,14 +155,19 @@ const UserCard = ({ user }) => {
             });
 
             return (
-              <Link
+              <Tooltip
                 key={recipe.id}
-                className="h-[10rem] w-[10rem] shrink-0 overflow-hidden rounded-[1.5rem] [&:nth-child(4)]:hidden desktop:[&:nth-child(4)]:block"
-                to={`/recipes/${recipe.id}`}
-                aria-label={`Open ${recipeTitle} by ${user.name}`}
+                content={recipeTitle}
+                className="h-[10rem] w-[10rem] shrink-0 [&:nth-child(4)]:hidden desktop:[&:nth-child(4)]:inline-flex"
               >
-                {previewImage}
-              </Link>
+                <Link
+                  className="h-full w-full overflow-hidden rounded-[1.5rem]"
+                  to={`/recipes/${recipe.id}`}
+                  aria-label={`Open ${recipeTitle} by ${user.name}`}
+                >
+                  {previewImage}
+                </Link>
+              </Tooltip>
             );
           })
         )}

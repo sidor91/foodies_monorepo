@@ -25,3 +25,4 @@ export { default as ListItems } from "./ListItems/ListItems.jsx";
 export { default as RecipePreview } from "./RecipePreview/RecipePreview.jsx";
 export { default as UserCard } from "./UserCard/UserCard.jsx";
 export { default as ListPagination } from "./ListPagination/ListPagination.jsx";
+export { default as Tooltip } from "./Tooltip/Tooltip.jsx";
