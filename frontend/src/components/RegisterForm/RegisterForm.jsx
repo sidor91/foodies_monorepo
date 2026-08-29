@@ -89,66 +89,72 @@ const RegisterForm = ({ isRegister, onRegister, onLogin, onRegisterSuccess }) =>
             </button>
 
             <div className="w-full flex flex-col gap-[1.4rem]">
-              <div className={`${css.field__box} ${values.name ? css.has__value : ""}`}>
-                <Field
-                  className={css.form__field}
-                  type="text"
+              <div className="flex flex-col items-start w-full gap-[0.6rem]">
+                <div className={`${css.field__box} ${values.name ? css.has__value : ""}`}>
+                  <Field
+                    className={css.form__field}
+                    type="text"
+                    name="name"
+                    id={nameFieldId}
+                    placeholder="Name*"
+                    autoComplete="name"
+                  />
+                </div>
+                <ErrorMessage
                   name="name"
-                  id={nameFieldId}
-                  placeholder="Name*"
-                  autoComplete="name"
+                  component="span"
+                  className="text-error text-[1.2rem] leading-[120%] tracking-[-0.02em] font-normal pl-[1.4rem]"
                 />
               </div>
-              <ErrorMessage
-                name="name"
-                component="span"
-                className="text-error text-[1.2rem] leading-[120%] tracking-[-0.02em] font-normal pl-[1.4rem]"
-              />
 
-              <div className={`${css.field__box} ${values.email ? css.has__value : ""}`}>
-                <Field
-                  className={css.form__field}
-                  type="email"
+              <div className="flex flex-col items-start w-full gap-[0.6rem]">
+                <div className={`${css.field__box} ${values.email ? css.has__value : ""}`}>
+                  <Field
+                    className={css.form__field}
+                    type="email"
+                    name="email"
+                    id={emailFieldId}
+                    placeholder="Email*"
+                    autoComplete="email"
+                  />
+                </div>
+                <ErrorMessage
                   name="email"
-                  id={emailFieldId}
-                  placeholder="Email*"
-                  autoComplete="email"
+                  component="span"
+                  className="text-error text-[1.2rem] leading-[120%] tracking-[-0.02em] font-normal pl-[1.4rem]"
                 />
               </div>
-              <ErrorMessage
-                name="email"
-                component="span"
-                className="text-error text-[1.2rem] leading-[120%] tracking-[-0.02em] font-normal pl-[1.4rem]"
-              />
 
-              <div className={`${css.field__box} ${values.password ? css.has__value : ""}`}>
-                <Field
-                  className={css.form__field}
-                  type={showPassword ? "text" : "password"}
+              <div className="flex flex-col items-start w-full gap-[0.6rem]">
+                <div className={`${css.field__box} ${values.password ? css.has__value : ""}`}>
+                  <Field
+                    className={css.form__field}
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    id={passwordFieldId}
+                    placeholder="Password*"
+                    autoComplete="new-password"
+                  />
+
+                  <button
+                    type="button"
+                    className="absolute right-[1.4rem] top-1/2 -translate-y-1/2"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    <svg className="w-[1.8rem] h-[1.8rem] fill-none stroke-text">
+                      <use
+                        href={showPassword ? "/icons.svg#icon-eye-on" : "/icons.svg#icon-eye-off"}
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <ErrorMessage
                   name="password"
-                  id={passwordFieldId}
-                  placeholder="Password*"
-                  autoComplete="new-password"
+                  component="span"
+                  className="text-error text-[1.2rem] leading-[120%] tracking-[-0.02em] font-normal pl-[1.4rem]"
                 />
-
-                <button
-                  type="button"
-                  className="absolute right-[1.4rem] top-1/2 -translate-y-1/2"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  <svg className="w-[1.8rem] h-[1.8rem] fill-none stroke-text">
-                    <use
-                      href={showPassword ? "/icons.svg#icon-eye-on" : "/icons.svg#icon-eye-off"}
-                    />
-                  </svg>
-                </button>
               </div>
-              <ErrorMessage
-                name="password"
-                component="span"
-                className="text-error text-[1.2rem] leading-[120%] tracking-[-0.02em] font-normal pl-[1.4rem]"
-              />
             </div>
 
             <div className="w-full flex flex-col gap-[1.6rem]">
@@ -171,7 +177,7 @@ const RegisterForm = ({ isRegister, onRegister, onLogin, onRegisterSuccess }) =>
                 </p>
                 <button
                   type="button"
-                  className="text-accent text-[1.2rem] leading-[150%] tracking-[-0.02em]"
+                  className="text-accent text-[1.2rem] leading-[150%] tracking-[-0.02em] hover:underline"
                   onClick={onLogin}
                   aria-label="Open SignIn"
                 >
