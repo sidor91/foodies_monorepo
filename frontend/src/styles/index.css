@@ -13,6 +13,9 @@
   --color-text: #1a1a1a;
   --color-error: #ae0000;
 
-  --breakpoint-tablet: 480px;
-  --breakpoint-desktop: 900px;
+  --breakpoint-tablet: 48rem;
+  --breakpoint-desktop: 90rem;
+
+  --transition-fast: 100ms ease-in-out;
+  --transition-slow: 100ms ease-in-out;
 }

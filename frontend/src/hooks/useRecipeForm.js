@@ -20,7 +20,20 @@ const useRecipeForm = () => {
     dispatch(clearDraft());
     setPreviewUrl(null);
     if (resetForm) {
-      resetForm();
+      resetForm({
+        values: {
+          photo: null,
+          title: "",
+          description: "",
+          category: "",
+          time: 10,
+          area: "",
+          ingredients: [],
+          instructions: "",
+          selectedIngredientId: "",
+          ingredientQuantity: "",
+        },
+      });
     }
   };
 
@@ -34,6 +47,13 @@ const useRecipeForm = () => {
   const handleImageUpload = (e, setFieldValue) => {
     const file = e.target.files[0];
     if (file) {
+      // 2 МБ = 2 * 1024 * 1024
+      const maxSize = 2 * 1024 * 1024;
+
+      if (file.size > maxSize) {
+        toast.error("File size should not exceed 2 MB!");
+        return;
+      }
       // 1. Set the file in Formik's state
       setFieldValue("photo", file);
 
