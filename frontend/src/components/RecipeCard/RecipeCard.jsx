@@ -1,6 +1,6 @@
 import css from "./RecipeCard.module.css";
 import ImageWithFallback from "../ImageWithFallback/ImageWithFallback.jsx";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const RecipeCard = ({ recipe, isFavorite = false, onFavoriteToggle }) => {
   const ownerName = recipe.owner?.name || "Foodies";
@@ -15,13 +15,17 @@ const RecipeCard = ({ recipe, isFavorite = false, onFavoriteToggle }) => {
 
       <div className={css.meta}>
         <div className={css.owner}>
-          <ImageWithFallback
-            className={css.ownerAvatar}
-            src={recipe.owner?.avatarUrl}
-            alt={ownerName}
-            placeholder="avatar"
-          />
-          <span>{ownerName}</span>
+          <Link to={`/user/${recipe.owner.id}`} aria-label={`Open ${ownerName} profile`}>
+            <ImageWithFallback
+              className={css.ownerAvatar}
+              src={recipe.owner?.avatarUrl}
+              alt={ownerName}
+              placeholder="avatar"
+            />
+          </Link>
+          <Link to={`/user/${recipe.owner.id}`}>
+            <span>{ownerName}</span>
+          </Link>
         </div>
 
         <div className={css.actions}>

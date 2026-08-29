@@ -83,15 +83,19 @@ const Recipe = ({ onRequireLogin }) => {
           <p className={css.description}>{recipe.description}</p>
 
           <div className={css.owner}>
-            <ImageWithFallback
-              className={css.ownerAvatar}
-              src={recipe.owner?.avatarUrl}
-              alt={recipe.owner?.name || "Owner avatar"}
-              placeholder="avatar"
-            />
+            <Link to={`/user/${recipe.owner.id}`} aria-label={`Open ${recipe.owner.name} profile`}>
+              <ImageWithFallback
+                className={css.ownerAvatar}
+                src={recipe.owner?.avatarUrl}
+                alt={recipe.owner?.name || "Owner avatar"}
+                placeholder="avatar"
+              />
+            </Link>
             <div>
               <p className={css.ownerLabel}>Created by:</p>
-              <p className={css.ownerName}>{recipe.owner?.name}</p>
+              <Link className={css.ownerName} to={`/user/${recipe.owner.id}`}>
+                {recipe.owner?.name}
+              </Link>
             </div>
           </div>
 
