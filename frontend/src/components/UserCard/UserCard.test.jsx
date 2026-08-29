@@ -75,10 +75,15 @@ describe("UserCard", () => {
       "href",
       "/recipes/recipe-1",
     );
-    expect(screen.getByRole("link", { name: "Open Mark profile" })).toHaveAttribute(
-      "href",
-      "/user/user-2",
-    );
+    const profileLinks = screen.getAllByRole("link", {
+      name: "Open Mark profile",
+    });
+
+    expect(profileLinks).toHaveLength(2);
+
+    profileLinks.forEach((link) => {
+      expect(link).toHaveAttribute("href", "/user/user-2");
+    });
   });
 
   it("renders an initial and empty message when previews are unavailable", () => {

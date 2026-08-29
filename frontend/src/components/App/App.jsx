@@ -128,7 +128,6 @@ const App = () => {
               path="/recipe/add"
               element={<PrivateRoute component={<AddRecipe />} openModal={openLoginModal} />}
             />
-            <Route path="/profile" element={<UserProfile onLogout={handleLogoutToggle} />} />
             <Route
               path="/categories/:categorySlug"
               element={<Home onRequireLogin={handleLoginToggle} />}
@@ -137,7 +136,15 @@ const App = () => {
               path="/recipes/:recipeSlugId"
               element={<Recipe onRequireLogin={handleLoginToggle} />}
             />
-            <Route path="/user/:id" element={<UserProfile onLogout={handleLogoutToggle} />} />
+            <Route
+              path="/user/:id"
+              element={
+                <PrivateRoute
+                  component={<UserProfile onLogout={handleLogoutToggle} />}
+                  openModal={openLoginModal}
+                />
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
