@@ -1,38 +1,42 @@
-import { Field } from "formik";
 import { FormError } from "../RecipeFormContent/RecipeFormContent.jsx";
+import Select from "react-select";
+import { customStyles } from "../../utils/selectStyles.jsx";
+import { useFormikContext } from "formik";
+import { CustomDropdownIndicator } from "../../utils/selectStyles.jsx";
 
 const CustomSelect = ({ name, label, value, placeholder, options, className }) => {
-  const selectClasses = `focus:outline-none bg-[bg] text-[1.4rem] tablet:text-[1.6rem] leading-[143%] 
-  tablet:leading-[150%] border border-secondary w-full rounded-[3rem] p-[1.4rem] pr-[4rem] appearance-none ${
-    value ? "text-accent" : "text-secondary"
-  } ${className || ""}  cursor-pointer`;
+  const { setFieldValue } = useFormikContext();
+
+  const selectedOption = options.find((option) => option.id === value || option.value === value);
+
   return (
-    <div className="flex flex-col gap-[0.8rem] tablet:gap-[1.6rem] w-full">
+    <div className={`flex flex-col gap-[0.8rem] tablet:gap-[1.6rem] w-full ${className || ""}`}>
       {label && (
-        <label className="font-[800] uppercase leading-[150%] tablet:text-[2rem] tablet:leading-[120%]">
+        <label className="font-[800] uppercase leading-[150%] tablet:text-[2rem] tablet:leading-[120%] text-text">
           {label}
         </label>
       )}
 
       <div className="relative w-full">
-        <Field as="select" name={name} className={selectClasses}>
-          <option value="" disabled className="text-secondary">
-            {placeholder}
-          </option>
-          {options.map((item) => (
-            <option key={item.id} value={item.id} className="text-accent">
-              {item.name}
-            </option>
-          ))}
-        </Field>
-
-        {/* Arrow */}
-        <svg
-          className="absolute right-[1.6rem] top-1/2 -translate-y-1/2 pointer-events-none w-[2rem] h-[2rem] 
-        stroke-current fill-none"
-        >
-          <use href="/icons.svg#icon-arrow-down" />
-        </svg>
+        <Select
+          name={name}
+          options={options}
+          value={selectedOption || null}
+          components={{
+            IndicatorSeparator: null,
+            DropdownIndicator: CustomDropdownIndicator,
+          }}
+          onChange={(option) => {
+            // given that the option can be null (when the user clears the selection), we need to handle that case
+            setFieldValue(name, option ? option.id || option.value : "");
+          }}
+          placeholder={placeholder}
+          styles={customStyles}
+          isSearchable={false}
+          // if the option has a name property, use it as the label, otherwise use the label property
+          getOptionLabel={(option) => option.name || option.label}
+          getOptionValue={(option) => option.id || option.value}
+        />
       </div>
 
       {name && <FormError name={name} />}

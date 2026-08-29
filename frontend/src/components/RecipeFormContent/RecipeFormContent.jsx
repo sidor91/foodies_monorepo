@@ -82,7 +82,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
                 <button
                   type="button"
                   className="border rounded-[50%] w-[5.6rem] h-[5.6rem] flex justify-center items-center p-[1.6rem]
-                   border-secondary hover:scale-101 transition-all duration-(--transition-slow)"
+                   border-secondary hover:scale-[1.01] transition-all duration-(--transition-slow)"
                   onClick={() => setFieldValue("time", Math.max(1, values.time - 5))}
                 >
                   <Icon
@@ -100,7 +100,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
                 <button
                   type="button"
                   className="border rounded-[50%] w-[5.6rem] h-[5.6rem] flex justify-center items-center p-[1.6rem]
-                   border-secondary hover:scale-101 transition-all duration-(--transition-slow)"
+                   border-secondary hover:scale-[1.01] transition-all duration-(--transition-slow)"
                   onClick={() => setFieldValue("time", values.time + 5)}
                 >
                   <Icon
@@ -126,14 +126,14 @@ const RecipeFormContent = ({ isSubmitting }) => {
 
           {/* ingredients */}
           <div>
-            <div className="flex flex-col tablet:flex-row tablet:items-end gap-[2rem] tablet:w-[31.6rem] ">
+            <div className="flex flex-col tablet:flex-row tablet:items-end gap-[2rem]">
               <CustomSelect
                 name="selectedIngredientId"
                 placeholder="Add the ingredient"
                 options={ingredientsList}
                 value={values.selectedIngredientId}
                 label="Ingredient"
-                className="tablet:w-[31.6rem]"
+                className="tablet:w-[31.5rem]"
               />
 
               <Field
@@ -141,7 +141,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
                 name="ingredientQuantity"
                 placeholder="Enter quantity"
                 className="text-[1.4rem] tablet:text-[1.6rem] leading-[143%] tablet:leading-[150%] border-b pb-[1.6rem]
-                 border-secondary focus:outline-none bg-transparent"
+                 border-secondary focus:outline-none bg-transparent tablet:flex-1 w-full"
               />
             </div>
 
@@ -156,8 +156,17 @@ const RecipeFormContent = ({ isSubmitting }) => {
              flex items-center justify-center w-[18.8rem] tablet:w-[23rem] text-[1.4rem] tablet:text-[1.6rem] font-[700]
              gap-[0.8rem] uppercase
              leading-[143%] tablet:leading-[150%] border-secondary
-             ${values.ingredients.length > 0 ? "mb-[3.2rem] tablet:mb-[4rem]" : "mb-[6.4rem] tablet:mb-[8rem]"} 
-             hover:scale-101 transition-all duration-(--transition-slow)`}
+             ${
+               values.ingredients.length > 0
+                 ? "mb-[3.2rem] tablet:mb-[4rem] hover:scale-101 transition-all duration-(--transition-slow)"
+                 : "mb-[6.4rem] tablet:mb-[8rem]"
+             } ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""} 
+             ${
+               values.selectedIngredientId === "" || values.ingredientQuantity === ""
+                 ? "opacity-50 cursor-not-allowed"
+                 : "hover:scale-[1.01] transition-all duration-(--transition-slow)"
+             }
+             `}
         >
           ADD INGREDIENT
           <Icon
@@ -205,7 +214,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
             tablet:px-[3.9rem] tablet:py-[1.6rem]
             flex items-center justify-center font-[700] text-[1.4rem] uppercase leading-[143%]
             tablet:text-[1.6rem] tablet:leading-[150%]
-            hover:scale-101 transition-all duration-(--transition-slow)"
+            hover:scale-[1.01] transition-all duration-(--transition-slow)"
             disabled={isSubmitting}
           >
             PUBLISH

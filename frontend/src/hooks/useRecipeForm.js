@@ -12,8 +12,10 @@ const useRecipeForm = () => {
   const dispatch = useDispatch();
   const [previewUrl, setPreviewUrl] = useState(null);
 
+  const { photo, ...valuesWithoutPhoto } = values;
+
   const saveCurrentDraft = () => {
-    dispatch(updateDraft(values));
+    dispatch(updateDraft(valuesWithoutPhoto));
   };
 
   const handleResetForm = (resetForm) => {
@@ -41,7 +43,7 @@ const useRecipeForm = () => {
   const handleRemoveIngredient = (indexToRemove) => {
     const updatedIngredients = values.ingredients.filter((_, index) => index !== indexToRemove);
     setFieldValue("ingredients", updatedIngredients);
-    dispatch(updateDraft({ ...values, ingredients: updatedIngredients }));
+    dispatch(updateDraft({ ...valuesWithoutPhoto, ingredients: updatedIngredients }));
   };
 
   const handleImageUpload = (e, setFieldValue) => {
@@ -96,8 +98,6 @@ const useRecipeForm = () => {
     setFieldValue("ingredientQuantity", "");
 
     // save the updated draft to Redux
-    const { photo, ...valuesWithoutPhoto } = values;
-
     dispatch(
       updateDraft({
         ...valuesWithoutPhoto,

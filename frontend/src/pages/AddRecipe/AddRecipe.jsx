@@ -9,7 +9,7 @@ import {
 import { useSelector } from "react-redux";
 import NotFound from "../NotFound/NotFound.jsx";
 import css from "./AddRecipe.module.css";
-import ThreeDots from "../../components/Loader/Loader.jsx";
+import Loader from "../../components/Loader/Loader.jsx";
 
 const AddRecipe = () => {
   const error = useSelector(selectCurrentRecipeError);
@@ -38,7 +38,7 @@ const AddRecipe = () => {
             {error && <NotFound />}
           </>
         )}
-        {isLoading && <ThreeDots />}
+        {isLoading && <Loader />}
       </div>
     </div>
   );
