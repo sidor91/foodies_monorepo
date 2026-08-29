@@ -177,7 +177,7 @@ const RegisterForm = ({ isRegister, onRegister, onLogin, onRegisterSuccess }) =>
                 </p>
                 <button
                   type="button"
-                  className="text-accent text-[1.2rem] leading-[150%] tracking-[-0.02em]"
+                  className="text-accent text-[1.2rem] leading-[150%] tracking-[-0.02em] hover:underline"
                   onClick={onLogin}
                   aria-label="Open SignIn"
                 >
