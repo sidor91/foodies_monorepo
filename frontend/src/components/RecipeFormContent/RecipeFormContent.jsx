@@ -7,7 +7,7 @@ import {
   selectAreas,
   selectIngredients,
 } from "../../../redux/references/referencesSelectors.js";
-import CustomSelect from "../CustomSelect/CustomSelect.jsx";
+import { CustomSelectAdd } from "../CustomSelect/CustomSelect.jsx";
 import Icon from "../Icon/Icon.jsx";
 import clsx from "clsx";
 import ImageUploader from "../ImageUploader/ImageUploader.jsx";
@@ -64,7 +64,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
           {/* category and time */}
           <div className="flex flex-col w-full gap-[2rem] tablet:flex-row">
             <div className="flex flex-col">
-              <CustomSelect
+              <CustomSelectAdd
                 name="category"
                 placeholder="Select category"
                 options={categories}
@@ -114,7 +114,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
           </div>
           {/* area */}
           <div className="tablet:w-[33rem]">
-            <CustomSelect
+            <CustomSelectAdd
               name="area"
               placeholder="Select area"
               options={areas}
@@ -127,7 +127,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
           {/* ingredients */}
           <div>
             <div className="flex flex-col tablet:flex-row tablet:items-end gap-[2rem]">
-              <CustomSelect
+              <CustomSelectAdd
                 name="selectedIngredientId"
                 placeholder="Add the ingredient"
                 options={ingredientsList}
