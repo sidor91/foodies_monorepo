@@ -19,6 +19,8 @@ const AddRecipe = lazy(() => import("../../pages/AddRecipe/AddRecipe.jsx"));
 const UserProfile = lazy(() => import("../../pages/UserProfile/UserProfile.jsx"));
 const NotFound = lazy(() => import("../../pages/NotFound/NotFound.jsx"));
 
+export const privateRoutesList = ["/user", "/recipe/add"];
+
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -34,11 +36,16 @@ const App = () => {
     dispatch(refreshUser());
   }, [dispatch]);
 
-  const handleLogout = async () => {
+  const handleLogout = async (pathname) => {
     try {
+      // navigate away first so PrivateRoute unmounts before isLoggedIn flips to false
+      const isPrivateRoute = privateRoutesList.some((item) => pathname.includes(item));
+      if (isPrivateRoute) {
+        navigate("/");
+      }
+
       await dispatch(logOut()).unwrap();
       setIsLogout(false);
-      navigate("/");
     } catch (error) {
       toast.error(error.response?.data?.message || "Logout failed");
     }
@@ -99,6 +106,7 @@ const App = () => {
         onLogin={handleLoginToggle}
         onRegister={handleRegisterToggle}
         onLogout={handleLogoutToggle}
+        onRequireLogin={openLoginModal}
       />
 
       <MobileMenu isMobileMenuOpen={isMobileMenuOpen} onMobileToggle={handleMobileToggle} />
@@ -123,18 +131,24 @@ const App = () => {
       <main className={css.content} inert={isMobileMenuOpen ? "" : undefined}>
         <Suspense fallback={<Loader />}>
           <Routes>
+            <Route path="/" element={<Home />} />
             <Route path="/" element={<Home onRequireLogin={handleLoginToggle} />} />
             <Route
               path="/recipe/add"
-              element={<PrivateRoute component={<AddRecipe />} openModal={openLoginModal} />}
+              element={
+                <PrivateRoute
+                  component={<AddRecipe onRequireLogin={openLoginModal} />}
+                  openModal={openLoginModal}
+                />
+              }
             />
             <Route
               path="/categories/:categorySlug"
-              element={<Home onRequireLogin={handleLoginToggle} />}
+              element={<Home onRequireLogin={openLoginModal} />}
             />
             <Route
               path="/recipes/:recipeSlugId"
-              element={<Recipe onRequireLogin={handleLoginToggle} />}
+              element={<Recipe onRequireLogin={openLoginModal} />}
             />
             <Route
               path="/user/:id"

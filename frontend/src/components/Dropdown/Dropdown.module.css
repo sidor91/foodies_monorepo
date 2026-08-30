@@ -1,0 +1,144 @@
+:where(.wrapper) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.label {
+  font-weight: 800;
+  line-height: 150%;
+  text-transform: uppercase;
+}
+
+:where(.listbox) {
+  position: relative;
+  width: 100%;
+}
+
+:where(.button) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  width: 100%;
+  padding: 1.6rem 1.8rem;
+  font-size: 1.6rem;
+  line-height: 150%;
+  text-align: left;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  border: 1px solid #bfbebe;
+  border-radius: 3rem;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.button:hover {
+  border-color: var(--color-accent);
+}
+
+.buttonOpen {
+  border-color: var(--color-accent);
+}
+
+.buttonError {
+  border-color: var(--color-error);
+}
+
+.value {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.placeholder {
+  color: var(--color-secondary);
+}
+
+.arrow {
+  flex-shrink: 0;
+  width: 1.8rem;
+  height: 1.8rem;
+  fill: none;
+  stroke: currentcolor;
+  transition: transform var(--transition-fast);
+}
+
+.arrowOpen {
+  transform: rotate(180deg);
+}
+
+.options {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  top: calc(100% + 0.8rem);
+  min-width: 100%;
+  width: fit-content;
+  max-width: max(100%, 24rem);
+  max-height: 28rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0.8rem;
+  list-style: none;
+  background-color: var(--color-bg);
+  border: 1px solid #d9d9d9;
+  border-radius: 1.6rem;
+  box-shadow: 0 1.2rem 3.2rem rgb(0 0 0 / 0.12);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 1.2rem 1.4rem;
+  font-size: 1.4rem;
+  line-height: 150%;
+  color: var(--color-text);
+  border-radius: 1.2rem;
+  cursor: pointer;
+}
+
+.optionLabel {
+  flex: 1 1 auto;
+  white-space: nowrap;
+}
+
+.optionActive {
+  background-color: #f3f3f3;
+}
+
+.optionSelected {
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.checkIcon {
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  fill: none;
+  stroke: var(--color-accent);
+}
+
+.empty {
+  padding: 1.2rem 1.4rem;
+  color: var(--color-secondary);
+  font-size: 1.4rem;
+}
+
+@media screen and (min-width: 48rem) {
+  .wrapper {
+    gap: 1.6rem;
+  }
+
+  .label {
+    font-size: 2rem;
+    line-height: 120%;
+  }
+}

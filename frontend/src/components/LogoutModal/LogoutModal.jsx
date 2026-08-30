@@ -1,8 +1,11 @@
 import { useEffect } from "react";
 
 import css from "./LogoutModal.module.css";
+import { useLocation } from "react-router-dom";
 
 const LogoutModal = ({ isLogout, onLogoutToggle, onLogout }) => {
+  const { pathname } = useLocation();
+
   useEffect(() => {
     if (!isLogout) {
       return;
@@ -46,7 +49,7 @@ const LogoutModal = ({ isLogout, onLogoutToggle, onLogout }) => {
           <button
             className="btn btn__primary pt-[1.4rem] pb-[1.4rem] font-[1.4rem] uppercase tablet:pt-[1.6rem] tablet:pb-[1.6rem]"
             type="button"
-            onClick={onLogout}
+            onClick={() => onLogout(pathname)}
           >
             Log Out
           </button>

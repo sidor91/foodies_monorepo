@@ -3,10 +3,10 @@ import { clsx } from "clsx";
 
 const ImageUploader = ({ previewUrl, handleImageUpload, setFieldValue }) => {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center desktop:w-[55.1rem]">
       <div
         className={clsx(`
-          w-full max-w-[34.3rem] tablet:max-w-[70.4rem] desktop:w-[55.1rem] h-[31.8rem]
+          w-full h-[31.8rem]
           tablet:h-[40rem] desktop:h-[40rem] rounded-[3rem]
           border-(--gray) overflow-hidden ${
             previewUrl
@@ -20,9 +20,9 @@ const ImageUploader = ({ previewUrl, handleImageUpload, setFieldValue }) => {
           ) : (
             <div className="flex flex-col items-center justify-center gap-[0.8rem]">
               <Icon
-                name="add-image"
+                name="add-foto"
                 size={50}
-                className="fill-secondary tablet:w-[6.4rem] tablet:h-[6.4rem]"
+                className="fill-secondary tablet:w-[6.4rem] tablet:h-[6.4rem] stroke-secondary"
               />
               <span
                 className="text-[1.4rem] tablet:text-[1.6rem] block leading-[143%] tablet:leading-[150%] underline

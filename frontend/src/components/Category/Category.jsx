@@ -13,6 +13,7 @@ import {
 import { selectFavoriteIds } from "../../../redux/favorites/favoritesSelectors.js";
 import { selectIsLoggedIn } from "../../../redux/auth/authSelectors.js";
 import useFavoriteToggle from "../../hooks/useFavoriteToggle.js";
+import Dropdown from "../Dropdown/Dropdown.jsx";
 import css from "./Category.module.css";
 import RecipeCard from "../RecipeCard/RecipeCard.jsx";
 
@@ -88,35 +89,21 @@ const Category = ({ category, onBack, onRequireLogin }) => {
 
       <div className={css.contentLayout}>
         <div className={css.filters}>
-          <label className={css.filter}>
-            <span className={css.srOnly}>Filter by ingredient</span>
-            <select
-              value={selectedIngredient}
-              onChange={(event) => handleIngredientSelection(event.target.value)}
-            >
-              <option value="">Ingredients</option>
-              {ingredients.map((ingredient) => (
-                <option key={ingredient.id || ingredient.name} value={ingredient.id || ""}>
-                  {ingredient.name}
-                </option>
-              ))}
-            </select>
-          </label>
+          <Dropdown
+            className={css.filter}
+            ariaLabel="Filter by ingredient"
+            value={selectedIngredient}
+            onChange={handleIngredientSelection}
+            options={[{ id: "", name: "Ingredients" }, ...ingredients]}
+          />
 
-          <label className={css.filter}>
-            <span className={css.srOnly}>Filter by area</span>
-            <select
-              value={selectedArea}
-              onChange={(event) => handleAreaSelection(event.target.value)}
-            >
-              <option value="">Area</option>
-              {areas.map((area) => (
-                <option key={area.id || area.name} value={area.id || ""}>
-                  {area.name}
-                </option>
-              ))}
-            </select>
-          </label>
+          <Dropdown
+            className={css.filter}
+            ariaLabel="Filter by area"
+            value={selectedArea}
+            onChange={handleAreaSelection}
+            options={[{ id: "", name: "Area" }, ...areas]}
+          />
         </div>
 
         <div className={css.gridContainer}>
@@ -132,6 +119,7 @@ const Category = ({ category, onBack, onRequireLogin }) => {
                       recipe={recipe}
                       isFavorite={favoriteIds.includes(recipe.id)}
                       onFavoriteToggle={handleFavoriteToggle}
+                      onRequireLogin={onRequireLogin}
                     />
                   </li>
                 ))}
