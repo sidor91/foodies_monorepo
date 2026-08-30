@@ -47,7 +47,6 @@ const App = () => {
       await dispatch(logOut()).unwrap();
       setIsLogout(false);
     } catch (error) {
-      console.log(error);
       toast.error(error.response?.data?.message || "Logout failed");
     }
   };
