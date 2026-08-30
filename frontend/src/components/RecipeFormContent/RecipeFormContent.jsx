@@ -7,7 +7,7 @@ import {
   selectAreas,
   selectIngredients,
 } from "../../../redux/references/referencesSelectors.js";
-import CustomSelect from "../CustomSelect/CustomSelect.jsx";
+import CustomSelectAdd from "../CustomSelect/CustomSelect.jsx";
 import Icon from "../Icon/Icon.jsx";
 import clsx from "clsx";
 import ImageUploader from "../ImageUploader/ImageUploader.jsx";
@@ -33,16 +33,16 @@ const RecipeFormContent = ({ isSubmitting }) => {
   return (
     <Form
       onBlur={saveCurrentDraft}
-      className="flex flex-col desktop:flex-row desktop:gap-[8rem] w-full"
+      className="flex flex-col desktop:flex-row items-start w-full desktop:justify-between"
     >
-      <>
+      <div className="w-full">
         <ImageUploader
           previewUrl={previewUrl}
           handleImageUpload={handleImageUpload}
           setFieldValue={setFieldValue}
         />
-      </>
-      <div className="flex flex-col w-full desktop:w-[65rem] tablet:w-[74rem]">
+      </div>
+      <div className="flex flex-col w-full desktop:max-w-[65rem] ">
         {/* title and description */}
 
         <label className="mb-[3.2rem] tablet:mb-[4rem] block w-full">
@@ -50,7 +50,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
             name="title"
             type="text"
             placeholder="The name of the recipe"
-            className="w-full bg-transparent pb-[1.4rem] font-extrabold text-[1.8rem] tablet:text-[2.4rem] 
+            className="w-full bg-transparent pb-[1.4rem] font-extrabold text-[1.8rem] tablet:text-[2.4rem]
             leading-[133%] tablet:font-[800] uppercase placeholder:text-secondary text-accent focus:outline-none"
           />
           <FormError name="title" />
@@ -64,7 +64,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
           {/* category and time */}
           <div className="flex flex-col w-full gap-[2rem] tablet:flex-row">
             <div className="flex flex-col">
-              <CustomSelect
+              <CustomSelectAdd
                 name="category"
                 placeholder="Select category"
                 options={categories}
@@ -82,7 +82,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
                 <button
                   type="button"
                   className="border rounded-[50%] w-[5.6rem] h-[5.6rem] flex justify-center items-center p-[1.6rem]
-                   border-secondary"
+                   border-secondary hover:scale-[1.01] transition-all duration-(--transition-slow)"
                   onClick={() => setFieldValue("time", Math.max(1, values.time - 5))}
                 >
                   <Icon
@@ -91,13 +91,16 @@ const RecipeFormContent = ({ isSubmitting }) => {
                     className="stroke-accent tablet:w-[2.4rem] tablet:h-[2.4rem]"
                   />
                 </button>
-                <span className="font-medium text-[1.4rem] tablet:text-[1.6rem] leading-[143%] text-secondary">
+                <span
+                  className={`font-medium text-[1.4rem] tablet:text-[1.6rem] leading-[143%]
+                    ${values.time !== 10 ? "text-accent" : "text-secondary"} `}
+                >
                   {values.time} min
                 </span>
                 <button
                   type="button"
-                  className="border rounded-[50%] w-[5.6rem] h-[5.6rem] flex justify-center items-center p-[1.6rem] 
-                   border-secondary"
+                  className="border rounded-[50%] w-[5.6rem] h-[5.6rem] flex justify-center items-center p-[1.6rem]
+                   border-secondary hover:scale-[1.01] transition-all duration-(--transition-slow)"
                   onClick={() => setFieldValue("time", values.time + 5)}
                 >
                   <Icon
@@ -111,7 +114,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
           </div>
           {/* area */}
           <div className="tablet:w-[33rem]">
-            <CustomSelect
+            <CustomSelectAdd
               name="area"
               placeholder="Select area"
               options={areas}
@@ -123,14 +126,14 @@ const RecipeFormContent = ({ isSubmitting }) => {
 
           {/* ingredients */}
           <div>
-            <div className="flex flex-col tablet:flex-row tablet:items-end gap-[2rem] tablet:w-[31.6rem] ">
-              <CustomSelect
+            <div className="flex flex-col tablet:flex-row tablet:items-end gap-[2rem]">
+              <CustomSelectAdd
                 name="selectedIngredientId"
                 placeholder="Add the ingredient"
                 options={ingredientsList}
                 value={values.selectedIngredientId}
                 label="Ingredient"
-                className="tablet:w-[31.6rem]"
+                className="tablet:w-[31.5rem]"
               />
 
               <Field
@@ -138,7 +141,7 @@ const RecipeFormContent = ({ isSubmitting }) => {
                 name="ingredientQuantity"
                 placeholder="Enter quantity"
                 className="text-[1.4rem] tablet:text-[1.6rem] leading-[143%] tablet:leading-[150%] border-b pb-[1.6rem]
-                 border-secondary focus:outline-none bg-transparent"
+                 border-secondary focus:outline-none bg-transparent tablet:flex-1 w-full"
               />
             </div>
 
@@ -149,11 +152,21 @@ const RecipeFormContent = ({ isSubmitting }) => {
         <button
           type="button"
           onClick={handleAddIngredient}
-          className={`border border-secondary rounded-[3rem] px-[2rem] py-[1.4rem] 
-             flex items-center justify-center w-[18.8rem] tablet:w-[23rem] text-[1.4rem] tablet:text-[1.6rem] font-[700] 
-             gap-[0.8rem] uppercase 
+          className={`border border-secondary rounded-[3rem] px-[2rem] py-[1.4rem]
+             flex items-center justify-center w-[18.8rem] tablet:w-[23rem] text-[1.4rem] tablet:text-[1.6rem] font-[700]
+             gap-[0.8rem] uppercase
              leading-[143%] tablet:leading-[150%] border-secondary
-             ${values.ingredients.length > 0 ? "mb-[3.2rem] tablet:mb-[4rem]" : "mb-[6.4rem] tablet:mb-[8rem]"} `}
+             ${
+               values.ingredients.length > 0
+                 ? "mb-[3.2rem] tablet:mb-[4rem] hover:scale-101 transition-all duration-(--transition-slow)"
+                 : "mb-[6.4rem] tablet:mb-[8rem]"
+             } ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""} 
+             ${
+               values.selectedIngredientId === "" || values.ingredientQuantity === ""
+                 ? "opacity-50 cursor-not-allowed"
+                 : "hover:scale-[1.01] transition-all duration-(--transition-slow)"
+             }
+             `}
         >
           ADD INGREDIENT
           <Icon
@@ -169,12 +182,12 @@ const RecipeFormContent = ({ isSubmitting }) => {
         {/* instructions */}
         <div className="">
           <div className="flex flex-col mb-[3.2rem]">
-            {/* Текст підпису (лейбл) */}
+            {/* text label */}
             <span className="uppercase font-[800] tablet:leading-[120%] tablet:text-[2rem] mb-[3.2rem] block">
               Recipe preparation
             </span>
 
-            {/* Поле вводу */}
+            {/* input field */}
             <CustomTextarea name="instructions" maxLength={1000} placeholder="Enter recipe" />
 
             <FormError name="instructions" />
@@ -184,22 +197,24 @@ const RecipeFormContent = ({ isSubmitting }) => {
         <div className="flex items-center gap-[0.8rem]">
           <button
             type="button"
-            className="border border-secondary rounded-[50%] p-[1.4rem] tablet:p-[1.8rem] flex items-center justify-center"
+            className="border border-secondary rounded-[50%] p-[1.4rem] tablet:p-[1.8rem] flex items-center justify-center
+           hover:scale-101 transition-all duration-(--transition-slow)"
             disabled={isSubmitting}
             onClick={() => handleResetForm(resetForm)}
           >
             <Icon
               name="trash-04"
               size={20}
-              className="stroke-secondary tablet:w-[2.rem] tablet:h-[2.rem]"
+              className="stroke-secondary tablet:w-[2rem] tablet:h-[2rem]"
             />
           </button>
           <button
             type="submit"
-            className="bg-accent text-bg rounded-[3rem] px-[3.2rem] py-[1.4rem] 
+            className="bg-accent text-bg rounded-[3rem] px-[3.2rem] py-[1.4rem]
             tablet:px-[3.9rem] tablet:py-[1.6rem]
-            flex items-center justify-center font-[700] text-[1.4rem] uppercase leading-[143%] 
-             transition-opacity tablet:text-[1.6rem] tablet:leading-[150%]"
+            flex items-center justify-center font-[700] text-[1.4rem] uppercase leading-[143%]
+            tablet:text-[1.6rem] tablet:leading-[150%]
+            hover:scale-[1.01] transition-all duration-(--transition-slow)"
             disabled={isSubmitting}
           >
             PUBLISH

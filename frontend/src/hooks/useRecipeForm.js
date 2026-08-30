@@ -12,15 +12,30 @@ const useRecipeForm = () => {
   const dispatch = useDispatch();
   const [previewUrl, setPreviewUrl] = useState(null);
 
+  const { photo, ...valuesWithoutPhoto } = values;
+
   const saveCurrentDraft = () => {
-    dispatch(updateDraft(values));
+    dispatch(updateDraft(valuesWithoutPhoto));
   };
 
   const handleResetForm = (resetForm) => {
     dispatch(clearDraft());
     setPreviewUrl(null);
     if (resetForm) {
-      resetForm();
+      resetForm({
+        values: {
+          photo: null,
+          title: "",
+          description: "",
+          category: "",
+          time: 10,
+          area: "",
+          ingredients: [],
+          instructions: "",
+          selectedIngredientId: "",
+          ingredientQuantity: "",
+        },
+      });
     }
   };
 
@@ -28,12 +43,19 @@ const useRecipeForm = () => {
   const handleRemoveIngredient = (indexToRemove) => {
     const updatedIngredients = values.ingredients.filter((_, index) => index !== indexToRemove);
     setFieldValue("ingredients", updatedIngredients);
-    dispatch(updateDraft({ ...values, ingredients: updatedIngredients }));
+    dispatch(updateDraft({ ...valuesWithoutPhoto, ingredients: updatedIngredients }));
   };
 
   const handleImageUpload = (e, setFieldValue) => {
     const file = e.target.files[0];
     if (file) {
+      // 2 МБ = 2 * 1024 * 1024
+      const maxSize = 2 * 1024 * 1024;
+
+      if (file.size > maxSize) {
+        toast.error("File size should not exceed 2 MB!");
+        return;
+      }
       // 1. Set the file in Formik's state
       setFieldValue("photo", file);
 
@@ -76,8 +98,6 @@ const useRecipeForm = () => {
     setFieldValue("ingredientQuantity", "");
 
     // save the updated draft to Redux
-    const { photo, ...valuesWithoutPhoto } = values;
-
     dispatch(
       updateDraft({
         ...valuesWithoutPhoto,

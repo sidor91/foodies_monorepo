@@ -1,5 +1,6 @@
 const prepareRecipeFormData = (values) => {
   const formData = new FormData();
+
   if (values.photo) formData.append("image", values.photo);
   formData.append("title", values.title);
   formData.append("description", values.description);

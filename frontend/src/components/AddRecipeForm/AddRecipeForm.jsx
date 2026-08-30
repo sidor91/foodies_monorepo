@@ -55,6 +55,8 @@ const AddRecipeForm = () => {
     area: savedDraft?.area || "",
     ingredients: savedDraft?.ingredients || [],
     instructions: savedDraft?.instructions || "",
+    selectedIngredientId: savedDraft?.selectedIngredientId || "",
+    ingredientQuantity: savedDraft?.ingredientQuantity || "",
   };
 
   useEffect(() => {
@@ -73,7 +75,6 @@ const AddRecipeForm = () => {
       dispatch(clearDraft()); // clear the draft in Redux
       resetForm(); // clear Formik form
 
-      // TODO;
       navigate(`/recipes/${newRecipe.id}`);
     } catch (error) {
       console.error("Error:", error);
@@ -83,11 +84,9 @@ const AddRecipeForm = () => {
   };
 
   return (
-    <section>
-      <Formik initialValues={initialValues} validationSchema={RecipeSchema} onSubmit={handleSubmit}>
-        {({ isSubmitting }) => <RecipeFormContent isSubmitting={isSubmitting} />}
-      </Formik>
-    </section>
+    <Formik initialValues={initialValues} validationSchema={RecipeSchema} onSubmit={handleSubmit}>
+      {({ isSubmitting }) => <RecipeFormContent isSubmitting={isSubmitting} />}
+    </Formik>
   );
 };
 
