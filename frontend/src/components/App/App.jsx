@@ -106,6 +106,7 @@ const App = () => {
         onLogin={handleLoginToggle}
         onRegister={handleRegisterToggle}
         onLogout={handleLogoutToggle}
+        onRequireLogin={openLoginModal}
       />
 
       <MobileMenu isMobileMenuOpen={isMobileMenuOpen} onMobileToggle={handleMobileToggle} />
@@ -134,15 +135,20 @@ const App = () => {
             <Route path="/" element={<Home onRequireLogin={handleLoginToggle} />} />
             <Route
               path="/recipe/add"
-              element={<PrivateRoute component={<AddRecipe />} openModal={openLoginModal} />}
+              element={
+                <PrivateRoute
+                  component={<AddRecipe onRequireLogin={openLoginModal} />}
+                  openModal={openLoginModal}
+                />
+              }
             />
             <Route
               path="/categories/:categorySlug"
-              element={<Home onRequireLogin={handleLoginToggle} />}
+              element={<Home onRequireLogin={openLoginModal} />}
             />
             <Route
               path="/recipes/:recipeSlugId"
-              element={<Recipe onRequireLogin={handleLoginToggle} />}
+              element={<Recipe onRequireLogin={openLoginModal} />}
             />
             <Route
               path="/user/:id"
