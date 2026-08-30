@@ -19,6 +19,8 @@ const AddRecipe = lazy(() => import("../../pages/AddRecipe/AddRecipe.jsx"));
 const UserProfile = lazy(() => import("../../pages/UserProfile/UserProfile.jsx"));
 const NotFound = lazy(() => import("../../pages/NotFound/NotFound.jsx"));
 
+export const privateRoutesList = ["/user", "/recipe/add"];
+
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -34,11 +36,16 @@ const App = () => {
     dispatch(refreshUser());
   }, [dispatch]);
 
-  const handleLogout = async () => {
+  const handleLogout = async (pathname) => {
     try {
+      // navigate away first so PrivateRoute unmounts before isLoggedIn flips to false
+      const isPrivateRoute = privateRoutesList.some((item) => pathname.includes(item));
+      if (isPrivateRoute) {
+        navigate("/");
+      }
+
       await dispatch(logOut()).unwrap();
       setIsLogout(false);
-      navigate("/");
     } catch (error) {
       toast.error(error.response?.data?.message || "Logout failed");
     }
@@ -124,7 +131,6 @@ const App = () => {
         <Suspense fallback={<Loader />}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/profile" element={<UserProfile />} />
             <Route path="/" element={<Home onRequireLogin={handleLoginToggle} />} />
             <Route
               path="/recipe/add"

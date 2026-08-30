@@ -5,11 +5,7 @@ import clsx from "clsx";
 import css from "./Header.module.css";
 import SignInUpButton from "../SignInUpButton/SignInUpButton";
 import UserNav from "../UserNav/UserNav";
-import {
-  selectUser,
-  selectIsLoggedIn,
-  selectIsRefreshing,
-} from "../../../redux/auth/authSelectors";
+import { selectUser, selectIsLoggedIn } from "../../../redux/auth/authSelectors";
 import useIsRoute from "../../hooks/useIsRoute";
 
 const Header = ({
@@ -27,7 +23,6 @@ const Header = ({
 
   const user = useSelector(selectUser);
   const isAuthenticated = useSelector(selectIsLoggedIn);
-  const isAuthLoading = useSelector(selectIsRefreshing);
 
   const buildLinkClass = ({ isActive }) => {
     return clsx(css.nav__link, isActive && css.active, !isHomePageOrCategories && css.not__home);
