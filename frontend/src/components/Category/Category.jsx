@@ -119,6 +119,7 @@ const Category = ({ category, onBack, onRequireLogin }) => {
                       recipe={recipe}
                       isFavorite={favoriteIds.includes(recipe.id)}
                       onFavoriteToggle={handleFavoriteToggle}
+                      onRequireLogin={onRequireLogin}
                     />
                   </li>
                 ))}

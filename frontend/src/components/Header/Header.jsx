@@ -16,6 +16,7 @@ const Header = ({
   onLogin,
   onRegister,
   onLogout,
+  onRequireLogin,
 }) => {
   const isHomePage = useIsRoute("/");
   const isCategoriesPage = useIsRoute("/categories");
@@ -26,6 +27,13 @@ const Header = ({
 
   const buildLinkClass = ({ isActive }) => {
     return clsx(css.nav__link, isActive && css.active, !isHomePageOrCategories && css.not__home);
+  };
+
+  const handleAddRecipeClick = (event) => {
+    if (!isAuthenticated) {
+      event.preventDefault();
+      onRequireLogin?.("/recipe/add");
+    }
   };
 
   return (
@@ -42,7 +50,7 @@ const Header = ({
           <NavLink to="/" className={buildLinkClass}>
             Home
           </NavLink>
-          <NavLink to="/recipe/add" className={buildLinkClass}>
+          <NavLink to="/recipe/add" className={buildLinkClass} onClick={handleAddRecipeClick}>
             Add Recipe
           </NavLink>
         </nav>

@@ -1,10 +1,21 @@
 import css from "./RecipeCard.module.css";
 import ImageWithFallback from "../ImageWithFallback/ImageWithFallback.jsx";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectIsLoggedIn } from "../../../redux/auth/authSelectors.js";
 
-const RecipeCard = ({ recipe, isFavorite = false, onFavoriteToggle }) => {
+const RecipeCard = ({ recipe, isFavorite = false, onFavoriteToggle, onRequireLogin }) => {
   const ownerName = recipe.owner?.name || "Foodies";
   const navigate = useNavigate();
+  const isAuthenticated = useSelector(selectIsLoggedIn);
+  const ownerPath = `/user/${recipe.owner.id}`;
+
+  const handleUserClick = (event) => {
+    if (!isAuthenticated) {
+      event.preventDefault();
+      onRequireLogin?.(ownerPath);
+    }
+  };
 
   return (
     <article className={css.card}>
@@ -15,7 +26,7 @@ const RecipeCard = ({ recipe, isFavorite = false, onFavoriteToggle }) => {
 
       <div className={css.meta}>
         <div className={css.owner}>
-          <Link to={`/user/${recipe.owner.id}`} aria-label={`Open ${ownerName} profile`}>
+          <Link to={ownerPath} aria-label={`Open ${ownerName} profile`} onClick={handleUserClick}>
             <ImageWithFallback
               className={css.ownerAvatar}
               src={recipe.owner?.avatarUrl}
@@ -23,7 +34,7 @@ const RecipeCard = ({ recipe, isFavorite = false, onFavoriteToggle }) => {
               placeholder="avatar"
             />
           </Link>
-          <Link to={`/user/${recipe.owner.id}`}>
+          <Link to={ownerPath} onClick={handleUserClick}>
             <span>{ownerName}</span>
           </Link>
         </div>
