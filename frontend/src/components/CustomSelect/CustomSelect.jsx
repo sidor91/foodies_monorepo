@@ -5,33 +5,7 @@ import Select from "react-select";
 import { customStyles } from "../../utils/selectStyles.jsx";
 import { CustomDropdownIndicator } from "../../utils/selectStyles.jsx";
 
-import Dropdown from "../Dropdown/Dropdown.jsx";
-
-const CustomSelect = ({ name, label, value, placeholder, options, className }) => {
-  const { setFieldValue, setFieldTouched, touched, errors } = useFormikContext();
-  const hasError = Boolean(touched[name] && errors[name]);
-
-  return (
-    <div className="flex flex-col gap-[0.8rem] tablet:gap-[1.6rem] w-full">
-      <Dropdown
-        id={name}
-        label={label}
-        value={value}
-        onChange={(nextValue) => setFieldValue(name, nextValue)}
-        onBlur={() => setFieldTouched(name, true)}
-        options={options}
-        placeholder={placeholder}
-        className={className}
-        error={hasError}
-      />
-
-      {name && <FormError name={name} />}
-    </div>
-  );
-};
-export default CustomSelect;
-
-export const CustomSelectAdd = ({ name, label, value, placeholder, options, className }) => {
+export const CustomSelect = ({ name, label, value, placeholder, options, className }) => {
   const { setFieldValue } = useFormikContext();
 
   const selectedOption = options.find((option) => option.id === value || option.value === value);
@@ -70,3 +44,5 @@ export const CustomSelectAdd = ({ name, label, value, placeholder, options, clas
     </div>
   );
 };
+
+export default CustomSelect;

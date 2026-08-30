@@ -7,7 +7,7 @@ import {
   selectAreas,
   selectIngredients,
 } from "../../../redux/references/referencesSelectors.js";
-import { CustomSelectAdd } from "../CustomSelect/CustomSelect.jsx";
+import CustomSelectAdd from "../CustomSelect/CustomSelect.jsx";
 import Icon from "../Icon/Icon.jsx";
 import clsx from "clsx";
 import ImageUploader from "../ImageUploader/ImageUploader.jsx";
