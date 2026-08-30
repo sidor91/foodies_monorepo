@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import useIsRoute from "../../hooks/useIsRoute.js";
@@ -6,6 +6,7 @@ import { selectUser } from "../../../redux/auth/authSelectors.js";
 
 const UserNav = ({ onLogout }) => {
   const [isExtra, setIsExtra] = useState(false);
+  const userNavRef = useRef(null);
 
   const user = useSelector(selectUser);
 
@@ -17,8 +18,22 @@ const UserNav = ({ onLogout }) => {
     setIsExtra((prev) => !prev);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userNavRef.current && !userNavRef.current.contains(event.target)) {
+        setIsExtra(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="bg-primary rounded-[3rem] flex items-center relative">
+    <div ref={userNavRef} className="bg-primary rounded-[3rem] flex items-center relative">
       {user?.avatarUrl ? (
         <img
           src={user.avatarUrl}
