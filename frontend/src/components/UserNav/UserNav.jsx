@@ -37,7 +37,7 @@ const UserNav = ({ onLogout }) => {
         onClick={handleExtraToggle}
         className="flex pl-[0.6rem] pr-[0.6rem] pt-[0.7rem] pb-[0.7rem] gap-[0.4rem] tablet:pr-[1.4rem]"
       >
-        <p className="text-bg uppercase text-[1.2rem] font-bold">{user?.name || "username"}</p>
+        <p className="text-bg uppercase text-[1.2rem] font-bold">{user?.name}</p>
         {!isExtra ? (
           <svg className="stroke-bg fill-none w-[1.8rem] h-[1.8rem]">
             <use href="/icons.svg#icon-arrow-down" />
