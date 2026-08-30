@@ -1,18 +1,9 @@
 import { Formik, useFormikContext } from "formik";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import CustomSelect from "./CustomSelect.jsx";
-
-// jsdom has no ResizeObserver; Headless UI (Listbox/Dropdown) needs it for anchor positioning
-beforeAll(() => {
-  globalThis.ResizeObserver ??= class ResizeObserver {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  };
-});
 
 const options = [
   { id: "breakfast", name: "Breakfast" },
@@ -44,8 +35,9 @@ describe("CustomSelect", () => {
     renderSelect();
 
     expect(screen.getByText("Category")).toBeInTheDocument();
+    expect(screen.getByText("Select category")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button"));
+    await user.click(screen.getByRole("combobox"));
 
     expect(screen.getByRole("option", { name: "Breakfast" })).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "Dessert" })).toBeInTheDocument();
@@ -55,10 +47,10 @@ describe("CustomSelect", () => {
     const user = userEvent.setup();
     renderSelect();
 
-    await user.click(screen.getByRole("button"));
+    await user.click(screen.getByRole("combobox"));
     await user.click(screen.getByRole("option", { name: "Dessert" }));
 
-    expect(screen.getByRole("button")).toHaveTextContent("Dessert");
+    expect(screen.getByText("Dessert")).toBeInTheDocument();
   });
 
   it("renders a Formik validation error", () => {

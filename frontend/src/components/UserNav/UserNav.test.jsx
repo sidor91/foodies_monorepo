@@ -2,14 +2,19 @@ import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
-import { renderWithRouter } from "../../test/renderWithProviders.jsx";
+import { renderWithProviders } from "../../test/renderWithProviders.jsx";
 import UserNav from "./UserNav.jsx";
 
 const userInfo = { id: "user-1", name: "Anna", avatarUrl: "anna.jpg" };
 
+const renderUserNav = (user = userInfo, props = {}) =>
+  renderWithProviders(<UserNav onLogout={() => {}} {...props} />, {
+    preloadedState: { auth: { user } },
+  });
+
 describe("UserNav", () => {
   it("renders the user's avatar and name", () => {
-    renderWithRouter(<UserNav user={userInfo} onLogout={() => {}} />);
+    renderUserNav();
 
     expect(screen.getByRole("img", { name: "Anna profile photo" })).toHaveAttribute(
       "src",
@@ -19,9 +24,7 @@ describe("UserNav", () => {
   });
 
   it("renders the first letter when an avatar is missing", () => {
-    renderWithRouter(
-      <UserNav user={{ id: "user-1", name: "Anna", avatarUrl: "" }} onLogout={() => {}} />,
-    );
+    renderUserNav({ id: "user-1", name: "Anna", avatarUrl: "" });
 
     expect(screen.getByText("A")).toBeInTheDocument();
   });
@@ -29,7 +32,7 @@ describe("UserNav", () => {
   it("opens the menu and shows the profile link", async () => {
     const user = userEvent.setup();
 
-    renderWithRouter(<UserNav user={userInfo} onLogout={() => {}} />);
+    renderUserNav();
 
     await user.click(screen.getByRole("button", { name: "Anna" }));
 
@@ -41,7 +44,7 @@ describe("UserNav", () => {
     const user = userEvent.setup();
     const onLogout = vi.fn();
 
-    renderWithRouter(<UserNav user={userInfo} onLogout={onLogout} />);
+    renderUserNav(userInfo, { onLogout });
 
     await user.click(screen.getByRole("button", { name: "Anna" }));
     await user.click(screen.getByRole("button", { name: "Log out" }));

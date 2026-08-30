@@ -2,9 +2,13 @@ import { describe, expect, it } from "vitest";
 
 import {
   selectCurrentRecipe,
+  selectCurrentRecipeError,
+  selectCurrentRecipeIsLoading,
   selectOwnRecipes,
   selectOwnRecipesPagination,
   selectPopularRecipes,
+  selectPopularRecipesError,
+  selectPopularRecipesIsLoading,
   selectRecipes,
   selectRecipesError,
   selectRecipesIsLoading,
@@ -13,12 +17,26 @@ import {
 
 const state = {
   recipes: {
-    list: { items: [{ id: "recipe-1" }], page: 2, limit: 6, total: 7, totalPages: 2 },
-    own: { items: [{ id: "recipe-2" }], page: 1, limit: 12, total: 1, totalPages: 1 },
-    popular: [{ id: "recipe-3" }],
-    current: { id: "recipe-1" },
-    isLoading: true,
-    error: "Request failed",
+    list: {
+      items: [{ id: "recipe-1" }],
+      page: 2,
+      limit: 6,
+      total: 7,
+      totalPages: 2,
+      isLoading: true,
+      error: "List failed",
+    },
+    own: {
+      items: [{ id: "recipe-2" }],
+      page: 1,
+      limit: 12,
+      total: 1,
+      totalPages: 1,
+      isLoading: false,
+      error: null,
+    },
+    popular: { items: [{ id: "recipe-3" }], isLoading: true, error: "Popular failed" },
+    current: { data: { id: "recipe-1" }, isLoading: true, error: "Current failed" },
   },
 };
 
@@ -30,9 +48,19 @@ describe("recipesSelectors", () => {
     expect(selectCurrentRecipe(state)).toEqual({ id: "recipe-1" });
   });
 
-  it("selects the request status", () => {
+  it("selects the public recipes request status", () => {
     expect(selectRecipesIsLoading(state)).toBe(true);
-    expect(selectRecipesError(state)).toBe("Request failed");
+    expect(selectRecipesError(state)).toBe("List failed");
+  });
+
+  it("selects the popular recipes request status", () => {
+    expect(selectPopularRecipesIsLoading(state)).toBe(true);
+    expect(selectPopularRecipesError(state)).toBe("Popular failed");
+  });
+
+  it("selects the current recipe request status", () => {
+    expect(selectCurrentRecipeIsLoading(state)).toBe(true);
+    expect(selectCurrentRecipeError(state)).toBe("Current failed");
   });
 
   it("selects public recipes pagination", () => {
