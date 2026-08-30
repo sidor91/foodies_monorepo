@@ -52,16 +52,7 @@ const Header = ({
           </NavLink>
         </nav>
 
-        {!isAuthLoading && !isAuthenticated && (
-          <SignInUpButton
-            isLogin={isLogin}
-            isRegister={isRegister}
-            onLogin={onLogin}
-            onRegister={onRegister}
-          />
-        )}
-
-        {(isAuthLoading || isAuthenticated) && (
+        {isAuthenticated ? (
           <div className="flex items-center justify-between gap-[0.4rem]">
             <UserNav user={user} onLogout={onLogout} />
             <button
@@ -79,6 +70,13 @@ const Header = ({
               </svg>
             </button>
           </div>
+        ) : (
+          <SignInUpButton
+            isLogin={isLogin}
+            isRegister={isRegister}
+            onLogin={onLogin}
+            onRegister={onRegister}
+          />
         )}
       </div>
     </header>
