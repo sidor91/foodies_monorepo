@@ -58,11 +58,12 @@ vi.mock("../RecipeFormContent/RecipeFormContent.jsx", async () => {
   const { useFormikContext } = await import("formik");
 
   const MockRecipeFormContent = () => {
-    const { values, submitForm } = useFormikContext();
+    const { errors, values, submitForm } = useFormikContext();
 
     return (
       <div>
         <p>Draft title: {values.title}</p>
+        {typeof errors.ingredients === "string" && <p>{errors.ingredients}</p>}
         <button type="button" onClick={submitForm}>
           Submit recipe
         </button>
@@ -132,9 +133,7 @@ describe("AddRecipeForm", () => {
     render(<AddRecipeForm />);
     await user.click(screen.getByRole("button", { name: "Submit recipe" }));
 
-    await waitFor(() => {
-      expect(mocks.toastError).toHaveBeenCalledWith("Please add at least one ingredient.");
-    });
+    expect(await screen.findByText("Please add at least one ingredient")).toBeInTheDocument();
     expect(mocks.addRecipe).not.toHaveBeenCalled();
   });
 

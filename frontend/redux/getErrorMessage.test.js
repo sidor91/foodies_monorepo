@@ -3,6 +3,12 @@ import { describe, expect, it } from "vitest";
 import getErrorMessage from "./getErrorMessage.js";
 
 describe("getErrorMessage", () => {
+  it("replaces a technical authentication error with a session message", () => {
+    const error = { response: { data: { message: "Invalid or expired token" } } };
+
+    expect(getErrorMessage(error)).toBe("Your session has expired. Please sign in again.");
+  });
+
   it("returns the API error message when it is available", () => {
     const error = { response: { data: { message: "Request failed" } } };
 

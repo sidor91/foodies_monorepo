@@ -63,14 +63,14 @@ describe("RecipeFormContent", () => {
     });
   });
 
-  it("renders the main recipe fields and reference options", () => {
+  it("renders the main recipe fields and selected references", () => {
     renderContent();
 
     expect(screen.getByPlaceholderText("The name of the recipe")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Enter a description of the dish")).toBeInTheDocument();
-    expect(screen.getByRole("option", { name: "Soup" })).toBeInTheDocument();
-    expect(screen.getByRole("option", { name: "Italian" })).toBeInTheDocument();
-    expect(screen.getByRole("option", { name: "Tomato" })).toBeInTheDocument();
+    expect(screen.getByText("Soup")).toBeInTheDocument();
+    expect(screen.getByText("Italian")).toBeInTheDocument();
+    expect(screen.getByText("Add the ingredient")).toBeInTheDocument();
     expect(screen.getByText("10 min")).toBeInTheDocument();
   });
 

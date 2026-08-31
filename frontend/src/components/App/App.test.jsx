@@ -7,23 +7,38 @@ import App from "./App.jsx";
 
 const mocks = vi.hoisted(() => ({
   dispatch: vi.fn(),
+  isAuthenticated: false,
+  navigate: vi.fn(),
   refreshUser: vi.fn(),
+  fetchFavorites: vi.fn(),
   logOut: vi.fn(),
   logoutUnwrap: vi.fn(),
   toastError: vi.fn(),
   actions: {
     refresh: { type: "test/refreshUser" },
+    favorites: { type: "test/fetchFavorites" },
     logout: { type: "test/logOut" },
   },
 }));
 
 vi.mock("react-redux", () => ({
   useDispatch: () => mocks.dispatch,
+  useSelector: () => mocks.isAuthenticated,
 }));
+
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+
+  return { ...actual, useNavigate: () => mocks.navigate };
+});
 
 vi.mock("../../../redux/auth/authOps.js", () => ({
   refreshUser: mocks.refreshUser,
   logOut: mocks.logOut,
+}));
+
+vi.mock("../../../redux/favorites/favoritesOps.js", () => ({
+  fetchFavorites: mocks.fetchFavorites,
 }));
 
 vi.mock("react-hot-toast", () => ({
@@ -32,7 +47,7 @@ vi.mock("react-hot-toast", () => ({
 }));
 
 vi.mock("../index.js", () => ({
-  Header: ({ onMobileToggle, onLogin, onRegister, onLogout }) => (
+  Header: ({ onMobileToggle, onLogin, onRegister, onLogout, onRequireLogin }) => (
     <header>
       <button type="button" onClick={onMobileToggle}>
         Toggle mobile menu
@@ -46,39 +61,60 @@ vi.mock("../index.js", () => ({
       <button type="button" onClick={onLogout}>
         Open logout
       </button>
+      <button type="button" onClick={() => onRequireLogin("/recipe/add")}>
+        Require login for add recipe
+      </button>
     </header>
   ),
   MobileMenu: ({ isMobileMenuOpen }) => (
     <p>{isMobileMenuOpen ? "Mobile menu open" : "Mobile menu closed"}</p>
   ),
-  LoginForm: ({ isLogin, onRegister }) =>
+  LoginForm: ({ isLogin, onRegister, onLoginSuccess }) =>
     isLogin ? (
       <section>
         <p>Login modal open</p>
         <button type="button" onClick={onRegister}>
           Go to register
         </button>
+        <button type="button" onClick={onLoginSuccess}>
+          Finish login
+        </button>
       </section>
     ) : null,
-  RegisterForm: ({ isRegister }) => (isRegister ? <p>Register modal open</p> : null),
+  RegisterForm: ({ isRegister, onLogin }) =>
+    isRegister ? (
+      <section>
+        <p>Register modal open</p>
+        <button type="button" onClick={onLogin}>
+          Go to login
+        </button>
+      </section>
+    ) : null,
   Loader: () => <div role="status">Loading page</div>,
   Footer: () => <footer>Footer</footer>,
 }));
 
-vi.mock("../LogoutModal/LogoutModal.jsx", () => ({
-  default: ({ isLogout, onLogoutToggle, onLogout }) =>
-    isLogout ? (
+vi.mock("../LogoutModal/LogoutModal.jsx", async () => {
+  const { useLocation } = await vi.importActual("react-router-dom");
+
+  const MockLogoutModal = ({ isLogout, onLogoutToggle, onLogout }) => {
+    const { pathname } = useLocation();
+
+    return isLogout ? (
       <section>
         <p>Logout modal open</p>
         <button type="button" onClick={onLogoutToggle}>
           Cancel logout
         </button>
-        <button type="button" onClick={onLogout}>
+        <button type="button" onClick={() => onLogout(pathname)}>
           Confirm logout
         </button>
       </section>
-    ) : null,
-}));
+    ) : null;
+  };
+
+  return { default: MockLogoutModal };
+});
 
 vi.mock("../../pages/Home/Home.jsx", () => ({
   default: () => <p>Home page</p>,
@@ -86,6 +122,10 @@ vi.mock("../../pages/Home/Home.jsx", () => ({
 
 vi.mock("../../pages/AddRecipe/AddRecipe.jsx", () => ({
   default: () => <p>Add recipe page</p>,
+}));
+
+vi.mock("../../pages/Recipe/Recipe.jsx", () => ({
+  default: () => <p>Recipe page</p>,
 }));
 
 vi.mock("../../pages/UserProfile/UserProfile.jsx", () => ({
@@ -99,7 +139,9 @@ vi.mock("../../pages/NotFound/NotFound.jsx", () => ({
 describe("App", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.isAuthenticated = false;
     mocks.refreshUser.mockReturnValue(mocks.actions.refresh);
+    mocks.fetchFavorites.mockReturnValue(mocks.actions.favorites);
     mocks.logOut.mockReturnValue(mocks.actions.logout);
     mocks.logoutUnwrap.mockResolvedValue(undefined);
     mocks.dispatch.mockImplementation((action) => {
@@ -109,6 +151,15 @@ describe("App", () => {
 
       return action;
     });
+  });
+
+  it("loads favorites for an authenticated user", () => {
+    mocks.isAuthenticated = true;
+
+    renderWithRouter(<App />);
+
+    expect(mocks.fetchFavorites).toHaveBeenCalledOnce();
+    expect(mocks.dispatch).toHaveBeenCalledWith(mocks.actions.favorites);
   });
 
   it("refreshes the user and renders the current route", async () => {
@@ -147,7 +198,30 @@ describe("App", () => {
     expect(screen.getByText("Register modal open")).toBeInTheDocument();
   });
 
-  it("logs out and closes the logout modal", async () => {
+  it("opens login for a private route and navigates there after login", async () => {
+    const user = userEvent.setup();
+    renderWithRouter(<App />, { route: "/recipe/add" });
+
+    expect(await screen.findByText("Login modal open")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Finish login" }));
+
+    expect(mocks.navigate).toHaveBeenLastCalledWith("/recipe/add");
+  });
+
+  it("opens login from the header and remembers the requested route", async () => {
+    const user = userEvent.setup();
+    renderWithRouter(<App />);
+
+    await user.click(screen.getByRole("button", { name: "Require login for add recipe" }));
+    expect(screen.getByText("Login modal open")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Finish login" }));
+
+    expect(mocks.navigate).toHaveBeenLastCalledWith("/recipe/add");
+  });
+
+  it("logs out on a public route without an extra navigation", async () => {
     const user = userEvent.setup();
     renderWithRouter(<App />);
 
@@ -161,11 +235,36 @@ describe("App", () => {
       expect(mocks.logoutUnwrap).toHaveBeenCalledOnce();
       expect(screen.queryByText("Logout modal open")).not.toBeInTheDocument();
     });
+    expect(mocks.navigate).not.toHaveBeenCalled();
+  });
+
+  it("navigates away before logging out from a private route", async () => {
+    const user = userEvent.setup();
+    mocks.isAuthenticated = true;
+    renderWithRouter(<App />, { route: "/user/user-1" });
+
+    await user.click(screen.getByRole("button", { name: "Open logout" }));
+    await user.click(screen.getByRole("button", { name: "Confirm logout" }));
+
+    await waitFor(() => {
+      expect(mocks.navigate).toHaveBeenCalledWith("/");
+      expect(mocks.logOut).toHaveBeenCalledOnce();
+      expect(mocks.logoutUnwrap).toHaveBeenCalledOnce();
+    });
+    expect(mocks.navigate.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.logOut.mock.invocationCallOrder[0],
+    );
   });
 
   it("renders the not-found route", async () => {
     renderWithRouter(<App />, { route: "/missing" });
 
     expect(await screen.findByText("Not found page")).toBeInTheDocument();
+  });
+
+  it("renders the recipe route", async () => {
+    renderWithRouter(<App />, { route: "/recipes/recipe-1" });
+
+    expect(await screen.findByText("Recipe page")).toBeInTheDocument();
   });
 });

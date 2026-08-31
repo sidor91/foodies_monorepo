@@ -5,13 +5,15 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { renderWithProviders } from "../../test/renderWithProviders.jsx";
 import LoginForm from "./LoginForm.jsx";
 
-const { logInMock, unwrapMock } = vi.hoisted(() => ({
+const { logInMock, refreshUserMock, unwrapMock } = vi.hoisted(() => ({
   logInMock: vi.fn(),
+  refreshUserMock: vi.fn(),
   unwrapMock: vi.fn(),
 }));
 
 vi.mock("../../../redux/auth/authOps", () => ({
   logIn: logInMock,
+  refreshUser: refreshUserMock,
 }));
 
 const renderLoginForm = (props = {}) => {
@@ -25,6 +27,7 @@ describe("LoginForm", () => {
     vi.clearAllMocks();
     unwrapMock.mockResolvedValue({ id: "user-1" });
     logInMock.mockImplementation(() => () => ({ unwrap: unwrapMock }));
+    refreshUserMock.mockReturnValue({ type: "test/refreshUser" });
   });
 
   it("renders the login fields with a disabled submit button", () => {
@@ -72,7 +75,8 @@ describe("LoginForm", () => {
   it("dispatches logIn with entered credentials", async () => {
     const user = userEvent.setup();
     const onLogin = vi.fn();
-    renderLoginForm({ onLogin });
+    const onLoginSuccess = vi.fn();
+    renderLoginForm({ onLogin, onLoginSuccess });
 
     await user.type(screen.getByPlaceholderText("Email*"), "anna@example.com");
     await user.type(screen.getByPlaceholderText("Password*"), "password123");
@@ -85,6 +89,17 @@ describe("LoginForm", () => {
       });
     });
     expect(unwrapMock).toHaveBeenCalledOnce();
+    expect(refreshUserMock).toHaveBeenCalledOnce();
+    expect(onLoginSuccess).toHaveBeenCalledOnce();
     expect(onLogin).toHaveBeenCalledOnce();
+    expect(unwrapMock.mock.invocationCallOrder[0]).toBeLessThan(
+      refreshUserMock.mock.invocationCallOrder[0],
+    );
+    expect(refreshUserMock.mock.invocationCallOrder[0]).toBeLessThan(
+      onLoginSuccess.mock.invocationCallOrder[0],
+    );
+    expect(onLoginSuccess.mock.invocationCallOrder[0]).toBeLessThan(
+      onLogin.mock.invocationCallOrder[0],
+    );
   });
 });

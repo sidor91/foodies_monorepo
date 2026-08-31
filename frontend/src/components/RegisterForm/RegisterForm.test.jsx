@@ -5,13 +5,15 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { renderWithProviders } from "../../test/renderWithProviders.jsx";
 import RegisterForm from "./RegisterForm.jsx";
 
-const { registerMock, unwrapMock } = vi.hoisted(() => ({
+const { registerMock, refreshUserMock, unwrapMock } = vi.hoisted(() => ({
   registerMock: vi.fn(),
+  refreshUserMock: vi.fn(),
   unwrapMock: vi.fn(),
 }));
 
 vi.mock("../../../redux/auth/authOps", () => ({
   register: registerMock,
+  refreshUser: refreshUserMock,
 }));
 
 const renderRegisterForm = (props = {}) => {
@@ -25,6 +27,7 @@ describe("RegisterForm", () => {
     vi.clearAllMocks();
     unwrapMock.mockResolvedValue({ id: "user-1" });
     registerMock.mockImplementation(() => () => ({ unwrap: unwrapMock }));
+    refreshUserMock.mockReturnValue({ type: "test/refreshUser" });
   });
 
   it("renders the registration fields with a disabled submit button", () => {
@@ -84,7 +87,9 @@ describe("RegisterForm", () => {
 
   it("dispatches register with entered user data", async () => {
     const user = userEvent.setup();
-    renderRegisterForm();
+    const onRegister = vi.fn();
+    const onRegisterSuccess = vi.fn();
+    renderRegisterForm({ onRegister, onRegisterSuccess });
 
     await user.type(screen.getByPlaceholderText("Name*"), "Anna");
     await user.type(screen.getByPlaceholderText("Email*"), "anna@example.com");
@@ -99,5 +104,17 @@ describe("RegisterForm", () => {
       });
     });
     expect(unwrapMock).toHaveBeenCalledOnce();
+    expect(refreshUserMock).toHaveBeenCalledOnce();
+    expect(onRegisterSuccess).toHaveBeenCalledOnce();
+    expect(onRegister).toHaveBeenCalledOnce();
+    expect(unwrapMock.mock.invocationCallOrder[0]).toBeLessThan(
+      refreshUserMock.mock.invocationCallOrder[0],
+    );
+    expect(refreshUserMock.mock.invocationCallOrder[0]).toBeLessThan(
+      onRegisterSuccess.mock.invocationCallOrder[0],
+    );
+    expect(onRegisterSuccess.mock.invocationCallOrder[0]).toBeLessThan(
+      onRegister.mock.invocationCallOrder[0],
+    );
   });
 });
