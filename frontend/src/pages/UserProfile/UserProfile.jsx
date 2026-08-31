@@ -35,7 +35,7 @@ const UserProfile = ({ onLogout }) => {
     isOwnProfile,
   });
 
-  const { items, pagination, isDataLoading, listError, isListLoading, shouldShowPagination } =
+  const { items, pagination, listError, isListLoading, shouldShowPagination } =
     useUserProfileContent({
       activeTab,
       page,
@@ -128,25 +128,21 @@ const UserProfile = ({ onLogout }) => {
               />
 
               <div className="flex w-full flex-col items-center gap-[3rem] tablet:gap-[6rem]">
-                {isDataLoading && !isPageTransitioning ? (
-                  <Loader />
-                ) : (
-                  <div className="relative w-full">
-                    <ListItems
-                      items={items}
-                      activeTab={activeTab}
-                      isOwnProfile={isOwnProfile}
-                      deletingRecipeId={deletingRecipeId}
-                      onDelete={handleDelete}
-                    />
+                <div className="relative w-full">
+                  <ListItems
+                    items={items}
+                    activeTab={activeTab}
+                    isOwnProfile={isOwnProfile}
+                    deletingRecipeId={deletingRecipeId}
+                    onDelete={handleDelete}
+                  />
 
-                    {isPageTransitioning && (
-                      <div className="absolute inset-0 z-10 flex items-center justify-center bg-bg/70">
-                        <Loader />
-                      </div>
-                    )}
-                  </div>
-                )}
+                  {isPageTransitioning && (
+                    <div className="absolute inset-0 z-10 flex items-center justify-center bg-bg/70">
+                      <Loader />
+                    </div>
+                  )}
+                </div>
 
                 {!isListLoading && listError && (
                   <p

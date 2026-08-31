@@ -4,7 +4,7 @@ import css from "./SignInUpButton.module.css";
 
 const SignInUpButton = ({ isLogin, isRegister, onLogin, onRegister }) => {
   return (
-    <nav className="bg-bg flex items-center rounded-[3rem]">
+    <nav className={clsx(css.sign__nav, "bg-bg flex items-center rounded-[3rem]")}>
       <button
         type="button"
         className={clsx(css.sign__btn, isLogin && css.active)}
