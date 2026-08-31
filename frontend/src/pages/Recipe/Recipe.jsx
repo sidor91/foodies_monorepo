@@ -38,7 +38,7 @@ const Recipe = ({ onRequireLogin }) => {
 
   useEffect(() => {
     dispatch(fetchRecipeById(recipeSlugId));
-    dispatch(fetchPopularRecipes(4));
+    dispatch(fetchPopularRecipes(5));
 
     return () => {
       dispatch(clearCurrentRecipe());
@@ -68,7 +68,7 @@ const Recipe = ({ onRequireLogin }) => {
     return null;
   }
 
-  const relatedRecipes = popularRecipes.filter((item) => item.id !== recipe.id);
+  const relatedRecipes = popularRecipes.filter((item) => item.id !== recipe.id).slice(0, 4);
 
   return (
     <div className={css.recipe}>
