@@ -38,7 +38,7 @@ const Recipe = ({ onRequireLogin }) => {
 
   useEffect(() => {
     dispatch(fetchRecipeById(recipeSlugId));
-    dispatch(fetchPopularRecipes(4));
+    dispatch(fetchPopularRecipes(5));
 
     return () => {
       dispatch(clearCurrentRecipe());
@@ -46,6 +46,15 @@ const Recipe = ({ onRequireLogin }) => {
   }, [dispatch, recipeSlugId]);
 
   const handleFavoriteToggle = useFavoriteToggle({ favoriteIds, isAuthenticated, onRequireLogin });
+
+  const ownerPath = `/user/${recipe?.owner?.id}`;
+
+  const handleOwnerClick = (event) => {
+    if (!isAuthenticated) {
+      event.preventDefault();
+      onRequireLogin?.(ownerPath);
+    }
+  };
 
   if (!isReady) {
     if (isLoading) {
@@ -59,7 +68,7 @@ const Recipe = ({ onRequireLogin }) => {
     return null;
   }
 
-  const relatedRecipes = popularRecipes.filter((item) => item.id !== recipe.id);
+  const relatedRecipes = popularRecipes.filter((item) => item.id !== recipe.id).slice(0, 4);
 
   return (
     <div className={css.recipe}>
@@ -83,7 +92,11 @@ const Recipe = ({ onRequireLogin }) => {
           <p className={css.description}>{recipe.description}</p>
 
           <div className={css.owner}>
-            <Link to={`/user/${recipe.owner.id}`} aria-label={`Open ${recipe.owner.name} profile`}>
+            <Link
+              to={ownerPath}
+              aria-label={`Open ${recipe.owner.name} profile`}
+              onClick={handleOwnerClick}
+            >
               <ImageWithFallback
                 className={css.ownerAvatar}
                 src={recipe.owner?.avatarUrl}
@@ -93,7 +106,7 @@ const Recipe = ({ onRequireLogin }) => {
             </Link>
             <div>
               <p className={css.ownerLabel}>Created by:</p>
-              <Link className={css.ownerName} to={`/user/${recipe.owner.id}`}>
+              <Link className={css.ownerName} to={ownerPath} onClick={handleOwnerClick}>
                 {recipe.owner?.name}
               </Link>
             </div>
@@ -141,6 +154,7 @@ const Recipe = ({ onRequireLogin }) => {
                   recipe={item}
                   isFavorite={favoriteIds.includes(item.id)}
                   onFavoriteToggle={handleFavoriteToggle}
+                  onRequireLogin={onRequireLogin}
                 />
               </li>
             ))}

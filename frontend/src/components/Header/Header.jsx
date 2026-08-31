@@ -5,11 +5,7 @@ import clsx from "clsx";
 import css from "./Header.module.css";
 import SignInUpButton from "../SignInUpButton/SignInUpButton";
 import UserNav from "../UserNav/UserNav";
-import {
-  selectUser,
-  selectIsLoggedIn,
-  selectIsRefreshing,
-} from "../../../redux/auth/authSelectors";
+import { selectUser, selectIsLoggedIn } from "../../../redux/auth/authSelectors";
 import useIsRoute from "../../hooks/useIsRoute";
 
 const Header = ({
@@ -20,6 +16,7 @@ const Header = ({
   onLogin,
   onRegister,
   onLogout,
+  onRequireLogin,
 }) => {
   const isHomePage = useIsRoute("/");
   const isCategoriesPage = useIsRoute("/categories");
@@ -27,10 +24,16 @@ const Header = ({
 
   const user = useSelector(selectUser);
   const isAuthenticated = useSelector(selectIsLoggedIn);
-  const isAuthLoading = useSelector(selectIsRefreshing);
 
   const buildLinkClass = ({ isActive }) => {
     return clsx(css.nav__link, isActive && css.active, !isHomePageOrCategories && css.not__home);
+  };
+
+  const handleAddRecipeClick = (event) => {
+    if (!isAuthenticated) {
+      event.preventDefault();
+      onRequireLogin?.("/recipe/add");
+    }
   };
 
   return (
@@ -47,7 +50,7 @@ const Header = ({
           <NavLink to="/" className={buildLinkClass}>
             Home
           </NavLink>
-          <NavLink to="/recipe/add" className={buildLinkClass}>
+          <NavLink to="/recipe/add" className={buildLinkClass} onClick={handleAddRecipeClick}>
             Add Recipe
           </NavLink>
         </nav>

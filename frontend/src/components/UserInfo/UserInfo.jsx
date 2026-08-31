@@ -5,6 +5,8 @@ import { toast } from "react-hot-toast";
 import { refreshUser, updateAvatar } from "../../../redux/auth/authOps.js";
 import { followUser, unfollowUser } from "../../../redux/users/usersOps.js";
 import { selectIsFollowing, selectIsFollowPending } from "../../../redux/users/usersSelectors.js";
+import { selectFavoriteIds } from "../../../redux/favorites/favoritesSelectors.js";
+import { selectOwnRecipes } from "../../../redux/recipes/recipesSelectors.js";
 
 const getErrorText = (error, fallbackMessage) => {
   if (typeof error === "string" && error.trim()) {
@@ -20,6 +22,8 @@ const getErrorText = (error, fallbackMessage) => {
 
 const UserInfo = ({ profile, isOwnProfile, onLogout, onFollowChange }) => {
   const dispatch = useDispatch();
+  const favoriteIds = useSelector(selectFavoriteIds);
+  const ownRecipes = useSelector(selectOwnRecipes);
 
   const [isAvatarUploading, setIsAvatarUploading] = useState(false);
 
@@ -154,7 +158,7 @@ const UserInfo = ({ profile, isOwnProfile, onLogout, onFollowChange }) => {
             </span>
 
             <strong className="text-[1.4rem] leading-[2rem] font-bold text-primary tablet:text-[1.6rem] tablet:leading-[2.4rem]">
-              {profile.recipesCount}
+              {ownRecipes?.length || 0}
             </strong>
           </div>
 
@@ -165,7 +169,7 @@ const UserInfo = ({ profile, isOwnProfile, onLogout, onFollowChange }) => {
               </span>
 
               <strong className="text-[1.4rem] leading-[2rem] font-bold text-primary tablet:text-[1.6rem] tablet:leading-[2.4rem]">
-                {profile.favoritesCount}
+                {favoriteIds?.length || 0}
               </strong>
             </div>
           )}

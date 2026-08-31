@@ -14,57 +14,42 @@ const getPageFromSearchParams = (searchParams) => {
   return pageValue;
 };
 
-const getTabFromSearchParams = (searchParams) => {
+const getTabFromSearchParams = (searchParams, allowedTabs) => {
   const tabValue = searchParams.get("tab");
 
-  return OWN_PROFILE_TABS.includes(tabValue) ? tabValue : "recipes";
+  return allowedTabs.includes(tabValue) ? tabValue : "recipes";
 };
 
 const useUserProfileList = ({ profile, isOwnProfile }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [activeTab, setActiveTab] = useState(() => getTabFromSearchParams(searchParams));
-
-  const [page, setPage] = useState(() => getPageFromSearchParams(searchParams));
-
   const [isPageTransitioning, setIsPageTransitioning] = useState(false);
+
+  const allowedTabs = isOwnProfile ? OWN_PROFILE_TABS : OTHER_PROFILE_TABS;
+
+  const activeTab = getTabFromSearchParams(searchParams, allowedTabs);
+  const page = getPageFromSearchParams(searchParams);
 
   useEffect(() => {
     if (!profile) {
       return;
     }
 
-    const allowedTabs = isOwnProfile ? OWN_PROFILE_TABS : OTHER_PROFILE_TABS;
-
-    const requestedTab = searchParams.get("tab");
-
-    const normalizedTab = allowedTabs.includes(requestedTab) ? requestedTab : "recipes";
-
-    const normalizedPage = getPageFromSearchParams(searchParams);
-
-    if (activeTab !== normalizedTab) {
-      setActiveTab(normalizedTab);
-    }
-
-    if (page !== normalizedPage) {
-      setPage(normalizedPage);
-    }
-
     const currentTabParam = searchParams.get("tab");
     const currentPageParam = searchParams.get("page");
 
-    if (currentTabParam !== normalizedTab || currentPageParam !== String(normalizedPage)) {
+    if (currentTabParam !== activeTab || currentPageParam !== String(page)) {
       setSearchParams(
         {
-          tab: normalizedTab,
-          page: String(normalizedPage),
+          tab: activeTab,
+          page: String(page),
         },
         {
           replace: true,
         },
       );
     }
-  }, [activeTab, isOwnProfile, page, profile, searchParams, setSearchParams]);
+  }, [activeTab, page, profile, searchParams, setSearchParams]);
 
   const handleTabChange = (tabId) => {
     if (tabId === activeTab) {
@@ -72,8 +57,6 @@ const useUserProfileList = ({ profile, isOwnProfile }) => {
     }
 
     setIsPageTransitioning(false);
-    setActiveTab(tabId);
-    setPage(1);
 
     setSearchParams({
       tab: tabId,
@@ -87,7 +70,6 @@ const useUserProfileList = ({ profile, isOwnProfile }) => {
     }
 
     setIsPageTransitioning(true);
-    setPage(nextPage);
 
     setSearchParams({
       tab: activeTab,
@@ -100,7 +82,6 @@ const useUserProfileList = ({ profile, isOwnProfile }) => {
       const { transitioning = true } = options;
 
       setIsPageTransitioning(transitioning);
-      setPage(nextPage);
 
       setSearchParams({
         tab: activeTab,
