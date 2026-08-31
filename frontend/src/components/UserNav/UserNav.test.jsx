@@ -52,4 +52,16 @@ describe("UserNav", () => {
     expect(onLogout).toHaveBeenCalledOnce();
     expect(screen.queryByRole("link", { name: "Profile" })).not.toBeInTheDocument();
   });
+
+  it("closes the menu after a click outside", async () => {
+    const user = userEvent.setup();
+    renderUserNav();
+
+    await user.click(screen.getByRole("button", { name: "Anna" }));
+    expect(screen.getByRole("link", { name: "Profile" })).toBeInTheDocument();
+
+    await user.click(document.body);
+
+    expect(screen.queryByRole("link", { name: "Profile" })).not.toBeInTheDocument();
+  });
 });

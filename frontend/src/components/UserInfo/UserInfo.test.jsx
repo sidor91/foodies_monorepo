@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -50,6 +50,8 @@ const renderUserInfo = ({
   isOwnProfile = false,
   followingIds = [],
   pendingIds = [],
+  favoriteIds = [],
+  ownRecipes = [],
   onLogout = () => {},
   onFollowChange = () => {},
   userProfile = profile,
@@ -61,7 +63,13 @@ const renderUserInfo = ({
       onLogout={onLogout}
       onFollowChange={onFollowChange}
     />,
-    { preloadedState: { users: { followingIds, pendingIds } } },
+    {
+      preloadedState: {
+        users: { followingIds, pendingIds },
+        favorites: { ids: favoriteIds },
+        recipes: { own: { items: ownRecipes } },
+      },
+    },
   );
 };
 
@@ -79,7 +87,11 @@ describe("UserInfo", () => {
   });
 
   it("renders full statistics and avatar for an own profile", () => {
-    renderUserInfo({ isOwnProfile: true });
+    renderUserInfo({
+      isOwnProfile: true,
+      favoriteIds: ["recipe-1", "recipe-2"],
+      ownRecipes: [{ id: "recipe-3" }],
+    });
 
     expect(screen.getByRole("heading", { name: "Mark" })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: "Mark avatar" })).toHaveAttribute("src", "mark.jpg");
@@ -87,6 +99,12 @@ describe("UserInfo", () => {
     expect(screen.getByText("Favorites:")).toBeInTheDocument();
     expect(screen.getByText("Following:")).toBeInTheDocument();
     expect(screen.getByLabelText("Upload avatar")).toBeInTheDocument();
+    expect(
+      within(screen.getByText("Added recipes:").parentElement).getByText("1"),
+    ).toBeInTheDocument();
+    expect(
+      within(screen.getByText("Favorites:").parentElement).getByText("2"),
+    ).toBeInTheDocument();
   });
 
   it("renders follow controls instead of private controls for another profile", () => {

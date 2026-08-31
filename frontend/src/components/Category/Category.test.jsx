@@ -45,12 +45,15 @@ vi.mock("../Dropdown/Dropdown.jsx", () => ({
 }));
 
 vi.mock("../RecipeCard/RecipeCard.jsx", () => ({
-  default: ({ recipe, isFavorite, onFavoriteToggle }) => (
+  default: ({ recipe, isFavorite, onFavoriteToggle, onRequireLogin }) => (
     <article>
       <p>{recipe.title}</p>
       <p>Favorite: {String(isFavorite)}</p>
       <button type="button" onClick={() => onFavoriteToggle(recipe.id)}>
         Toggle {recipe.title}
+      </button>
+      <button type="button" onClick={() => onRequireLogin?.()}>
+        Require login for {recipe.title}
       </button>
     </article>
   ),
@@ -171,6 +174,22 @@ describe("Category", () => {
     await user.click(screen.getByRole("button", { name: "Toggle Cake" }));
 
     expect(mocks.favoriteToggle).toHaveBeenCalledWith("recipe-1");
+  });
+
+  it("passes the login callback to recipe cards", async () => {
+    const user = userEvent.setup();
+    const onRequireLogin = vi.fn();
+    renderCategory(
+      {
+        recipes: [{ id: "recipe-1", title: "Cake" }],
+        totalPages: 1,
+      },
+      { onRequireLogin },
+    );
+
+    await user.click(screen.getByRole("button", { name: "Require login for Cake" }));
+
+    expect(onRequireLogin).toHaveBeenCalledOnce();
   });
 
   it("requests another page from pagination", async () => {

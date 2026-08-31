@@ -2,7 +2,7 @@ import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { renderWithRouter } from "../../test/renderWithProviders.jsx";
+import { renderWithProviders } from "../../test/renderWithProviders.jsx";
 import RecipeCard from "./RecipeCard.jsx";
 
 const { navigateMock } = vi.hoisted(() => ({ navigateMock: vi.fn() }));
@@ -20,13 +20,18 @@ const recipe = {
   owner: { id: "user-1", name: "Anna", avatarUrl: "anna.jpg" },
 };
 
+const renderRecipeCard = (props = {}, isLoggedIn = true) =>
+  renderWithProviders(<RecipeCard recipe={recipe} {...props} />, {
+    preloadedState: { auth: { isLoggedIn } },
+  });
+
 describe("RecipeCard", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it("renders recipe information and owner links", () => {
-    renderWithRouter(<RecipeCard recipe={recipe} />);
+    renderRecipeCard();
 
     expect(screen.getByRole("heading", { name: "Tomato soup" })).toBeInTheDocument();
     expect(screen.getByText("A simple soup.")).toBeInTheDocument();
@@ -41,7 +46,7 @@ describe("RecipeCard", () => {
   });
 
   it("renders a fallback description", () => {
-    renderWithRouter(<RecipeCard recipe={{ ...recipe, description: "" }} />);
+    renderRecipeCard({ recipe: { ...recipe, description: "" } });
 
     expect(screen.getByText("No description yet.")).toBeInTheDocument();
   });
@@ -49,9 +54,7 @@ describe("RecipeCard", () => {
   it("shows favorite state and passes the recipe id", async () => {
     const user = userEvent.setup();
     const onFavoriteToggle = vi.fn();
-    renderWithRouter(
-      <RecipeCard recipe={recipe} isFavorite onFavoriteToggle={onFavoriteToggle} />,
-    );
+    renderRecipeCard({ isFavorite: true, onFavoriteToggle });
 
     const favoriteButton = screen.getByRole("button", { name: "Remove from favorites" });
     expect(favoriteButton).toHaveAttribute("aria-pressed", "true");
@@ -63,10 +66,20 @@ describe("RecipeCard", () => {
 
   it("navigates to the recipe page", async () => {
     const user = userEvent.setup();
-    renderWithRouter(<RecipeCard recipe={recipe} />);
+    renderRecipeCard();
 
     await user.click(screen.getByRole("button", { name: "Open recipe" }));
 
     expect(navigateMock).toHaveBeenCalledWith("/recipes/recipe-1");
+  });
+
+  it("asks a guest to log in before opening the owner profile", async () => {
+    const user = userEvent.setup();
+    const onRequireLogin = vi.fn();
+    renderRecipeCard({ onRequireLogin }, false);
+
+    await user.click(screen.getByRole("link", { name: "Open Anna profile" }));
+
+    expect(onRequireLogin).toHaveBeenCalledWith("/user/user-1");
   });
 });

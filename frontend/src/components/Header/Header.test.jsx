@@ -44,6 +44,38 @@ describe("Header", () => {
     expect(screen.queryByRole("button", { name: "Sign In" })).not.toBeInTheDocument();
   });
 
+  it("asks a guest to log in before adding a recipe", async () => {
+    const user = userEvent.setup();
+    const onRequireLogin = vi.fn();
+
+    renderHeader(
+      { user: null, isLoggedIn: false, isRefreshing: false },
+      { onRequireLogin },
+    );
+
+    await user.click(screen.getByRole("link", { name: "Add Recipe" }));
+
+    expect(onRequireLogin).toHaveBeenCalledWith("/recipe/add");
+  });
+
+  it("does not ask an authenticated user to log in before adding a recipe", async () => {
+    const user = userEvent.setup();
+    const onRequireLogin = vi.fn();
+
+    renderHeader(
+      {
+        user: { id: "user-1", name: "Anna", avatarUrl: "" },
+        isLoggedIn: true,
+        isRefreshing: false,
+      },
+      { onRequireLogin },
+    );
+
+    await user.click(screen.getByRole("link", { name: "Add Recipe" }));
+
+    expect(onRequireLogin).not.toHaveBeenCalled();
+  });
+
   it("calls onMobileToggle from the menu button", async () => {
     const user = userEvent.setup();
     const onMobileToggle = vi.fn();
